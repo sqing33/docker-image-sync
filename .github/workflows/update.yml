@@ -135,8 +135,6 @@ jobs:
                 # 删除匹配目标镜像的行（格式：源镜像|目标镜像）
                 sed -i "/|${del_image}$/d" combined-list.txt
               done < deleted-images.txt
-              echo "===== 更新后的 combined-list.txt ====="
-              cat combined-list.txt
             fi
           fi
 
