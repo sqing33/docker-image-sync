@@ -138,6 +138,15 @@ jobs:
             done
           fi
 
+      - name: 创建 docker-compose.yaml 文件
+        if: env.VALID_ARCHS != ''
+        run: |
+          mkdir -p docker-compose
+          cp docker-compose/example.yaml docker-compose/${{ env.IMAGE_NAME }}.yaml
+          git add docker-compose/${{ env.IMAGE_NAME }}.yaml
+          git commit -m "添加 ${{ env.IMAGE_NAME }}.yaml 文件"
+          git push origin main
+
       - name: 更新 README.md 文件
         if: env.VALID_ARCHS != ''
         run: |
@@ -178,8 +187,11 @@ jobs:
                 pull_cmd="docker pull ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
               fi
 
+              # 为每个镜像创建一个docker-compose.yaml文件的链接
+              compose_file="[${{ inputs.ghcr_image }}.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/${{ env.IMAGE_NAME }}.yaml)"
+
               # 生成新表格行
-              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` |  |"
+              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` | \`$compose_file\` |"
 
               # 生成新的表格内容
               {
