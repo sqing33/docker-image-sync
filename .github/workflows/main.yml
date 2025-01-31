@@ -190,10 +190,10 @@ jobs:
               fi
 
               # 为每个镜像创建一个docker-compose.yaml文件的链接
-              compose_file="[${{ inputs.ghcr_image }}.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/${{ env.IMAGE_NAME }}.yaml)"
+              compose_file="[${{ env.IMAGE_NAME }}.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/${{ env.IMAGE_NAME }}.yaml)"
 
               # 生成新表格行
-              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` | \`$compose_file\` |"
+              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` | $compose_file |"
 
               # 生成新的表格内容
               {
