@@ -143,6 +143,8 @@ jobs:
         run: |
           mkdir -p docker-compose
           cp docker-compose/example.yaml docker-compose/${{ env.IMAGE_NAME }}.yaml
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
           git add docker-compose/${{ env.IMAGE_NAME }}.yaml
           git commit -m "添加 ${{ env.IMAGE_NAME }}.yaml 文件"
           git push origin main
