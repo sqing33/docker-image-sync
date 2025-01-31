@@ -31,6 +31,7 @@
 | 25 | photoprism/photoprism | ai 相册 | `docker pull ghcr.nju.edu.cn/sqing33/photoprism` | [photoprism.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoprism.yaml) |
 | 26 | mongodb/mongodb-community-server | mongodb 文档型数据库 | `docker pull ghcr.nju.edu.cn/sqing33/mongodb` | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) |
 | 27 | pihole/pihole | 广告拦截器 | `docker pull ghcr.nju.edu.cn/sqing33/pihole` | [pihole.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pihole.yaml) |
+| 28 | linuxserver/resilio-sync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/resilio-sync` | [resilio-sync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/resilio-sync.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
