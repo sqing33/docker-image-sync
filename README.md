@@ -26,6 +26,7 @@
 | 20 | jonnyan404/verysync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/verysync` | [verysync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/verysync.yaml) |
 | 21 | homeassistant/home-assistant | Home Assistant 家庭助理 | `docker pull ghcr.nju.edu.cn/sqing33/homeassistant` | [homeassistant.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml) |
 | 22 | jauderho/docker-autocompose | 将现有的Docker容器转换为docker-compose.yaml | `docker pull ghcr.nju.edu.cn/sqing33/autocompose` | [autocompose.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml) |
+| 23 | azukaar/cosmos-server | NAS 系统 | `docker pull ghcr.nju.edu.cn/sqing33/cosmos` | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
