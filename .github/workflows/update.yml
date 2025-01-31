@@ -169,11 +169,17 @@ jobs:
               echo "▸ 处理架构: $arch"
               target_tag="$target_image_base:latest-$arch"
               
-              # 获取架构特定 digest
+              # 获取架构特定 digest（需添加错误处理）
               arch_digest=$(echo "$source_manifest" | jq -r \
                 '.manifests[] | select(.platform.architecture == "'$arch'").digest')
-
-              # 拉取并推送架构镜像
+            
+              # 如果 digest 为空，则跳过该架构
+              if [ -z "$arch_digest" ]; then
+                echo "⚠️ 警告：架构 $arch 不存在于源镜像中，已跳过"
+                continue
+              fi
+            
+              # 拉取并推送架构镜像（保持原有逻辑）
               docker pull --platform "linux/$arch" "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest"
               docker tag "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest" "$target_tag"
               docker push "$target_tag"
