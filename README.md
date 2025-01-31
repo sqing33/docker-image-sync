@@ -19,6 +19,7 @@
 | 13 | tiangolo/nginx-rtmp | 直播推流服务器 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-rtmp` | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
 | 14 | bytelang/kplayer | 直播推流 | `docker pull ghcr.nju.edu.cn/sqing33/kplayer` | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
 | 15 | networkstatic/iperf3 | 带宽测试 | `docker pull ghcr.nju.edu.cn/sqing33/iperf3` | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml) |
+| 16 | xhofe/alist | 多存储挂载工具 | `docker pull ghcr.nju.edu.cn/sqing33/alist` | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
