@@ -26,9 +26,9 @@ jobs:
           /^### 已同步 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 命令列（第4列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $4);
-              gsub(/`/, "", $4);
-              print $4
+              gsub(/^[ \t]+|[ \t]+$/, "", $5);
+              gsub(/`/, "", $5);
+              print $5
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
