@@ -118,92 +118,61 @@ jobs:
             git push origin main
           fi
 
-      - name: 重新生成合并镜像列表
-        run: paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
-
-      - name: 同步所有架构镜像更新
-        env:
-          GHCR_USER: ${{ github.repository_owner }}
-        run: |
-          while IFS='|' read -r source_image target_image; do
-            echo "处理镜像: $target_image (源镜像: $source_image)"
-            source_image_full="docker://$source_image:latest"
-            target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
-            need_update=false
-      
-            # 获取源镜像清单列表
-            source_manifest=$(skopeo inspect --raw "$source_image_full")
-            source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
-      
-            # 检查目标镜像是否存在
-            if target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null); then
-              target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
-            else
-              target_digest=""
-            fi
-      
-            # 比较清单 digest
-            if [ "$source_digest" != "$target_digest" ]; then
-              echo "检测到清单更新，开始全架构同步..."
-              need_update=true
-            else
-              echo "清单未更新，跳过同步"
-              continue
-            fi
-      
-            # 获取所有支持的架构（处理嵌套清单）
-            if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
-              # 多架构清单：提取所有有效架构
-              ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
-            else
-              # 单架构镜像：直接提取架构
-              ARCH=$(echo "$source_manifest" | jq -r '.architecture')
-              ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
-            fi
-      
-            if [ -z "$ARCHS" ]; then
-              echo "❌ 未找到支持的架构，使用默认架构 amd64"
-              ARCHS="amd64"
-            fi
-      
-            # 同步各架构镜像
-            for arch in $ARCHS; do
-              echo "▸ 处理架构: $arch"
-              target_tag="$target_image_base:latest-$arch"
-              
-              # 获取架构特定 digest（处理 arm/armv7 别名）
-              arch_digest=$(echo "$source_manifest" | jq -r \
-                --arg arch "$arch" \
-                '.manifests[] | select(.platform.architecture == $arch or .platform.architecture == "armv7" and $arch == "arm").digest')
-      
-              # 如果 digest 为空，尝试通过平台标签匹配
-              if [ -z "$arch_digest" ]; then
-                arch_digest=$(echo "$source_manifest" | jq -r \
-                  --arg arch "$arch" \
-                  '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
-              fi
-      
-              # 最终检查 digest 有效性
-              if [ -z "$arch_digest" ]; then
-                echo "⚠️ 警告：架构 $arch 不存在于源镜像中，已跳过"
-                continue
-              fi
-      
-              # 拉取并推送架构镜像
-              docker pull --platform "linux/$arch" "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest"
-              docker tag "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest" "$target_tag"
-              docker push "$target_tag"
-            done
-      
-            # 更新 manifest 列表（保持原有逻辑）
-            docker manifest rm "$target_image_base:latest" 2>/dev/null || true
-            amend_args=()
-            for arch in $ARCHS; do
-              amend_args+=(--amend "$target_image_base:latest-$arch")
-            done
-            docker manifest create "$target_image_base:latest" "${amend_args[@]}" --insecure
-            docker manifest push "$target_image_base:latest"
-      
-            echo "✅ 同步完成: $target_image_base:latest"
-            echo "────────────────────────────────────────"
-          done < combined-list.txt
+          - name: 同步所有架构镜像更新
+            env:
+              GHCR_USER: ${{ github.repository_owner }}
+            run: |
+              while IFS='|' read -r source_image target_image; do
+                # 注意：由于要去除 target_image 相关逻辑，这里将忽略 target_image 变量
+          
+                source_image_full="docker://$source_image:latest"
+                
+                # 获取源镜像清单列表
+                source_manifest=$(skopeo inspect --raw "$source_image_full")
+                source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
+                
+                # 获取所有支持的架构（处理嵌套清单）
+                if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
+                  # 多架构清单：提取所有有效架构
+                  ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
+                else
+                  # 单架构镜像：直接提取架构
+                  ARCH=$(echo "$source_manifest" | jq -r '.architecture')
+                  ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
+                fi
+                
+                if [ -z "$ARCHS" ]; then
+                  echo "❌ 未找到支持的架构，使用默认架构 amd64"
+                  ARCHS="amd64"
+                fi
+                
+                # 同步各架构镜像
+                for arch in $ARCHS; do
+                  echo "▸ 处理架构: $arch"
+                  
+                  # 获取架构特定 digest（处理 arm/armv7 别名）
+                  arch_digest=$(echo "$source_manifest" | jq -r \
+                    --arg arch "$arch" \
+                    '.manifests[] | select(.platform.architecture == $arch or .platform.architecture == "armv7" and $arch == "arm").digest')
+                  
+                  # 如果 digest 为空，尝试通过平台标签匹配
+                  if [ -z "$arch_digest" ]; then
+                    arch_digest=$(echo "$source_manifest" | jq -r \
+                      --arg arch "$arch" \
+                      '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
+                  fi
+                  
+                  # 最终检查 digest 有效性
+                  if [ -z "$arch_digest" ]; then
+                    echo "⚠️ 警告：架构 $arch 不存在于源镜像中，已跳过"
+                    continue
+                  fi
+                  
+                  # 拉取并推送架构镜像
+                  docker pull --platform "linux/$arch" "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest"
+                  # 注意：此处去除了目标镜像相关的 tag 和 push 操作
+                done
+                
+                # 注意：此处去除了关于 manifest 创建和推送的相关逻辑，因为这些依赖于 target_image
+                echo "────────────────────────────────────────"
+              done < combined-list.txt
