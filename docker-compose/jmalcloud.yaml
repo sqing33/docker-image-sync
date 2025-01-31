@@ -1,13 +1,43 @@
-version: '3.8'  # 定义版本
 services:
-  helloworld:  # 定义服务名称
-    image: ghcr.nju.edu.cn/sqing33/hello-world	  # 镜像
-    container_name: portainer # 容器名称
-    restart: always # 重启策略
-    ports:
-      - "80:80"  # 将主机的80端口映射到容器的80端口
+  mongodb:
+    container_name: mongodb
+    image: ghcr.nju.edu.cn/sqing33/mongodb
+    environment:
+      TZ: "Asia/Shanghai"
     volumes:
-      - (宿主机路径):(容器路径)  # 将宿主机路径挂载到容器
-    depends_on:  # 标识依赖的服务，例如确保 db 启动后再启动h elloworld
-      - db
-    
+      - /root/data/jmalcloud/mongodb/data/db:/data/db
+      - /root/data/jmalcloud/mongodb/backup:/dump
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    command: --wiredTigerCacheSizeGB 0.5
+
+  jmalcloud:
+    container_name: jmalcloud
+    image: ghcr.nju.edu.cn/sqing33/jmalcloud
+    environment:
+      MONGODB_URI: "mongodb://mongo:27017/jmalcloud"
+      TZ: "Asia/Shanghai"
+      JVM_OPTS: "-Xms256m -Xmx1024m"
+    volumes:
+      - /root/data/jmalcloud/files:/jmalcloud/files/
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  nginx:
+    container_name: nginx
+    image: ghcr.nju.edu.cn/sqing33/nginx
+    ports:
+      - 7070:80
+      - 7071:8089
+    environment:
+      TZ: "Asia/Shanghai"
+    links:
+      - jmalcloud
+      - office
+    restart: unless-stopped
