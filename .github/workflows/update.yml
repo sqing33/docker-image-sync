@@ -110,7 +110,6 @@ jobs:
             ' README.md > README.tmp && mv README.tmp README.md
       
             # 清理临时文件并提交更改
-            rm -f combined-list.txt source-image-list.txt deleted-images.txt
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
