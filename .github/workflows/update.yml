@@ -2,7 +2,7 @@ name: 定期更新 ghcr.io 镜像
 
 on:
   schedule:
-    - cron: "33 16 * * *"
+    - cron: "0 16 * * *"
   workflow_dispatch:
 
 permissions:
