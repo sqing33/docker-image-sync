@@ -128,6 +128,16 @@ jobs:
             git add README.md
             git commit -m "自动清理已删除的镜像条目" || echo "无变更可提交"
             git push origin main
+
+            # 从 combined-list.txt 删除已标记的条目
+            if [ -f deleted-images.txt ]; then
+              while IFS= read -r del_image; do
+                # 删除匹配目标镜像的行（格式：源镜像|目标镜像）
+                sed -i "/|${del_image}$/d" combined-list.txt
+              done < deleted-images.txt
+              echo "===== 更新后的 combined-list.txt ====="
+              cat combined-list.txt
+            fi
           fi
 
       - name: 同步所有架构镜像更新
