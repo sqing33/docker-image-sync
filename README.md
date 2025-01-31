@@ -25,6 +25,7 @@
 | 19 | henrygd/beszel | 多服务器监控面板 | `docker pull ghcr.nju.edu.cn/sqing33/beszel` | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
 | 20 | lscr.io/linuxserver/duplicati | 备份 | `docker pull ghcr.nju.edu.cn/sqing33/duplicati` | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml) |
 | 21 | jonnyan404/verysync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/verysync` | [verysync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/verysync.yaml) |
+| 22 | sulinggg/openwrt | docker 版 openwrt | `docker pull ghcr.nju.edu.cn/sqing33/openwrt:armv8` | [openwrt.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openwrt.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
