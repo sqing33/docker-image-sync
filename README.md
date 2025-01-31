@@ -15,18 +15,15 @@
 | 9 | ghcr.io/imagegenius/immich | 相册 | `docker pull ghcr.nju.edu.cn/sqing33/immich` | [immich.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/immich.yaml) |
 | 10 | quay.io/jupyter/pyspark-notebook | 基于网页的用于交互计算的编辑器 | `docker pull ghcr.nju.edu.cn/sqing33/jupyter-notebook` | [jupyter-notebook.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyter-notebook.yaml) |
 | 11 | redis | redis 数据库 | `docker pull ghcr.nju.edu.cn/sqing33/redis` | [redis.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) |
-| 12 | postgres | PostgreSQL 对象关系数据库 | `docker pull ghcr.nju.edu.cn/sqing33/postgres:14` | [postgres.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml) |
-| 13 | tiangolo/nginx-rtmp | 直播推流服务器 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-rtmp` | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
-| 14 | bytelang/kplayer | 直播推流 | `docker pull ghcr.nju.edu.cn/sqing33/kplayer` | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
-| 15 | networkstatic/iperf3 | 带宽测试 | `docker pull ghcr.nju.edu.cn/sqing33/iperf3` | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml) |
-| 16 | xhofe/alist | 多存储挂载工具 | `docker pull ghcr.nju.edu.cn/sqing33/alist` | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
-| 17 | johngong/baidunetdisk | docker 版百度网盘 | `docker pull ghcr.nju.edu.cn/sqing33/baidunetdisk` | [baidunetdisk.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/baidunetdisk.yaml) |
-| 18 | cnk3x/xunlei | docker 版迅雷 | `docker pull ghcr.nju.edu.cn/sqing33/xunlei` | [xunlei.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xunlei.yaml) |
-| 19 | henrygd/beszel | 多服务器监控面板 | `docker pull ghcr.nju.edu.cn/sqing33/beszel` | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
-| 20 | lscr.io/linuxserver/duplicati | 备份 | `docker pull ghcr.nju.edu.cn/sqing33/duplicati` | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml) |
-| 21 | jonnyan404/verysync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/verysync` | [verysync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/verysync.yaml) |
-| 22 | sulinggg/openwrt:armv8 | docker 版 openwrt | `docker pull ghcr.nju.edu.cn/sqing33/openwrt:armv8` | [openwrt.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openwrt.yaml) |
-| 23 | sulinggg/openwrt:armv8 | docker 版 openwrt | `docker pull ghcr.nju.edu.cn/sqing33/openwrt:amd64` | [openwrt.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openwrt.yaml) |
+| 12 | tiangolo/nginx-rtmp | 直播推流服务器 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-rtmp` | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
+| 13 | bytelang/kplayer | 直播推流 | `docker pull ghcr.nju.edu.cn/sqing33/kplayer` | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
+| 14 | networkstatic/iperf3 | 带宽测试 | `docker pull ghcr.nju.edu.cn/sqing33/iperf3` | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml) |
+| 15 | xhofe/alist | 多存储挂载工具 | `docker pull ghcr.nju.edu.cn/sqing33/alist` | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
+| 16 | johngong/baidunetdisk | docker 版百度网盘 | `docker pull ghcr.nju.edu.cn/sqing33/baidunetdisk` | [baidunetdisk.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/baidunetdisk.yaml) |
+| 17 | cnk3x/xunlei | docker 版迅雷 | `docker pull ghcr.nju.edu.cn/sqing33/xunlei` | [xunlei.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xunlei.yaml) |
+| 18 | henrygd/beszel | 多服务器监控面板 | `docker pull ghcr.nju.edu.cn/sqing33/beszel` | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
+| 19 | lscr.io/linuxserver/duplicati | 备份 | `docker pull ghcr.nju.edu.cn/sqing33/duplicati` | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml) |
+| 20 | jonnyan404/verysync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/verysync` | [verysync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/verysync.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
