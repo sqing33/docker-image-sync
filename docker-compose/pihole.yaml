@@ -1,13 +1,17 @@
-version: '3.8'  # 定义版本
+version: '3.8'
+
 services:
-  helloworld:  # 定义服务名称
-    image: ghcr.nju.edu.cn/sqing33/hello-world	  # 镜像
-    container_name: portainer # 容器名称
-    restart: always # 重启策略
+  pihole:
+    container_name: pihole
+    image: ghcr.nju.edu.cn/sqing33/pihole:latest
     ports:
-      - "80:80"  # 将主机的80端口映射到容器的80端口
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
+      - "80:80/tcp"
+    environment:
+      TZ: 'Asia/Shanghai'
     volumes:
-      - (宿主机路径):(容器路径)  # 将宿主机路径挂载到容器
-    depends_on:  # 标识依赖的服务，例如确保 db 启动后再启动h elloworld
-      - db
-    
+      - '/root/date/pihole:/etc/pihole'
+      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+    restart: unless-stopped
