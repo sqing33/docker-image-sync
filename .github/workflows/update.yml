@@ -118,6 +118,9 @@ jobs:
             git push origin main
           fi
 
+      - name: 重新生成合并镜像列表
+        run: paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
+
       - name: 同步所有架构镜像更新
         env:
           GHCR_USER: ${{ github.repository_owner }}
