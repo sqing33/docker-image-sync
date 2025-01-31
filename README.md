@@ -22,6 +22,7 @@
 | 16 | xhofe/alist | 多存储挂载工具 | `docker pull ghcr.nju.edu.cn/sqing33/alist` | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
 | 17 | johngong/baidunetdisk | docker 版百度网盘 | `docker pull ghcr.nju.edu.cn/sqing33/baidunetdisk` | [baidunetdisk.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/baidunetdisk.yaml) |
 | 18 | cnk3x/xunlei | docker 版迅雷 | `docker pull ghcr.nju.edu.cn/sqing33/xunlei` | [xunlei.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xunlei.yaml) |
+| 19 | henrygd/beszel | 多服务器监控面板 | `docker pull ghcr.nju.edu.cn/sqing33/beszel` | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
