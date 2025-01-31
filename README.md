@@ -29,6 +29,7 @@
 | 23 | azukaar/cosmos-server | NAS 系统 | `docker pull ghcr.nju.edu.cn/sqing33/cosmos` | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml) |
 | 24 | jmal/jmalcloud | 私有云存储 | `docker pull ghcr.nju.edu.cn/sqing33/jmalcloud` | [jmalcloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jmalcloud.yaml) |
 | 25 | photoprism/photoprism | ai 相册 | `docker pull ghcr.nju.edu.cn/sqing33/photoprism` | [photoprism.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoprism.yaml) |
+| 26 | mongodb/mongodb-community-server | mongodb 文档型数据库 | `docker pull ghcr.nju.edu.cn/sqing33/mongodb` | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
