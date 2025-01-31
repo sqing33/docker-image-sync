@@ -4,10 +4,10 @@
 
 |   | 源镜像 | 用途 | pull 命令 | docker-compose |
 | ---- | -------- | ---- | --------- | -------------- |
-| 1   | nginx                         | web 服务器  | `docker pull ghcr.nju.edu.cn/sqing33/nginx`             |                |
-| 2   | dpanel/dpanel                 | docker 管理 | `docker pull ghcr.nju.edu.cn/sqing33/dpanel`            |                |
-| 3   | hello-world                   |             | `docker pull ghcr.nju.edu.cn/sqing33/hello-world`       |                |
-| 4 | lscr.io/linuxserver/qbittorrent | bt 下载 | `docker pull ghcr.nju.edu.cn/sqing33/qbittorrent` |  |
+| 1 | hello-world                   | hello-world | `docker pull ghcr.nju.edu.cn/sqing33/hello-world`       | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml) |
+| 2 | nginx                         | web 服务器  | `docker pull ghcr.nju.edu.cn/sqing33/nginx`             | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) |
+| 3 | dpanel/dpanel                 | docker 管理 | `docker pull ghcr.nju.edu.cn/sqing33/dpanel`            | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml) |
+| 4 | lscr.io/linuxserver/qbittorrent | bt 下载 | `docker pull ghcr.nju.edu.cn/sqing33/qbittorrent` | [qbittorrent.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) |
 | 5 | mzz2017/v2raya | 魔法 | `docker pull ghcr.nju.edu.cn/sqing33/v2raya` | [v2raya.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml) |
 | 6 | 6053537/portainer-ce | docker 管理 | `docker pull ghcr.nju.edu.cn/sqing33/portainer` | [portainer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/portainer.yaml) |
 ### 使用方法
