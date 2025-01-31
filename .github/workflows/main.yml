@@ -1,0 +1,221 @@
+name: 将 Docker 镜像同步到 ghcr.io
+
+permissions:
+  packages: write
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      dockerhub_image:
+        description: "要同步的 Docker 镜像"
+        required: true
+        default: ""
+      tag:
+        description: "Docker 镜像版本"
+        required: true
+        default: "latest"
+      ghcr_image:
+        description: "同步的镜像名称（留空则自动提取）"
+        required: false
+        default: ""
+      image_description:
+        description: "Docker 镜像的作用描述"
+        required: false
+        default: ""
+      architectures:
+        description: "要同步的架构列表（逗号分隔，留空则同步所有可用架构）"
+        required: false
+        default: ""
+
+jobs:
+  docker-image-sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 安装依赖工具
+        run: sudo apt-get update && sudo apt-get install -y jq skopeo
+
+      - name: 设置环境变量
+        run: |
+          # 处理架构参数
+          if [ -z "${{ inputs.architectures }}" ]; then
+            echo "🔄 检测到未指定架构，自动获取所有可用架构..."
+            RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}")
+            
+            # 获取有效架构列表
+            if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
+              ARCHS=$(echo "$RAW_MANIFEST" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|arm|386|ppc64le|s390x|mips64le' | tr '\n' ',' | sed 's/,$//')
+            else
+              ARCH=$(echo "$RAW_MANIFEST" | jq -r '.architecture')
+              ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
+            fi
+            
+            if [ -z "$ARCHS" ]; then
+              echo "❌ 未找到支持的架构，使用默认架构 amd64"
+              ARCHS="amd64"
+            fi
+            echo "ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')" >> $GITHUB_ENV
+          else
+            echo "ARCHS_STR=$(echo '${{ inputs.architectures }}' | tr ',' ' ')" >> $GITHUB_ENV
+          fi
+
+          # 设置 IMAGE_NAME
+          if [ -z "${{ inputs.ghcr_image }}" ]; then
+            IMAGE_NAME=$(basename "${{ inputs.dockerhub_image }}")
+          else
+            IMAGE_NAME="${{ inputs.ghcr_image }}"
+          fi
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          echo "GHCR_USER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: 检出仓库
+        uses: actions/checkout@v4
+
+      - name: 登录到 GitHub 容器注册表
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ env.GHCR_USER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 拉取并推送多架构镜像
+        run: |
+          ARCHS=(${{ env.ARCHS_STR }})
+          declare -a VALID_ARCHS=()
+          FULL_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}" | jq .)
+
+          for arch in "${ARCHS[@]}"; do
+            echo "🔄 正在检查 $arch 架构支持..."
+            if echo "$FULL_MANIFEST" | jq -e --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch)' >/dev/null 2>&1; then
+              echo "✅ 确认存在 $arch 架构镜像"
+              VALID_ARCHS+=("$arch")
+              
+              echo "🚀 正在同步 $arch 架构..."
+              docker pull --platform "linux/$arch" "${{ inputs.dockerhub_image }}:${{ inputs.tag }}"
+              docker tag "${{ inputs.dockerhub_image }}:${{ inputs.tag }}" \
+                "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch"
+              docker push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch"
+            else
+              echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
+            fi
+            echo "----------------------------------------"
+          done
+
+          if [ ${#VALID_ARCHS[@]} -eq 0 ]; then 
+            echo "❌ 所有指定架构均不存在，停止同步"
+            exit 1 
+          fi 
+          echo "VALID_ARCHS=${VALID_ARCHS[*]}" >> $GITHUB_ENV
+
+      - name: 创建多架构 Manifest
+        if: env.VALID_ARCHS != ''
+        run: |
+          echo "有效架构列表：${{ env.VALID_ARCHS }}"
+          declare -a MANIFEST_ARGS=()
+
+          for arch in ${{ env.VALID_ARCHS }}; do
+            MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch")
+          done
+
+          echo "🛠️ 创建多架构清单..."
+          docker manifest create "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}" \
+            "${MANIFEST_ARGS[@]}" \
+            --insecure
+
+          echo "🚚 推送清单..."
+          docker manifest push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+
+      - name: 清理临时镜像
+        run: |
+          docker image prune -a --force
+          if [ -n "${{ env.VALID_ARCHS }}" ]; then
+            for arch in ${{ env.VALID_ARCHS }}; do
+              docker rmi "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch" || true
+            done
+          fi
+
+      - name: 更新 README.md 文件
+        if: env.VALID_ARCHS != ''
+        run: |
+          # 提取现有表格数据行
+          data_lines=$(sed -n '/^### 已同步 Docker 镜像/,/^### 使用方法/ { /^| [0-9]/p }' README.md)
+
+          # 提取现有镜像名称列表
+          existing_images=$(awk -F '|' '
+          /^### 已同步 Docker 镜像/ {capture=1; next}
+          capture && /^\| [0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $3);
+              gsub(/`/, "", $3);
+              print $3
+          }
+          /^### 使用方法/ {capture=0}
+          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
+
+          # 获取当前镜像名称
+          current_image=$(echo "${{ inputs.dockerhub_image }}" | tr '[:upper:]' '[:lower:]')
+
+          echo "Existing images: $existing_images"
+          echo "Current image: $current_image"
+
+          # 检查镜像是否已存在
+          if echo "$existing_images" | grep -qxF "$current_image"; then
+              echo "镜像 ${{ inputs.dockerhub_image }} 已存在，跳过 README 更新"
+          else
+              echo "添加新镜像 ${{ inputs.dockerhub_image }} 到 README"
+
+              # 计算当前镜像数量
+              count=$(echo "$data_lines" | wc -l)
+              new_count=$((count + 1))
+
+              # 生成 pull 命令
+              if [ "${{ inputs.tag }}" = "latest" ]; then
+                pull_cmd="docker pull ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
+              else
+                pull_cmd="docker pull ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+              fi
+
+              # 生成新表格行
+              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` |  |"
+
+              # 生成新的表格内容
+              {
+                echo "### 已同步 Docker 镜像"
+                echo ""
+                echo "|   | 源镜像 | 用途 | pull 命令 | docker-compose |"
+                echo "| ---- | -------- | ---- | --------- | -------------- |"
+                echo "$data_lines"
+                echo "$new_row"
+              } > new_table_content.txt
+
+              # 使用 awk 替换原内容
+              awk '
+              /^### 已同步 Docker 镜像/ {
+                  while ((getline line < "new_table_content.txt") > 0) {
+                      print line
+                  }
+                  close("new_table_content.txt")
+                  while ((getline line) > 0) {
+                      if (line ~ /^### 使用方法/) {
+                          print line
+                          break
+                      }
+                  }
+                  next
+              }
+              { print }
+              ' README.md > README.tmp && mv README.tmp README.md
+
+              # 提交更改
+              git config --global user.name "GitHub Actions"
+              git config --global user.email "actions@github.com"
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+              git add README.md
+              git commit -m "更新README.md，添加新的镜像表格条目"
+              git push origin main
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
