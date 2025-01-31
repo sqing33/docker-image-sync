@@ -15,6 +15,7 @@
 | 9 | ghcr.io/imagegenius/immich | 相册 | `docker pull ghcr.nju.edu.cn/sqing33/immich` | [immich.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/immich.yaml) |
 | 10 | quay.io/jupyter/pyspark-notebook | 基于网页的用于交互计算的编辑器 | `docker pull ghcr.nju.edu.cn/sqing33/jupyter-notebook` | [jupyter-notebook.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyter-notebook.yaml) |
 | 11 | redis | redis 数据库 | `docker pull ghcr.nju.edu.cn/sqing33/redis` | [redis.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) |
+| 12 | postgres | PostgreSQL 对象关系数据库 | `docker pull ghcr.nju.edu.cn/sqing33/postgres14:14` | [postgres14.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres14.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
