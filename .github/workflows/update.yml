@@ -26,15 +26,17 @@ jobs:
           /^### 已同步 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 命令列（第4列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $5);
-              gsub(/`/, "", $5);
-              print $5
+              gsub(/^[ \t]+|[ \t]+$/, "", $4);
+              gsub(/`/, "", $4);
+              print $4
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
           # 提取镜像名称（去除域名和标签）
           sed 's|^docker pull ghcr.nju.edu.cn/sqing33/||' | 
           sed 's/:[^:]*$//' > target-image-list.txt
+          echo "===== target-image-list.txt 内容 ====="
+          cat target-image-list.txt
 
       - name: 提取源镜像名称（从源镜像列）
         id: extract-source-images
@@ -48,9 +50,19 @@ jobs:
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
+          echo "===== source-image-list.txt 内容 ====="
+          cat source-image-list.txt
 
       - name: 合并镜像列表
-        run: paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
+        run: |
+          # 检查文件是否存在且非空
+          if [ ! -s source-image-list.txt ] || [ ! -s target-image-list.txt ]; then
+            echo "错误：source-image-list.txt 或 target-image-list.txt 为空或不存在"
+            exit 1
+          fi
+          paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
+          echo "===== combined-list.txt 内容 ====="
+          cat combined-list.txt
 
       - name: 登录到 GitHub 容器注册表
         uses: docker/login-action@v3
@@ -74,19 +86,19 @@ jobs:
               echo "$target_image" >> deleted-images.txt
             fi
           done < target-image-list.txt
-      
+
           # 更新镜像列表为仅保留存在的镜像
           mv keep-images.txt target-image-list.txt
-      
+
           # 如果存在需要删除的条目，更新README.md
           if [ -f deleted-images.txt ]; then
             echo "开始清理README中的无效条目..."
             while IFS= read -r del_image; do
-              # 转义特殊字符并匹配 pull 命令列（修复反引号转义）
+              # 转义特殊字符并匹配 pull 命令列
               escaped_del_image=$(printf '%s' "$del_image" | sed 's/[][\\\^\$\.\*?+(){}|]/\\&/g')
               sed -i "/|.*\`docker pull ghcr.nju.edu.cn\/$GHCR_USER\/$escaped_del_image\\(:[^\`]*\\)\?\`/d" README.md
             done < deleted-images.txt
-      
+
             # 重新编号并修复表格格式
             awk -F '|' '
               BEGIN { count=0 }
@@ -108,8 +120,9 @@ jobs:
               }
               { print }
             ' README.md > README.tmp && mv README.tmp README.md
-      
+
             # 清理临时文件并提交更改
+            rm -f combined-list.txt source-image-list.txt deleted-images.txt
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
@@ -122,23 +135,27 @@ jobs:
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
+          echo "===== 同步镜像列表 ====="
+          cat combined-list.txt
+          echo "===================="
+
           while IFS='|' read -r source_image target_image; do
             echo "处理镜像: $target_image (源镜像: $source_image)"
             source_image_full="docker://$source_image:latest"
             target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
             need_update=false
-      
+
             # 获取源镜像清单列表
             source_manifest=$(skopeo inspect --raw "$source_image_full")
             source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
-      
+
             # 检查目标镜像是否存在
             if target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null); then
               target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
             else
               target_digest=""
             fi
-      
+
             # 比较清单 digest
             if [ "$source_digest" != "$target_digest" ]; then
               echo "检测到清单更新，开始全架构同步..."
@@ -147,7 +164,7 @@ jobs:
               echo "清单未更新，跳过同步"
               continue
             fi
-      
+
             # 获取所有支持的架构（处理嵌套清单）
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
               # 多架构清单：提取所有有效架构
@@ -157,12 +174,12 @@ jobs:
               ARCH=$(echo "$source_manifest" | jq -r '.architecture')
               ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
             fi
-      
+
             if [ -z "$ARCHS" ]; then
               echo "❌ 未找到支持的架构，使用默认架构 amd64"
               ARCHS="amd64"
             fi
-      
+
             # 同步各架构镜像
             for arch in $ARCHS; do
               echo "▸ 处理架构: $arch"
@@ -171,28 +188,29 @@ jobs:
               # 获取架构特定 digest（处理 arm/armv7 别名）
               arch_digest=$(echo "$source_manifest" | jq -r \
                 --arg arch "$arch" \
-                '.manifests[] | select(.platform.architecture == $arch or .platform.architecture == "armv7" and $arch == "arm").digest')
-      
+                '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
+
               # 如果 digest 为空，尝试通过平台标签匹配
               if [ -z "$arch_digest" ]; then
                 arch_digest=$(echo "$source_manifest" | jq -r \
                   --arg arch "$arch" \
                   '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
               fi
-      
+
               # 最终检查 digest 有效性
               if [ -z "$arch_digest" ]; then
                 echo "⚠️ 警告：架构 $arch 不存在于源镜像中，已跳过"
                 continue
               fi
-      
+
               # 拉取并推送架构镜像
               docker pull --platform "linux/$arch" "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest"
               docker tag "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest" "$target_tag"
               docker push "$target_tag"
             done
-      
-            # 更新 manifest 列表（保持原有逻辑）
+
+            # 更新 manifest 列表
+            echo "🔄 重建多架构manifest列表..."
             docker manifest rm "$target_image_base:latest" 2>/dev/null || true
             amend_args=()
             for arch in $ARCHS; do
@@ -200,7 +218,7 @@ jobs:
             done
             docker manifest create "$target_image_base:latest" "${amend_args[@]}" --insecure
             docker manifest push "$target_image_base:latest"
-      
+
             echo "✅ 同步完成: $target_image_base:latest"
             echo "────────────────────────────────────────"
           done < combined-list.txt
