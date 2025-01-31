@@ -12,6 +12,7 @@
 | 6 | 6053537/portainer-ce | docker 管理 | `docker pull ghcr.nju.edu.cn/sqing33/portainer` | [portainer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/portainer.yaml) |
 | 7 | mysql/mysql-server | mysql 数据库 | `docker pull ghcr.nju.edu.cn/sqing33/mysql` | [mysql.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml) |
 | 8 | whyour/qinglong | 青龙面板 | `docker pull ghcr.nju.edu.cn/sqing33/qinglong` | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
+| 9 | ghcr.io/imagegenius/immich | 相册 | `docker pull ghcr.nju.edu.cn/sqing33/immich` | [immich.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/immich.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
