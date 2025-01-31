@@ -17,6 +17,7 @@
 | 11 | redis | redis 数据库 | `docker pull ghcr.nju.edu.cn/sqing33/redis` | [redis.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) |
 | 12 | postgres | PostgreSQL 对象关系数据库 | `docker pull ghcr.nju.edu.cn/sqing33/postgres:14` | [postgres.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml) |
 | 13 | tiangolo/nginx-rtmp | 直播推流服务器 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-rtmp` | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
+| 14 | bytelang/kplayer | 直播推流 | `docker pull ghcr.nju.edu.cn/sqing33/kplayer` | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
