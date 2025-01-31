@@ -19,22 +19,38 @@ jobs:
       - name: 安装依赖
         run: sudo apt-get install -y jq skopeo
 
-      - name: 提取源镜像列表
-        id: extract-images
+      - name: 提取目标镜像名称（从 pull 命令列）
+        id: extract-target-images
         run: |
           awk -F '|' '
           /^### 已同步 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 命令列（第4列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $5);
-              gsub(/`/, "", $5);
-              print $5
+              gsub(/^[ \t]+|[ \t]+$/, "", $4);
+              gsub(/`/, "", $4);
+              print $4
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
           # 提取镜像名称（去除域名和标签）
           sed 's|^docker pull ghcr.nju.edu.cn/sqing33/||' | 
-          sed 's/:[^:]*$//' > image-list.txt
+          sed 's/:[^:]*$//' > target-image-list.txt
+
+      - name: 提取源镜像名称（从源镜像列）
+        id: extract-source-images
+        run: |
+          awk -F '|' '
+          /^### 已同步 Docker 镜像/ {capture=1; next}
+          capture && /^\| [0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $3);
+              gsub(/`/, "", $3);
+              print $3
+          }
+          /^### 部分镜像 docker run 命令/ {capture=0}
+          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
+
+      - name: 合并镜像列表
+        run: paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
 
       - name: 登录到 GitHub 容器注册表
         uses: docker/login-action@v3
@@ -49,37 +65,28 @@ jobs:
         run: |
           # 生成需要保留的镜像列表
           touch keep-images.txt
-          while IFS= read -r image; do
-            image_name=$(basename "$image")
-            target_image="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$image_name"
-            if skopeo inspect "docker://$target_image:latest" >/dev/null 2>&1; then
-              echo "$image" >> keep-images.txt
+          while IFS= read -r target_image; do
+            target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
+            if skopeo inspect "docker://$target_image_base:latest" >/dev/null 2>&1; then
+              echo "$target_image" >> keep-images.txt
             else
-              echo "镜像 $image 不存在于ghcr.io，标记为删除"
-              # 记录需要删除的镜像名称（用于处理README）
-              echo "$image" >> deleted-images.txt
+              echo "镜像 $target_image 不存在于ghcr.io，标记为删除"
+              echo "$target_image" >> deleted-images.txt
             fi
-          done < image-list.txt
-
-          # 仅在文件存在时输出内容（避免报错）
-          if [ -f "deleted-images.txt" ]; then
-            echo "以下镜像将被清理："
-            cat deleted-images.txt
-          fi
+          done < target-image-list.txt
 
           # 更新镜像列表为仅保留存在的镜像
-          mv keep-images.txt image-list.txt
+          mv keep-images.txt target-image-list.txt
 
           # 如果存在需要删除的条目，更新README.md
           if [ -f deleted-images.txt ]; then
             echo "开始清理README中的无效条目..."
             while IFS= read -r del_image; do
-              # 使用竖线作为分隔符，并允许列前后有空格
               escaped_del_image=$(printf '%s\n' "$del_image" | sed 's/[]\[\*\^$.\/?+(){}|]/\\&/g')
-              sed -i "/| *[0-9]\+ *| *$escaped_del_image *|/d" README.md
+              sed -i "/| *[0-9]\+ *|.*|.*\`docker pull ghcr.nju.edu.cn\/sqing33\/$escaped_del_image\`/d" README.md
             done < deleted-images.txt
 
-            # 重新编号并修复表格格式（保持原有代码不变）
+            # 重新编号并修复表格格式
             awk -F '|' '
               BEGIN { count=0 }
               /^### 已同步 Docker 镜像/ { 
@@ -101,7 +108,7 @@ jobs:
               { print }
             ' README.md > README.tmp && mv README.tmp README.md
 
-            # 提交更改（保持原有代码不变）
+            # 提交更改
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
@@ -115,14 +122,13 @@ jobs:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
           echo "===== 同步镜像列表 ====="
-          cat image-list.txt
+          cat combined-list.txt
           echo "===================="
 
-          while IFS= read -r source_image; do
-            echo "处理镜像: $source_image"
-            source_image_full="docker://$( [[ "$source_image" == *"/"* ]] && echo "$source_image" || echo "library/$source_image" ):latest"
-            image_name=$(basename "$source_image")
-            target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$image_name"
+          while IFS='|' read -r source_image target_image; do
+            echo "处理镜像: $target_image (源镜像: $source_image)"
+            source_image_full="docker://$source_image:latest"
+            target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
             need_update=false
 
             # 获取源镜像清单列表
@@ -185,4 +191,4 @@ jobs:
 
             echo "✅ 同步完成: $target_image_base:latest"
             echo "────────────────────────────────────────"
-          done < image-list.txt
+          done < combined-list.txt
