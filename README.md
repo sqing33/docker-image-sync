@@ -18,6 +18,7 @@
 | 12 | postgres | PostgreSQL 对象关系数据库 | `docker pull ghcr.nju.edu.cn/sqing33/postgres:14` | [postgres.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml) |
 | 13 | tiangolo/nginx-rtmp | 直播推流服务器 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-rtmp` | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
 | 14 | bytelang/kplayer | 直播推流 | `docker pull ghcr.nju.edu.cn/sqing33/kplayer` | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
+| 15 | networkstatic/iperf3 | 带宽测试 | `docker pull ghcr.nju.edu.cn/sqing33/iperf3` | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
