@@ -7,3 +7,4 @@ services:
       - NOIP_USERNAME=
       - NOIP_PASSWORD=
       - NOIP_HOSTNAMES=all.ddnskey.com
+      - IP_METHOD=http://ip1.dynupdate6.no-ip.com/  # ipv6
