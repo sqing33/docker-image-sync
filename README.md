@@ -34,6 +34,7 @@
 | 28 | linuxserver/resilio-sync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/resilio-sync` | [resilio-sync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/resilio-sync.yaml) |
 | 29 | linuxserver/jackett | bt 索引 | `docker pull ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
 | 30 | jeessy/ddns-go | 自动获取公网 IPv4 或 IPv6并解析到对应的域名服务器 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-go` | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
+| 31 | qmcgaw/ddns-updater | 用于为多个 DNS 提供商保持 DNS A 和/或 AAAA 记录更新的程序 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-updater` | [ddns-updater.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-updater.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
