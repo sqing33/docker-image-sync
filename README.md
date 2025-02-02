@@ -23,19 +23,17 @@
 | 17 | cnk3x/xunlei | docker 版迅雷 | `docker pull ghcr.nju.edu.cn/sqing33/xunlei` | [xunlei.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xunlei.yaml) |
 | 18 | henrygd/beszel | 多服务器监控面板 | `docker pull ghcr.nju.edu.cn/sqing33/beszel` | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
 | 19 | lscr.io/linuxserver/duplicati | 备份 | `docker pull ghcr.nju.edu.cn/sqing33/duplicati` | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml) |
-| 20 | jonnyan404/verysync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/verysync` | [verysync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/verysync.yaml) |
-| 21 | homeassistant/home-assistant | Home Assistant 家庭助理 | `docker pull ghcr.nju.edu.cn/sqing33/homeassistant` | [homeassistant.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml) |
-| 22 | jauderho/docker-autocompose | 将现有的Docker容器转换为docker-compose.yaml | `docker pull ghcr.nju.edu.cn/sqing33/autocompose` | [autocompose.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml) |
-| 23 | azukaar/cosmos-server | NAS 系统 | `docker pull ghcr.nju.edu.cn/sqing33/cosmos` | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml) |
-| 24 | jmal/jmalcloud | 私有云存储 | `docker pull ghcr.nju.edu.cn/sqing33/jmalcloud` | [jmalcloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jmalcloud.yaml) |
-| 25 | photoprism/photoprism | ai 相册 | `docker pull ghcr.nju.edu.cn/sqing33/photoprism` | [photoprism.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoprism.yaml) |
-| 26 | mongodb/mongodb-community-server | mongodb 文档型数据库 | `docker pull ghcr.nju.edu.cn/sqing33/mongodb` | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) |
-| 27 | pihole/pihole | 广告拦截器 | `docker pull ghcr.nju.edu.cn/sqing33/pihole` | [pihole.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pihole.yaml) |
-| 28 | linuxserver/resilio-sync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/resilio-sync` | [resilio-sync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/resilio-sync.yaml) |
-| 29 | linuxserver/jackett | bt 索引 | `docker pull ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
-| 30 | jeessy/ddns-go | 自动获取公网 IPv4 或 IPv6并解析到对应的域名服务器 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-go` | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
-| 31 | qmcgaw/ddns-updater | 用于为多个 DNS 提供商保持 DNS A 和/或 AAAA 记录更新的程序 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-updater` | [ddns-updater.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-updater.yaml) |
-| 32 | ghcr.io/noipcom/noip-duc | noip 动态更新客户端 | `docker pull ghcr.nju.edu.cn/sqing33/noip-duc` | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
+| 20 | homeassistant/home-assistant | Home Assistant 家庭助理 | `docker pull ghcr.nju.edu.cn/sqing33/homeassistant` | [homeassistant.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml) |
+| 21 | jauderho/docker-autocompose | 将现有的Docker容器转换为docker-compose.yaml | `docker pull ghcr.nju.edu.cn/sqing33/autocompose` | [autocompose.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml) |
+| 22 | azukaar/cosmos-server | NAS 系统 | `docker pull ghcr.nju.edu.cn/sqing33/cosmos` | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml) |
+| 23 | jmal/jmalcloud | 私有云存储 | `docker pull ghcr.nju.edu.cn/sqing33/jmalcloud` | [jmalcloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jmalcloud.yaml) |
+| 24 | photoprism/photoprism | ai 相册 | `docker pull ghcr.nju.edu.cn/sqing33/photoprism` | [photoprism.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoprism.yaml) |
+| 25 | mongodb/mongodb-community-server | mongodb 文档型数据库 | `docker pull ghcr.nju.edu.cn/sqing33/mongodb` | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) |
+| 26 | pihole/pihole | 广告拦截器 | `docker pull ghcr.nju.edu.cn/sqing33/pihole` | [pihole.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pihole.yaml) |
+| 27 | linuxserver/resilio-sync | 同步 | `docker pull ghcr.nju.edu.cn/sqing33/resilio-sync` | [resilio-sync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/resilio-sync.yaml) |
+| 28 | linuxserver/jackett | bt 索引 | `docker pull ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
+| 29 | jeessy/ddns-go | 自动获取公网 IPv4 或 IPv6并解析到对应的域名服务器 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-go` | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
+| 30 | ghcr.io/noipcom/noip-duc | noip 动态更新客户端 | `docker pull ghcr.nju.edu.cn/sqing33/noip-duc` | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
