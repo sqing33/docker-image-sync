@@ -11,7 +11,7 @@ services:
     volumes:
       - /root/data/resilio-sync/config:/config
       - /nas/sync/downloads:/downloads
-      - /nas/sync/data:/sync
+      - /nas/sync:/sync
     ports:
       - 8888:8888
       - 55555:55555
