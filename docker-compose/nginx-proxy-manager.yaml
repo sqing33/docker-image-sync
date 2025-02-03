@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  nginx-proxy-manager-zh:
+  nginx-proxy-manager:
     container_name: nginx-proxy-manager
     image: ghcr.nju.edu.cn/sqing33/nginx-proxy-manager
     restart: always
@@ -11,6 +11,7 @@ services:
     volumes:
       - /root/data/nginx-proxy-manager:/data
       - /root/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
-    environment:
-      INITIAL_ADMIN_EMAIL: root
-      INITIAL_ADMIN_PASSWORD: 12346578
+
+# 初始账号
+# 邮箱：admin@example.com
+# 密码：changeme
