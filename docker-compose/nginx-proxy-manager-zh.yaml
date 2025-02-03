@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   nginx-proxy-manager-zh:
+    container_name: nginx-proxy-manager-zh
     image: ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh
     restart: always
     ports:
