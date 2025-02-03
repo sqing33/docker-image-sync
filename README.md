@@ -36,6 +36,7 @@
 | 30 | ghcr.io/noipcom/noip-duc | noip 动态更新客户端 | `docker pull ghcr.nju.edu.cn/sqing33/noip-duc` | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
 | 31 | jc21/nginx-proxy-manager | Nginx 可视化管理 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-proxy-manager` | [nginx-proxy-manager.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager.yaml) |
 | 32 | chishin/nginx-proxy-manager-zh | Nginx 可视化管理界面（中文版） | `docker pull ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh` | [nginx-proxy-manager-zh.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager-zh.yaml) |
+| 33 | socheatsok78/nginxconfig |  | `docker pull ghcr.nju.edu.cn/sqing33/nginxconfig` | [nginxconfig.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxconfig.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
