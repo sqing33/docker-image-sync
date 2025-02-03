@@ -10,3 +10,6 @@ services:
     volumes:
       - /root/data/nginx-proxy-manager:/data
       - /root/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+    environment:
+      INITIAL_ADMIN_EMAIL: root
+      INITIAL_ADMIN_PASSWORD: 12346578
