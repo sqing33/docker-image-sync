@@ -34,6 +34,7 @@
 | 28 | linuxserver/jackett | bt 索引 | `docker pull ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
 | 29 | jeessy/ddns-go | 自动获取公网 IPv4 或 IPv6并解析到对应的域名服务器 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-go` | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
 | 30 | ghcr.io/noipcom/noip-duc | noip 动态更新客户端 | `docker pull ghcr.nju.edu.cn/sqing33/noip-duc` | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
+| 31 | jc21/nginx-proxy-manager | Nginx 可视化管理 | `docker pull ghcr.nju.edu.cn/sqing33/nginx-proxy-manager` | [nginx-proxy-manager.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
