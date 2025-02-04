@@ -38,6 +38,7 @@
 | 32   | cym1102/nginxwebui               |                                                   | `docker pull ghcr.nju.edu.cn/sqing33/nginxwebui`             | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml) |
 | 33   | node                             | Node.js 服务器                                    | `docker pull ghcr.nju.edu.cn/sqing33/node`                   | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) |
 | 34 | alpine | Alpine Linux，大小仅为 5 MB 的 Linux 发行版 | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
+| 35 | moby/buildkit | Dockerfile 构建 | `docker pull ghcr.nju.edu.cn/sqing33/buildkit` | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
 ### 使用方法
 
 1. 
