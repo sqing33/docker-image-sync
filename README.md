@@ -44,7 +44,7 @@
 | 38   | python                           | python 3.12-slim                                  | `docker pull ghcr.nju.edu.cn/sqing33/python:3.12-slim`       | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 39   | python                           | python 3.13-slim                                  | `docker pull ghcr.nju.edu.cn/sqing33/python:3.13-slim`       | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 40   | python                           | python 3.14.0a4-slim                              | `docker pull ghcr.nju.edu.cn/sqing33/python:3.14.0a4-slim`   | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
-| 41 | alpine | Alpine Linux 是围绕 musl libc 和 BusyBox 构建的 Linux 发行版。该镜像的大小仅为 5 MB | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
+| 41 | alpine | Alpine Linux，大小仅为 5 MB 的 Linux 发行版 | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
 ### 使用方法
 
 1. 
