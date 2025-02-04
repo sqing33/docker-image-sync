@@ -2,8 +2,8 @@
 
 ### 已同步 Docker 镜像
 
-|      | 源镜像                           | 用途                                              | pull 命令                                                    | docker-compose                                               |
-| ---- | -------------------------------- | ------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+|   | 源镜像 | 用途 | pull 命令 | docker-compose |
+| ---- | -------- | ---- | --------- | -------------- |
 | 1    | hello-world                      | hello-world                                       | `docker pull ghcr.nju.edu.cn/sqing33/hello-world`            | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml) |
 | 2    | nginx                            | web 服务器                                        | `docker pull ghcr.nju.edu.cn/sqing33/nginx`                  | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) |
 | 3    | dpanel/dpanel                    | docker 管理                                       | `docker pull ghcr.nju.edu.cn/sqing33/dpanel`                 | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml) |
@@ -44,7 +44,7 @@
 | 38   | python                           | python 3.12-slim                                  | `docker pull ghcr.nju.edu.cn/sqing33/python:3.12-slim`       | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 39   | python                           | python 3.13-slim                                  | `docker pull ghcr.nju.edu.cn/sqing33/python:3.13-slim`       | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 40   | python                           | python 3.14.0a4-slim                              | `docker pull ghcr.nju.edu.cn/sqing33/python:3.14.0a4-slim`   | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
-
+| 41 | alpine | Alpine Linux 是围绕 musl libc 和 BusyBox 构建的 Linux 发行版。该镜像的大小仅为 5 MB | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
 ### 使用方法
 
 1. 
