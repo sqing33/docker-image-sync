@@ -38,6 +38,7 @@
 | 32 | socheatsok78/nginxconfig |  | `docker pull ghcr.nju.edu.cn/sqing33/nginxconfig` | [nginxconfig.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxconfig.yaml) |
 | 33 | cym1102/nginxwebui |  | `docker pull ghcr.nju.edu.cn/sqing33/nginxwebui` | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml) |
 | 34 | node | Node.js 服务器 | `docker pull ghcr.nju.edu.cn/sqing33/node` | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) |
+| 35 | python | python | `docker pull ghcr.nju.edu.cn/sqing33/python:3.9-slim` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 ### 使用方法
 
 1. 使用 GitHub 将项目克隆到自己的仓库
