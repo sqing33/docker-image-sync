@@ -41,6 +41,7 @@
 | 35 | moby/buildkit | Dockerfile 构建 | `docker pull ghcr.nju.edu.cn/sqing33/buildkit` | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
 | 36 | python | python | `docker pull ghcr.nju.edu.cn/sqing33/python:3.8` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 37 | youshandefeiyang/sub-web-modify | 订阅转换 | `docker pull ghcr.nju.edu.cn/sqing33/sub-web-modify` | [sub-web-modify.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sub-web-modify.yaml) |
+| 38 | ollama/ollama | 启动和运行大型语言模型的最简单方法 | `docker pull ghcr.nju.edu.cn/sqing33/ollama` | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
 ### 使用方法
 
 1. 
