@@ -40,6 +40,7 @@
 | 34 | alpine | Alpine Linux，大小仅为 5 MB 的 Linux 发行版 | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
 | 35 | moby/buildkit | Dockerfile 构建 | `docker pull ghcr.nju.edu.cn/sqing33/buildkit` | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
 | 36 | ollama/ollama | 启动和运行大型语言模型的最简单方法 | `docker pull ghcr.nju.edu.cn/sqing33/ollama` | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
+| 37 | python | python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,3.14.0a4和3.14-rc版本 | `docker pull ghcr.nju.edu.cn/sqing33/python` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 ### 使用方法
 
 1. 
