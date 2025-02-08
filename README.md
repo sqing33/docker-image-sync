@@ -33,15 +33,13 @@
 | 27   | linuxserver/resilio-sync         | 同步                                              | `docker pull ghcr.nju.edu.cn/sqing33/resilio-sync`           | [resilio-sync.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/resilio-sync.yaml) |
 | 28   | jeessy/ddns-go                   | 自动获取公网 IPv4 或 IPv6并解析到对应的域名服务器 | `docker pull ghcr.nju.edu.cn/sqing33/ddns-go`                | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
 | 29   | ghcr.io/noipcom/noip-duc         | noip 动态更新客户端                               | `docker pull ghcr.nju.edu.cn/sqing33/noip-duc`               | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
-| 30   | jc21/nginx-proxy-manager         | Nginx 可视化管理                                  | `docker pull ghcr.nju.edu.cn/sqing33/nginx-proxy-manager`    | [nginx-proxy-manager.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager.yaml) |
-| 31   | chishin/nginx-proxy-manager-zh   | Nginx 可视化管理界面（中文版）                    | `docker pull ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh` | [nginx-proxy-manager-zh.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager-zh.yaml) |
-| 32   | cym1102/nginxwebui               |                                                   | `docker pull ghcr.nju.edu.cn/sqing33/nginxwebui`             | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml) |
-| 33   | node                             | Node.js 服务器                                    | `docker pull ghcr.nju.edu.cn/sqing33/node`                   | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) |
-| 34 | alpine | Alpine Linux，大小仅为 5 MB 的 Linux 发行版 | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
-| 35 | moby/buildkit | Dockerfile 构建 | `docker pull ghcr.nju.edu.cn/sqing33/buildkit` | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
-| 36 | ollama/ollama | 启动和运行大型语言模型的最简单方法 | `docker pull ghcr.nju.edu.cn/sqing33/ollama` | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
-| 37 | python | 包含python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,python:3.14.0a4,python:3.14-rc | `docker pull ghcr.nju.edu.cn/sqing33/python` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
-| 38 | laoyutang/clash-and-dashboard | 魔法 | `docker pull ghcr.nju.edu.cn/sqing33/clash` | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
+| 30   | cym1102/nginxwebui               |                                                   | `docker pull ghcr.nju.edu.cn/sqing33/nginxwebui`             | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml) |
+| 31   | node                             | Node.js 服务器                                    | `docker pull ghcr.nju.edu.cn/sqing33/node`                   | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) |
+| 32 | alpine | Alpine Linux，大小仅为 5 MB 的 Linux 发行版 | `docker pull ghcr.nju.edu.cn/sqing33/alpine` | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
+| 33 | moby/buildkit | Dockerfile 构建 | `docker pull ghcr.nju.edu.cn/sqing33/buildkit` | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
+| 34 | ollama/ollama | 启动和运行大型语言模型的最简单方法 | `docker pull ghcr.nju.edu.cn/sqing33/ollama` | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
+| 35 | python | 包含python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,python:3.14.0a4,python:3.14-rc | `docker pull ghcr.nju.edu.cn/sqing33/python` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
+| 36 | laoyutang/clash-and-dashboard | 魔法 | `docker pull ghcr.nju.edu.cn/sqing33/clash` | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
 
 ### 使用方法
 
