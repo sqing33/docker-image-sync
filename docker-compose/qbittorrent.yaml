@@ -14,3 +14,12 @@ services:
       - /root/data/qbittorrent:/config
       - /nas/downloads:/downloads
     restart: unless-stopped
+
+# 出现 Unauthorized
+# 打开配置文件 qBittorrent.conf
+# 在 [Preferences] 添加
+
+# WebUI\HostHeaderValidation=false
+# WebUI\CSRFProtection=false
+
+# 设置配置文件为只读
