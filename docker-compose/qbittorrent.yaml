@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   qbittorrent:
     image: ghcr.nju.edu.cn/sqing33/qbittorrent:latest
