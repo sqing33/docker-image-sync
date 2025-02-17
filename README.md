@@ -40,7 +40,7 @@
 | 34 | ollama/ollama | 启动和运行大型语言模型的最简单方法 | `docker pull ghcr.nju.edu.cn/sqing33/ollama` | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
 | 35 | python | 包含python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,python:3.14.0a4,python:3.14-rc | `docker pull ghcr.nju.edu.cn/sqing33/python` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 36 | laoyutang/clash-and-dashboard | 魔法 | `docker pull ghcr.nju.edu.cn/sqing33/clash` | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
-
+| 37 | linuxserver/transmission | BT 下载 | `docker pull ghcr.nju.edu.cn/sqing33/transmission` | [transmission.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml) |
 ### 使用方法
 
 1. 
