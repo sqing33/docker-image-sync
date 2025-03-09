@@ -9,7 +9,7 @@
 2. 触发镜像同步
 
    完成设置后，点击页面顶部的 `Action`，再从左侧列表中选择 `将 Docker 镜像同步到 ghcr.io`。随后，点击右侧的 `Run workflow`，在弹出的界面中填写待同步的镜像信息。
-   <img src="https://github.com/user-attachments/assets/68367c69-153d-43e2-91df-11432e7f5ebd" alt="image-20250309172337171" style="zoom:50%;" />
+   <img src="https://github.com/user-attachments/assets/68367c69-153d-43e2-91df-11432e7f5ebd" alt="image-20250309172337171" style="zoom:20%;" />
 
 
 4. 同步结果查看
