@@ -153,17 +153,17 @@ jobs:
         if: env.VALID_ARCHS != ''
         run: |
           # 提取现有表格数据行
-          data_lines=$(sed -n '/^### 已同步 Docker 镜像/,/^### 使用方法/ { /^| [0-9]/p }' README.md)
+          data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
 
           # 提取现有镜像名称列表
           existing_images=$(awk -F '|' '
-          /^### 已同步 Docker 镜像/ {capture=1; next}
+          /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               gsub(/^[ \t]+|[ \t]+$/, "", $3);
               gsub(/`/, "", $3);
               print $3
           }
-          /^### 使用方法/ {capture=0}
+          !/^\|/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
 
           # 获取当前镜像名称
@@ -197,7 +197,7 @@ jobs:
 
               # 生成新的表格内容
               {
-                echo "### 已同步 Docker 镜像"
+                echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
                 echo "|   | 源镜像 | 用途 | pull 命令 | docker-compose |"
                 echo "| ---- | -------- | ---- | --------- | -------------- |"
@@ -207,13 +207,13 @@ jobs:
 
               # 使用 awk 替换原内容
               awk '
-              /^### 已同步 Docker 镜像/ {
+              /^### 本仓库已同步的 Docker 镜像/ {
                   while ((getline line < "new_table_content.txt") > 0) {
                       print line
                   }
                   close("new_table_content.txt")
                   while ((getline line) > 0) {
-                      if (line ~ /^### 使用方法/) {
+                      if (line !~ /^\|/) {
                           print line
                           break
                       }
