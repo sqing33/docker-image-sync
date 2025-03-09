@@ -24,7 +24,7 @@ on:
         required: false
         default: ""
       architectures:
-        description: "要同步的架构列表（逗号分隔，(例:amd64,arm64)，留空则同步所有可用架构）"
+        description: "要同步的架构列表（逗号分隔(例:amd64,arm64)，留空则同步所有可用架构）"
         required: false
         default: ""
 
