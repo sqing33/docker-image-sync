@@ -25,8 +25,8 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|      | 源镜像                           | 用途                                                         | pull 命令                                              | docker-compose                                               |
-| ---- | -------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------ |
+|   | 源镜像 | 用途 | pull 命令 | docker-compose |
+| ---- | -------- | ---- | --------- | -------------- |
 | 1    | hello-world                      | hello-world                                                  | `docker pull ghcr.nju.edu.cn/sqing33/hello-world`      | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml) |
 | 2    | nginx                            | web 服务器                                                   | `docker pull ghcr.nju.edu.cn/sqing33/nginx`            | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) |
 | 3    | dpanel/dpanel                    | docker 管理                                                  | `docker pull ghcr.nju.edu.cn/sqing33/dpanel`           | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml) |
@@ -64,3 +64,4 @@
 | 35   | python                           | 包含python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,python:3.14.0a4,python:3.14-rc | `docker pull ghcr.nju.edu.cn/sqing33/python`           | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 36   | laoyutang/clash-and-dashboard    | 魔法                                                         | `docker pull ghcr.nju.edu.cn/sqing33/clash`            | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
 | 37   | docmost/docmost                  | 云文档                                                       | `docker pull ghcr.nju.edu.cn/sqing33/docmost`          | [docmost.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docmost.yaml) |
+| 38 | traefik |  | `docker pull ghcr.nju.edu.cn/sqing33/traefik` | [traefik.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/traefik.yaml) |
