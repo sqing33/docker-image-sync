@@ -1,4 +1,3 @@
-version: '3.8'  # 定义版本
 services:
   helloworld:  # 定义服务名称
     image: ghcr.nju.edu.cn/sqing33/hello-world	  # 镜像
