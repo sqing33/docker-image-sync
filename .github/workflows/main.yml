@@ -163,7 +163,7 @@ jobs:
               gsub(/`/, "", $3);
               print $3
           }
-          !/^\|/ {capture=0}
+          /^[^|]/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
 
           # 获取当前镜像名称
@@ -213,7 +213,7 @@ jobs:
                   }
                   close("new_table_content.txt")
                   while ((getline line) > 0) {
-                      if (line !~ /^\|/) {
+                      if (line ~ /^[^|]/) {
                           print line
                           break
                       }
