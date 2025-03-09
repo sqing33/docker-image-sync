@@ -9,7 +9,8 @@
 2. 触发镜像同步
 
    完成设置后，点击页面顶部的 `Action`，再从左侧列表中选择 `将 Docker 镜像同步到 ghcr.io`。随后，点击右侧的 `Run workflow`，在弹出的界面中填写待同步的镜像信息。
-   <img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20250309172337171.png" alt="image-20250309172337171" style="zoom:50%;" />
+   ![image](https://github.com/user-attachments/assets/68367c69-153d-43e2-91df-11432e7f5ebd)
+
 
 3. 同步结果查看
    镜像同步完成后，`readme.md` 文件中会自动添加该镜像的相关信息条目，内容包括源镜像、用途、`pull` 命令以及 `docker-compose` 文件路径。同时，在项目的 `docker-compose` 目录下，会自动复制 `example.yaml` 文件，并将其重命名为同步镜像的名称。
