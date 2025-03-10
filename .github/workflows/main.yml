@@ -184,9 +184,9 @@ jobs:
 
               # 生成 pull 命令
               if [ "${{ inputs.tag }}" = "latest" ]; then
-                pull_cmd="docker pull ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
+                pull_cmd="docker pull ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
               else
-                pull_cmd="docker pull ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+                pull_cmd="docker pull ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
               fi
 
               # 为每个镜像创建一个docker-compose.yaml文件的链接
