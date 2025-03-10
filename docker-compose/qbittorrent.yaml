@@ -1,6 +1,6 @@
 services:
   qbittorrent:
-    image: ghcr.nju.edu.cn/sqing33/qbittorrent:latest
+    image: ghcr.io/sqing33/qbittorrent:latest
     container_name: qbittorrent
     environment:
       - TZ=Asia/Shanghai
@@ -14,7 +14,6 @@ services:
       - /root/data/qbittorrent:/config
       - /nas/downloads:/downloads
     restart: unless-stopped
-
 # 出现 Unauthorized
 # 打开配置文件 qBittorrent.conf
 # 在 [Preferences] 添加

@@ -1,6 +1,6 @@
 services:
   mrdoc:
-    image: ghcr.nju.edu.cn/sqing33/mrdoc:v9.1	
+    image: ghcr.io/sqing33/mrdoc:v9.1
     container_name: mrdoc
     ports:
       - "7086:10086"

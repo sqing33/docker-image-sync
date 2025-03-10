@@ -1,6 +1,6 @@
 services:
   transmission:
-    image: ghcr.nju.edu.cn/sqing33/transmission	
+    image: ghcr.io/sqing33/transmission
     container_name: transmission
     environment:
       - PUID=1000

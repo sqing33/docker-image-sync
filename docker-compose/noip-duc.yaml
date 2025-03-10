@@ -1,10 +1,10 @@
-version: '3.8'
+version: "3.8"
 services:
   noip-duc:
-    image: ghcr.nju.edu.cn/sqing33/noip-duc:latest
+    image: ghcr.io/sqing33/noip-duc:latest
     container_name: noip-duc
     environment:
       - NOIP_USERNAME=
       - NOIP_PASSWORD=
       - NOIP_HOSTNAMES=all.ddnskey.com
-      - IP_METHOD=http://ip1.dynupdate6.no-ip.com/  # ipv6
+      - IP_METHOD=http://ip1.dynupdate6.no-ip.com/ # ipv6

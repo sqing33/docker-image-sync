@@ -1,6 +1,6 @@
 services:
   clash:
-    image: ghcr.nju.edu.cn/sqing33/clash:latest
+    image: ghcr.io/sqing33/clash:latest
     container_name: clash
     restart: always
     logging:
@@ -8,11 +8,10 @@ services:
       options:
         max-size: 1m
     volumes:
-      - /root/data/clash/config.yaml:/root/.config/clash/config.yaml  # config.yaml 在 Windows 版 clash 目录的 profiles 下 获取
+      - /root/data/clash/config.yaml:/root/.config/clash/config.yaml # config.yaml 在 Windows 版 clash 目录的 profiles 下 获取
     ports:
       - "7888:8080"
       - "7890:7890"
-
 # 设置宿主机代理
 # sudo nano  /etc/profile.d/proxy.sh
 

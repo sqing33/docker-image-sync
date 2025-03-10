@@ -1,6 +1,6 @@
 services:
   dpanel:
-    image: ghcr.nju.edu.cn/sqing33/dpanel:latest
+    image: ghcr.io/sqing33/dpanel:latest
     container_name: dpanel
     restart: always
     ports:

@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongodb:
-    image: ghcr.nju.edu.cn/sqing33/mongodb
+    image: ghcr.io/sqing33/mongodb
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=12345678

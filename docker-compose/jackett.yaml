@@ -1,7 +1,7 @@
-version: '3.8'
+version: "3.8"
 services:
   jackett:
-    image: ghcr.nju.edu.cn/sqing33/jackett
+    image: ghcr.io/sqing33/jackett
     container_name: jackett
     environment:
       - PUID=1000

@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   qinglong:
-    image: ghcr.nju.edu.cn/sqing33/qinglong:latest
+    image: ghcr.io/sqing33/qinglong:latest
     volumes:
       - /root/data/qinglong:/ql/data
     ports:

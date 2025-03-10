@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mysql:
-    image: ghcr.nju.edu.cn/sqing33/mysql
+    image: ghcr.io/sqing33/mysql
     container_name: mysql
     restart: always
     environment:
@@ -13,7 +13,6 @@ services:
       - /root/data/mysql/data:/var/lib/mysql
       - /root/data/mysql/conf:/etc/mysql/conf.d
       - /root/data/mysql/log:/var/log/mysql
-
 # 进入容器命令行
 # docker exec -it mysql bash
 #

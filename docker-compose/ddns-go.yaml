@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   ddns-go:
-    image: ghcr.nju.edu.cn/sqing33/ddns-go
+    image: ghcr.io/sqing33/ddns-go
     container_name: ddns-go
     restart: always
     network_mode: host

@@ -1,7 +1,7 @@
 services:
   mongodb:
     container_name: mongodb
-    image: ghcr.nju.edu.cn/sqing33/mongodb
+    image: ghcr.io/sqing33/mongodb
     environment:
       TZ: "Asia/Shanghai"
     volumes:
@@ -17,7 +17,7 @@ services:
 
   jmalcloud:
     container_name: jmalcloud
-    image: ghcr.nju.edu.cn/sqing33/jmalcloud
+    image: ghcr.io/sqing33/jmalcloud
     environment:
       MONGODB_URI: "mongodb://mongo:27017/jmalcloud"
       TZ: "Asia/Shanghai"
@@ -31,7 +31,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: ghcr.nju.edu.cn/sqing33/nginx
+    image: ghcr.io/sqing33/nginx
     ports:
       - 7070:80
       - 7071:8089

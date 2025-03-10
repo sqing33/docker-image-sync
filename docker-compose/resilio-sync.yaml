@@ -1,8 +1,8 @@
-version: '3.8'  # 定义版本
+version: "3.8" # 定义版本
 
 services:
   resilio-sync:
-    image: ghcr.nju.edu.cn/sqing33/resilio-sync
+    image: ghcr.io/sqing33/resilio-sync
     container_name: resilio-sync
     environment:
       - PUID=1000

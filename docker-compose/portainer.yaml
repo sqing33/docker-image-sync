@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
   portainer:
-    image: ghcr.nju.edu.cn/sqing33/portainer:latest
+    image: ghcr.io/sqing33/portainer:latest
     container_name: portainer
     restart: always
     ports:

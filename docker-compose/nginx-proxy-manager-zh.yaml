@@ -1,17 +1,16 @@
-version: '3.8'
+version: "3.8"
 services:
   nginx-proxy-manager-zh:
     container_name: nginx-proxy-manager-zh
-    image: ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh
+    image: ghcr.io/sqing33/nginx-proxy-manager-zh
     restart: always
     ports:
-      - '11180:80'
-      - '11181:81'
-      - '11443:443'
+      - "11180:80"
+      - "11181:81"
+      - "11443:443"
     volumes:
       - /root/data/nginx-proxy-manager:/data
       - /root/data/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
-
 # 初始账号
 # 邮箱：admin@example.com
 # 密码：changeme

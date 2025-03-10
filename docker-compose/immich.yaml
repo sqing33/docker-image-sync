@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   immich:
-    image: ghcr.nju.edu.cn/sqing33/immich:latest
+    image: ghcr.io/sqing33/immich:latest
         container_name: immich
     environment:
       - PUID=1000
@@ -29,14 +29,14 @@ services:
     restart: always
 
   redis:
-    image: ghcr.nju.edu.cn/sqing33/redis:latest
+    image: ghcr.io/sqing33/redis:latest
     ports:
       - "6379:6379"
     container_name: redis
     restart: always
 
   postgres14:
-    image: ghcr.nju.edu.cn/sqing33/postgres:14
+    image: ghcr.io/sqing33/postgres:14
     ports:
       - "5432:5432"
     container_name: postgres14
