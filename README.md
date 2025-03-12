@@ -64,5 +64,3 @@
 | 35   | python                           | 包含python的3.8、3.9、3.12、3.13的完整版本、slim、alpine版本,python:3.14.0a4,python:3.14-rc | `docker pull ghcr.io/sqing33/python`           | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
 | 36   | laoyutang/clash-and-dashboard    | 魔法                                                         | `docker pull ghcr.io/sqing33/clash`            | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
 | 37   | docmost/docmost                  | 云文档                                                       | `docker pull ghcr.io/sqing33/docmost`          | [docmost.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docmost.yaml) |
-| 38 | nginx |  | `docker pull ghcr.io/sqing33/nginx:alpine` | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) |
-| 39 | python |  | `docker pull ghcr.io/sqing33/python:3.10-alpine` | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
