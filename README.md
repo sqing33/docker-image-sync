@@ -65,3 +65,4 @@
 | 36   | laoyutang/clash-and-dashboard    | 魔法                                                         | `docker pull ghcr.io/sqing33/clash`            | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
 | 37   | docmost/docmost                  | 云文档                                                       | `docker pull ghcr.io/sqing33/docmost`          | [docmost.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docmost.yaml) |
 | 38 | outlinewiki/outline | 云文档 | `docker pull ghcr.io/sqing33/outline` | [outline.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/outline.yaml) |
+| 39 | photoview/photoview | 轻量相册 | `docker pull ghcr.io/sqing33/photoview` | [photoview.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoview.yaml) |
