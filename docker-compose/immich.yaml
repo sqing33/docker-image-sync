@@ -3,7 +3,7 @@ version: '3.8'
 services:
   immich:
     image: ghcr.io/sqing33/immich:latest
-        container_name: immich
+    container_name: immich
     environment:
       - PUID=1000
       - PGID=1000
