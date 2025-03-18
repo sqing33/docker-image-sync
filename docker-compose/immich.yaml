@@ -32,6 +32,7 @@ services:
     # For hardware acceleration, add one of -[armnn, cuda, openvino] to the image tag.
     image: ghcr.io/immich-app/immich-machine-learning:release-openvino
     extends:
+      # hwaccel.ml.yml下载地址：https://github.com/immich-app/immich/releases/latest/download/hwaccel.ml.yml
       file: hwaccel.ml.yml
       service: openvino # set to one of [armnn, cuda, openvino, openvino-wsl] for accelerated inference - use the `-wsl` version for WSL2 where applicable
     volumes:
