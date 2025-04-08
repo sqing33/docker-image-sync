@@ -65,3 +65,4 @@
 | 36 | outlinewiki/outline | 云文档 | `docker pull ghcr.io/sqing33/outline` | [outline.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/outline.yaml) |
 | 37 | photoview/photoview | 轻量相册 | `docker pull ghcr.io/sqing33/photoview` | [photoview.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoview.yaml) |
 | 38 | syncthing/syncthing | 同步 | `docker pull ghcr.io/sqing33/syncthing` | [syncthing.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml) |
+| 39 | lyswhut/lx-music-sync-server | 落雪音乐服务端 | `docker pull ghcr.io/sqing33/lx-music-sync-server` | [lx-music-sync-server.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lx-music-sync-server.yaml) |
