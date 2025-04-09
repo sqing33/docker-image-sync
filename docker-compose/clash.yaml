@@ -9,3 +9,9 @@ services:
       - "9090:9090"
     volumes:
       - /vol3/1000/Docker/clash/config.yaml:/root/.config/clash/config.yaml
+  yacd:
+    image: haishanh/yacd
+    container_name: yacd
+    restart: always
+    ports:
+      - "9080:80"
