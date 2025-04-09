@@ -6,8 +6,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Shanghai
-      - SETTINGS_ENCRYPTION_KEY=qaqaa123
-      - DUPLICATI__WEBSERVICE_PASSWORD=qaqaa123
+      - SETTINGS_ENCRYPTION_KEY=
+      - DUPLICATI__WEBSERVICE_PASSWORD=
     volumes:
       - /vol3/1000/Docker/duplicati:/config
       - /vol1/1000:/source1
