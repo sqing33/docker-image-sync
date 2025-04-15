@@ -26,5 +26,5 @@ services:
       - NGINX_HOST=foobar.com
       - NGINX_PORT=80
 
-# 若报错无文件夹权限，进入容器终端
-# chmod -R 777 /var/www
+# 若报错无文件夹权限
+# docker exec -it nginx chmod -R 777 /var/www
