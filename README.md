@@ -67,3 +67,4 @@
 | 38 | syncthing/syncthing | 同步 | `docker pull ghcr.io/sqing33/syncthing` | [syncthing.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml) |
 | 39 | dreamacro/clash | 魔法 | `docker pull ghcr.io/sqing33/clash` | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
 | 40 | chishin/nginx-proxy-manager-zh | nginx 代理管理器 | `docker pull ghcr.io/sqing33/nginx-proxy-manager-zh` | [nginx-proxy-manager-zh.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager-zh.yaml) |
+| 41 | phpmyadmin | 数据库管理 | `docker pull ghcr.io/sqing33/phpmyadmin` | [phpmyadmin.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml) |
