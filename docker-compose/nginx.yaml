@@ -27,6 +27,7 @@ services:
       - /vol3/1000/Docker/nginx/conf/conf.d:/etc/nginx/conf.d
       - /vol3/1000/Docker/nginx/log:/var/log/nginx
       - /vol3/1000/Docker/nginx/html:/usr/share/nginx/html
+      - /vol2/1000/web:/var/www
     environment:
       - NGINX_HOST=foobar.com
       - NGINX_PORT=80
