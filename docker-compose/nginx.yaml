@@ -19,7 +19,7 @@ services:
     ports:
       - "888:80"
     volumes:
-      - /vol3/1000/Docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - /vol3/1000/Docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /vol3/1000/Docker/nginx/conf/conf.d:/etc/nginx/conf.d
       - /vol2/1000/web:/var/www
     environment:
