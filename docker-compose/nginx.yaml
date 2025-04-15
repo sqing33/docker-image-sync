@@ -28,3 +28,6 @@ services:
 
 # 若报错无文件夹权限
 # docker exec -it nginx chmod -R 777 /var/www
+
+# 部署 vue 访问子页面 404
+# 配置文件添加 try_files $uri $uri/ /index.html;
