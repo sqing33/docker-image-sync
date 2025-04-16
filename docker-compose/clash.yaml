@@ -2,7 +2,7 @@ services:
   clash: 
     image: ghcr.nju.edu.cn/sqing33/clash
     container_name: clash
-    restart: always # 重启策略
+    restart: always
     ports:
       - "7890:7890"
       - "7891:7891"
