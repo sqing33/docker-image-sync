@@ -16,6 +16,12 @@ services:
       echo '安装 JupyterLab 中文语言包...' &&
       /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet &&
       mkdir -p /opt/notebooks &&
+      echo '生成 JupyterLab 配置文件...' &&
+      /opt/conda/bin/jupyter lab --generate-config &&
+      echo '添加终端配置到 JupyterLab 配置文件...' &&
+      echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py &&
       echo '启动 JupyterLab 服务器...' &&
       /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
       "    
+
+# 切换中文：Setting -> Language -> Chinese
