@@ -21,7 +21,12 @@ services:
       echo '添加终端配置到 JupyterLab 配置文件...' &&
       echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py &&
       echo '启动 JupyterLab 服务器...' &&
-      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
-      "    
+      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' &&
+      apt update && apt install nano &&
+      mkdir -p ~/.pip &&
+      echo '[global]' > ~/.pip/pip.conf &&
+      echo 'index-url = https://pypi.tuna.tsinghua.edu.cn/simple/' >> ~/.pip/pip.conf &&
+      echo 'extra-index-url = https://mirrors.aliyun.com/pypi/simple/' >> ~/.pip/pip.conf
+      " 
 
 # 切换中文：Setting -> Language -> Chinese
