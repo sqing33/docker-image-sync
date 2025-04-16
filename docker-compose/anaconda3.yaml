@@ -9,13 +9,13 @@ services:
       - /vol2/1000/python:/app
     stdin_open: true
     tty: true
-    
-    # 安装 Jupyter
     command: >
       /bin/bash -c "
-      echo '开始 Jupyter 环境设置...' &&
-      /opt/conda/bin/conda install jupyter -y --quiet &&
+      echo '开始 JupyterLab 环境设置...' &&
+      /opt/conda/bin/conda install jupyterlab -y --quiet &&
+      echo '安装 JupyterLab 中文语言包...' &&
+      /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet &&
       mkdir -p /opt/notebooks &&
-      echo '启动 Jupyter Notebook 服务器...' &&
-      /opt/conda/bin/jupyter notebook --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
-      "
+      echo '启动 JupyterLab 服务器...' &&
+      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+      "    
