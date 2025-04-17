@@ -5,28 +5,30 @@ services:
     ports:
       - "18888:8888"
     working_dir: /app
+    restart: always
     volumes:
-      - /vol2/1000/python:/app
+      - /vol1/1000/Code:/app
     stdin_open: true
     tty: true
     command: >
       /bin/bash -c "
-      echo '开始 JupyterLab 环境设置...' &&
-      /opt/conda/bin/conda install jupyterlab -y --quiet &&
-      echo '安装 JupyterLab 中文语言包...' &&
-      /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet &&
-      mkdir -p /opt/notebooks &&
-      echo '生成 JupyterLab 配置文件...' &&
-      /opt/conda/bin/jupyter lab --generate-config &&
-      echo '添加终端配置到 JupyterLab 配置文件...' &&
-      echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py &&
-      echo '启动 JupyterLab 服务器...' &&
-      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' &&
-      apt update && apt install nano &&
-      mkdir -p ~/.pip &&
-      echo '[global]' > ~/.pip/pip.conf &&
-      echo 'index-url = https://repo.huaweicloud.com/repository/pypi/simple/' >> ~/.pip/pip.conf &&
-      echo 'extra-index-url = https://pypi.tuna.tsinghua.edu.cn/simple/' >> ~/.pip/pip.conf
-      " 
-
-# 切换中文：Setting -> Language -> Chinese
+      mkdir -p /app/conda_envs;
+      if ! grep -q 'envs_dirs:' ~/.condarc; then
+        echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
+        echo 'envs_dirs:' >> ~/.condarc;
+        echo '  - /app/conda_envs' >> ~/.condarc;
+        echo 'pkgs_dirs:' >> ~/.condarc;
+        echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
+      fi;
+      echo '开始 JupyterLab 环境设置...';
+      /opt/conda/bin/conda install jupyterlab -y --quiet;
+      echo '安装 JupyterLab 中文语言包...';
+      /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
+      mkdir -p /opt/notebooks;
+      echo '生成 JupyterLab 配置文件...';
+      /opt/conda/bin/jupyter lab --generate-config;
+      echo '添加终端配置到 JupyterLab 配置文件...';
+      echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py;
+      echo '启动 JupyterLab 服务器...';
+      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+      "
