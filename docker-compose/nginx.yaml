@@ -18,13 +18,12 @@ services:
     container_name: nginx
     ports:
       - "888:80"
+    # network_mode: "host"
     volumes:
       - /vol3/1000/Docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - /vol2/1000/web/conf.d:/etc/nginx/conf.d
       - /vol2/1000/web:/var/www
-    environment:
-      - NGINX_HOST=foobar.com
-      - NGINX_PORT=80
+
 
 # 若报错无文件夹权限
 # docker exec -it nginx chmod -R 777 /var/www
