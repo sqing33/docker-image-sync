@@ -1,3 +1,4 @@
+# miniconda + JupyterLab
 services:
   miniconda3:
     image: continuumio/miniconda3
@@ -42,4 +43,43 @@ services:
       echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py;
       echo '启动 JupyterLab 服务器...';
       /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='';
+      "
+
+# miniconda + code-server
+services:
+  miniconda3:
+    image: continuumio/miniconda3
+    container_name: miniconda3
+    ports:
+      - "18888:8080"
+    working_dir: /app
+    restart: always
+    environment:
+      http_proxy: "http://192.168.10.100:7890"
+      https_proxy: "http://192.168.10.100:7890"
+      no_proxy: "localhost,127.0.0.1,.example.com"
+    volumes:
+      - /vol1/1000/Code:/app
+      - /vol1/1000/Docker/miniconda3/code-server:/root/.config/code-server
+    stdin_open: true
+    tty: true
+    command: >
+      /bin/bash -c "
+      mkdir -p /app/conda_envs;
+      if ! grep -q 'envs_dirs:' ~/.condarc; then
+        echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
+        echo 'envs_dirs:' >> ~/.condarc;
+        echo '  - /app/conda_envs' >> ~/.condarc;
+        echo 'pkgs_dirs:' >> ~/.condarc;
+        echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
+      fi;
+      echo '设置 pip 镜像源';
+      pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
+      pip config set install.trusted-host mirrors.huaweicloud.com;
+      echo '安装 curl';
+      apt update && apt install curl -y;
+      echo '安装/更新 code-server...';
+      curl -fsSL https://code-server.dev/install.sh | sh;
+      echo '启动 code-server...';
+      code-server --bind-addr 0.0.0.0:8080 --auth none /app;
       "
