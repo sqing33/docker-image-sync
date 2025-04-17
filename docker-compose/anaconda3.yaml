@@ -6,12 +6,17 @@ services:
       - "18888:8888"
     working_dir: /app
     restart: always
+#    environment:
+#      http_proxy: "http://192.168.10.100:7890"
+#      https_proxy: "http://192.168.10.100:7890"
+#      no_proxy: "localhost,127.0.0.1,.example.com"
     volumes:
       - /vol1/1000/Code:/app
     stdin_open: true
     tty: true
     command: >
       /bin/bash -c "
+      apt update && apt install nano;
       mkdir -p /app/conda_envs;
       if ! grep -q 'envs_dirs:' ~/.condarc; then
         echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
@@ -20,11 +25,14 @@ services:
         echo 'pkgs_dirs:' >> ~/.condarc;
         echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
       fi;
+      echo '设置 pip 镜像源'
+      pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
+      pip config set install.trusted-host mirrors.huaweicloud.com;
       echo '开始 JupyterLab 环境设置...';
       /opt/conda/bin/conda install jupyterlab -y --quiet;
       echo '安装 JupyterLab 中文语言包...';
       /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
-      mkdir -p /opt/notebooks;
+      mkdir -p ~/.jupyter;
       if [ ! -f ~/.jupyter/jupyter_lab_config.py; ]; then
         echo 'JupyterLab 配置文件不存在，正在生成...';
         /opt/conda/bin/jupyter lab --generate-config;
@@ -34,5 +42,5 @@ services:
       echo '添加终端配置到 JupyterLab 配置文件...';
       echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py;
       echo '启动 JupyterLab 服务器...';
-      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='';
       "
