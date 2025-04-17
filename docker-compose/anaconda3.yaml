@@ -16,7 +16,6 @@ services:
     tty: true
     command: >
       /bin/bash -c "
-      apt update && apt install nano;
       mkdir -p /app/conda_envs;
       if ! grep -q 'envs_dirs:' ~/.condarc; then
         echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
