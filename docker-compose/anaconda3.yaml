@@ -25,8 +25,12 @@ services:
       echo '安装 JupyterLab 中文语言包...';
       /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
       mkdir -p /opt/notebooks;
-      echo '生成 JupyterLab 配置文件...';
-      /opt/conda/bin/jupyter lab --generate-config;
+      if [ ! -f ~/.jupyter/jupyter_lab_config.py; ]; then
+        echo 'JupyterLab 配置文件不存在，正在生成...';
+        /opt/conda/bin/jupyter lab --generate-config;
+      else
+        echo 'JupyterLab 配置文件已存在，跳过生成。';
+      fi;
       echo '添加终端配置到 JupyterLab 配置文件...';
       echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py;
       echo '启动 JupyterLab 服务器...';
