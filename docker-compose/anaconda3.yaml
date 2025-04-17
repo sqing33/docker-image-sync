@@ -25,7 +25,7 @@ services:
         echo 'pkgs_dirs:' >> ~/.condarc;
         echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
       fi;
-      echo '设置 pip 镜像源'
+      echo '设置 pip 镜像源';
       pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
       pip config set install.trusted-host mirrors.huaweicloud.com;
       echo '开始 JupyterLab 环境设置...';
