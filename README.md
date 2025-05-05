@@ -71,3 +71,4 @@
 | 42 | continuumio/anaconda3 | anaconda docker 环境 | `docker pull ghcr.io/sqing33/anaconda3` | [anaconda3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/anaconda3.yaml) |
 | 43 | lscr.io/linuxserver/transmission | bt 下载器 | `docker pull ghcr.io/sqing33/transmission` | [transmission.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml) |
 | 44 | nastool/nas-tools |  | `docker pull ghcr.io/sqing33/nas-tools` | [nas-tools.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml) |
+| 45 | jxxghp/moviepilot-v2 | NAS媒体库自动化管理工具 | `docker pull ghcr.io/sqing33/moviepilot-v2` | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml) |
