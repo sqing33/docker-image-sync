@@ -73,3 +73,4 @@
 | 44 | nastool/nas-tools |  | `docker pull ghcr.io/sqing33/nas-tools` | [nas-tools.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml) |
 | 45 | jxxghp/moviepilot-v2 | NAS媒体库自动化管理工具 | `docker pull ghcr.io/sqing33/moviepilot-v2` | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml) |
 | 46 | lscr.io/linuxserver/obsidian | 笔记 | `docker pull ghcr.io/sqing33/obsidian` | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml) |
+| 47 | stilleshan/docsify | 文档网站生成器 | `docker pull ghcr.io/sqing33/docsify` | [docsify.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify.yaml) |
