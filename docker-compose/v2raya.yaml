@@ -1,11 +1,17 @@
 services:
-  helloworld: # 定义服务名称
-    image: ghcr.io/sqing33/hello-world # 镜像
-    container_name: portainer # 容器名称
-    restart: always # 重启策略
-    ports:
-      - "80:80" # 将主机的80端口映射到容器的80端口
-    volumes:
-      - (宿主机路径):(容器路径) # 将宿主机路径挂载到容器
-    depends_on: # 标识依赖的服务，例如确保 db 启动后再启动h elloworld
-      - db
+    v2raya:
+        image: ghcr.nju.edu.cn/sqing33/v2raya
+        volumes:
+            - '/vol1/1000/Docker/v2raya/data:/etc/v2raya'
+            - '/vol1/1000/Docker/v2raya/modules:/lib/modules:ro'
+        environment:
+            - IPTABLES_MODE=legacy
+            - V2RAYA_NFTABLES_SUPPORT=off
+            - V2RAYA_V2RAY_BIN=/usr/local/bin/v2ray
+            - V2RAYA_LOG_FILE=/tmp/v2raya.log
+        container_name: v2raya
+        ports:
+            - 2017:2017
+            - 20172:20172
+        privileged: true
+        restart: always
