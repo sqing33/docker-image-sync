@@ -254,30 +254,47 @@ jobs:
           echo "===== 检查 ghcr.io 上所有包 ====="
           cat target-image-list.txt | sort > keep-list.txt
 
-          # 动态判断组织类型
-          if [[ "$GHCR_USER" =~ ^[a-zA-Z0-9-]+$ ]]; then
-            API_PATH_PREFIX="/users/${GHCR_USER}"
-          else
-            API_PATH_PREFIX="/orgs/${GHCR_USER}"
-          fi
-
-          echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
+          # 获取 GitHub Packages 列表（用户级）
+          echo "正在获取用户 ${GHCR_USER} 的容器镜像列表..."
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "${API_PATH_PREFIX}/packages" \
-            -F package_type=container \
-            -F per_page=100 \
+            "/users/${GHCR_USER}/packages?package_type=container&per_page=100" \
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
             cat debug_ghcr_packages_list.log
             exit 1
           fi
 
-          # 检查数据有效性
+          # 验证返回数据有效性
           if [ ! -s ghcr_packages.json ] || ! jq empty ghcr_packages.json 2>/dev/null; then
             echo "获取到的包数据无效或为空"
             cat ghcr_packages.json
             exit 1
+          fi
+
+          # 提取包名并排序
+          jq -r '.[].name' ghcr_packages.json | sort > ghcr-list.txt
+
+          # 计算需要删除的包
+          comm -23 ghcr-list.txt keep-list.txt > to-delete.txt
+
+          if [ -s to-delete.txt ]; then
+            echo "需要删除的包："
+            cat to-delete.txt
+            while IFS= read -r pkg; do
+              echo "正在删除包: $pkg"
+              if ! gh api \
+                -X DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/users/${GHCR_USER}/packages/container/${pkg}" \
+                --silent \
+                --verbose 2>> debug_ghcr_packages_delete.log; then
+                echo "删除失败，错误日志："
+                cat debug_ghcr_packages_delete.log
+              fi
+            done < to-delete.txt
+          else
+            echo "无需要删除的包"
           fi
 
           # 检查是否成功获取到数据
