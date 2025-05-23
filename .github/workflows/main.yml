@@ -15,16 +15,8 @@ on:
         description: "Docker 镜像版本"
         required: true
         default: "latest"
-      image_description:
-        description: "Docker 镜像的作用描述"
-        required: false
-        default: ""
       ghcr_image:
         description: "同步的镜像名称（留空则自动提取）"
-        required: false
-        default: ""
-      architectures:
-        description: "要同步的架构列表（逗号分隔(例:amd64,arm64)，留空则同步所有可用架构）"
         required: false
         default: ""
 
@@ -38,27 +30,23 @@ jobs:
 
       - name: 设置环境变量
         run: |
-          # 处理架构参数
-          if [ -z "${{ inputs.architectures }}" ]; then
-            echo "🔄 检测到未指定架构，自动获取所有可用架构..."
-            RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}")
-            
-            # 获取有效架构列表
-            if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
-              ARCHS=$(echo "$RAW_MANIFEST" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|arm|386|ppc64le|s390x|mips64le' | tr '\n' ',' | sed 's/,$//')
-            else
-              ARCH=$(echo "$RAW_MANIFEST" | jq -r '.architecture')
-              ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
-            fi
-            
-            if [ -z "$ARCHS" ]; then
-              echo "❌ 未找到支持的架构，使用默认架构 amd64"
-              ARCHS="amd64"
-            fi
-            echo "ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')" >> $GITHUB_ENV
+          # 自动获取所有可用架构
+          echo "🔄 自动获取所有可用架构..."
+          RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}")
+          
+          # 获取有效架构列表
+          if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
+            ARCHS=$(echo "$RAW_MANIFEST" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|arm|386|ppc64le|s390x|mips64le' | tr '\n' ',' | sed 's/,$//')
           else
-            echo "ARCHS_STR=$(echo '${{ inputs.architectures }}' | tr ',' ' ')" >> $GITHUB_ENV
+            ARCH=$(echo "$RAW_MANIFEST" | jq -r '.architecture')
+            ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
           fi
+          
+          if [ -z "$ARCHS" ]; then
+            echo "❌ 未找到支持的架构，使用默认架构 amd64"
+            ARCHS="amd64"
+          fi
+          echo "ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')" >> $GITHUB_ENV
 
           # 设置 IMAGE_NAME
           if [ -z "${{ inputs.ghcr_image }}" ]; then
