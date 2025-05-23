@@ -74,3 +74,4 @@
 | 45 | jxxghp/moviepilot-v2 | `ghcr.nju.edu.cn/sqing33/moviepilot-v2` | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml) |
 | 46 | lscr.io/linuxserver/obsidian | `ghcr.nju.edu.cn/sqing33/obsidian` | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml) |
 | 47 | stilleshan/docsify | `ghcr.nju.edu.cn/sqing33/docsify-stilleshan` | [docsify-stilleshan.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-stilleshan.yaml) |
+| 48 | metacubex/mihomo | `ghcr.nju.edu.cn/sqing33/mihomo` | [mihomo.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml) |
