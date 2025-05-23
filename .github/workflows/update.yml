@@ -230,3 +230,34 @@ jobs:
             echo "✅ 同步完成: $target_image_base:latest"
             echo "────────────────────────────────────────"
           done < combined-list.txt
+
+      - name: 删除 ghcr.io 上 README 未列出的镜像包
+        env:
+          GHCR_USER: ${{ github.repository_owner }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "===== 检查 ghcr.io 上所有包 ====="
+          # 获取 README 中应保留的镜像名
+          cat target-image-list.txt | sort > keep-list.txt
+
+          # 获取 ghcr.io 上所有包（镜像名）
+          gh api -H "Accept: application/vnd.github+json" \
+            /users/${GHCR_USER}/packages?package_type=container > ghcr_packages.json
+
+          jq -r '.[].name' ghcr_packages.json | sort > ghcr-list.txt
+
+          # 找出需要删除的包（ghcr.io 上有但 README 没有的）
+          comm -23 ghcr-list.txt keep-list.txt > to-delete.txt
+
+          if [ -s to-delete.txt ]; then
+            echo "需要删除的包："
+            cat to-delete.txt
+            while IFS= read -r pkg; do
+              echo "正在删除 ghcr.io 上的包: $pkg"
+              gh api -X DELETE -H "Accept: application/vnd.github+json" \
+                /users/${GHCR_USER}/packages/container/$pkg \
+                --silent || echo "删除 $pkg 失败，可能无权限或包不存在"
+            done < to-delete.txt
+          else
+            echo "无需要删除的包"
+          fi
