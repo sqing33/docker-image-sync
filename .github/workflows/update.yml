@@ -241,10 +241,27 @@ jobs:
           cat target-image-list.txt | sort > keep-list.txt
 
           # 获取 ghcr.io 上所有包（镜像名）
-          gh api -H "Accept: application/vnd.github+json" \
-            /users/${GHCR_USER}/packages?package_type=container > ghcr_packages.json
+          if ! gh api \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/users/${GHCR_USER}/packages?package_type=container&per_page=100" \
+            > ghcr_packages.json; then
+            echo "获取包列表失败，请检查权限或重试"
+            exit 1
+          fi
+
+          # 检查是否成功获取到数据
+          if [ ! -s ghcr_packages.json ] || ! jq empty ghcr_packages.json 2>/dev/null; then
+            echo "获取到的包数据无效或为空"
+            cat ghcr_packages.json
+            exit 1
+          fi
 
           jq -r '.[].name' ghcr_packages.json | sort > ghcr-list.txt
+
+          echo "在 ghcr.io 上找到的包："
+          cat ghcr-list.txt
+          echo "应该保留的包："
+          cat keep-list.txt
 
           # 找出需要删除的包（ghcr.io 上有但 README 没有的）
           comm -23 ghcr-list.txt keep-list.txt > to-delete.txt
@@ -254,9 +271,13 @@ jobs:
             cat to-delete.txt
             while IFS= read -r pkg; do
               echo "正在删除 ghcr.io 上的包: $pkg"
-              gh api -X DELETE -H "Accept: application/vnd.github+json" \
-                /users/${GHCR_USER}/packages/container/$pkg \
-                --silent || echo "删除 $pkg 失败，可能无权限或包不存在"
+              if ! gh api \
+                -X DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/user/packages/container/${pkg}" \
+                --silent; then
+                echo "删除 $pkg 失败，可能无权限或包不存在"
+              fi
             done < to-delete.txt
           else
             echo "无需要删除的包"
