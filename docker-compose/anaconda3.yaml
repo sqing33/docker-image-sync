@@ -149,3 +149,20 @@ services:
         # --- 启动 Supervisord ---
         echo '启动 supervisord...';
         /usr/bin/supervisord -c /etc/supervisord.conf
+# supervisord.conf
+[supervisord]
+nodaemon=true
+
+[program:jupyterlab]
+command=/opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/jupyterlab.err.log
+stdout_logfile=/var/log/jupyterlab.out.log
+
+[program:codeserver]
+command=code-server --bind-addr 0.0.0.0:8080 --auth none /app
+autostart=true
+autorestart=true
+stderr_logfile=/var/log/codeserver.err.log
+stdout_logfile=/var/log/codeserver.out.log
