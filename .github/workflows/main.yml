@@ -159,9 +159,9 @@ jobs:
           existing_images=$(awk -F '|' '
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
-              gsub(/^[ \t]+|[ \t]+$/, "", $3);
-              gsub(/`/, "", $3);
-              print $3
+              gsub(/^[ \t]+|[ \t]+$/, "", $2);
+              gsub(/`/, "", $2);
+              print $2
           }
           /^[^|]/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
@@ -184,23 +184,23 @@ jobs:
 
               # 生成 pull 命令
               if [ "${{ inputs.tag }}" = "latest" ]; then
-                pull_cmd="docker pull ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
+                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
               else
-                pull_cmd="docker pull ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
               fi
 
               # 为每个镜像创建一个docker-compose.yaml文件的链接
               compose_file="[${{ env.IMAGE_NAME }}.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/${{ env.IMAGE_NAME }}.yaml)"
 
               # 生成新表格行
-              new_row="| $new_count | ${{ inputs.dockerhub_image }} | ${{ inputs.image_description }} | \`$pull_cmd\` | $compose_file |"
+              new_row="| $new_count | ${{ inputs.dockerhub_image }} | \`$pull_cmd\` | $compose_file |"
 
               # 生成新的表格内容
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
-                echo "|   | 源镜像 | 用途 | pull 命令 | docker-compose |"
-                echo "| ---- | -------- | ---- | --------- | -------------- |"
+                echo "|   | 源镜像 | pull 镜像 | docker-compose |"
+                echo "| ---- | -------- | --------- | -------------- |"
                 echo "$data_lines"
                 echo "$new_row"
               } > new_table_content.txt
