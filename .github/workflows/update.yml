@@ -44,9 +44,10 @@ jobs:
           awk -F '|' '
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
-              gsub(/^[ \t]+|[ \t]+$/, "", $2);
-              gsub(/`/, "", $2);
-              print $2
+              # 提取源镜像列（第2列，在删除用途列后）
+              gsub(/^[ \t]+|[ \t]+$/, "", $3);
+              gsub(/`/, "", $3);
+              print $3
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
