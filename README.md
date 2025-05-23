@@ -10,7 +10,6 @@
 
    完成设置后，点击页面顶部的 `Action`，再从左侧列表中选择 `将 Docker 镜像同步到 ghcr.io`。随后，点击右侧的 `Run workflow`，在弹出的界面中填写待同步的镜像信息。
 
-
 3. 同步结果查看
 
    镜像同步完成后，`readme.md` 文件中会自动添加该镜像的相关信息条目，内容包括源镜像、用途、`pull` 命令以及 `docker-compose` 文件路径。同时，在项目的 `docker-compose` 目录下，会自动复制 `example.yaml` 文件，并将其重命名为同步镜像的名称。
@@ -25,53 +24,50 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|   | 源镜像 | pull 镜像 | docker-compose |
-| ---- | -------- | --------- | -------------- |
-| 1    | hello-world                      | `ghcr.nju.edu.cn/sqing33/hello-world`      | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml) |
-| 2    | nginx                            | `ghcr.nju.edu.cn/sqing33/nginx`            | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) |
-| 3    | dpanel/dpanel                    | `ghcr.nju.edu.cn/sqing33/dpanel`           | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml) |
-| 4    | lscr.io/linuxserver/qbittorrent  | `ghcr.nju.edu.cn/sqing33/qbittorrent`      | [qbittorrent.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) |
-| 5    | mzz2017/v2raya                   | `ghcr.nju.edu.cn/sqing33/v2raya`           | [v2raya.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml) |
-| 6    | 6053537/portainer-ce             | `ghcr.nju.edu.cn/sqing33/portainer`        | [portainer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/portainer.yaml) |
-| 7    | mysql/mysql-server               | `ghcr.nju.edu.cn/sqing33/mysql`            | [mysql.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml) |
-| 8    | whyour/qinglong                  | `ghcr.nju.edu.cn/sqing33/qinglong`         | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
-| 9    | ghcr.io/imagegenius/immich       | `ghcr.nju.edu.cn/sqing33/immich`           | [immich.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/immich.yaml) |
-| 10   | quay.io/jupyter/pyspark-notebook | `ghcr.nju.edu.cn/sqing33/jupyter-notebook` | [jupyter-notebook.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyter-notebook.yaml) |
-| 11   | redis                            | `ghcr.nju.edu.cn/sqing33/redis`            | [redis.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) |
-| 12   | tiangolo/nginx-rtmp              | `ghcr.nju.edu.cn/sqing33/nginx-rtmp`       | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) |
-| 13   | bytelang/kplayer                 | `ghcr.nju.edu.cn/sqing33/kplayer`          | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml) |
-| 14   | networkstatic/iperf3             | `ghcr.nju.edu.cn/sqing33/iperf3`           | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml) |
-| 15   | xhofe/alist                      | `ghcr.nju.edu.cn/sqing33/alist`            | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
-| 16   | johngong/baidunetdisk            | `ghcr.nju.edu.cn/sqing33/baidunetdisk`     | [baidunetdisk.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/baidunetdisk.yaml) |
-| 17   | cnk3x/xunlei                     | `ghcr.nju.edu.cn/sqing33/xunlei`           | [xunlei.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xunlei.yaml) |
-| 18   | henrygd/beszel                   | `ghcr.nju.edu.cn/sqing33/beszel`           | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml) |
-| 19   | lscr.io/linuxserver/duplicati    | `ghcr.nju.edu.cn/sqing33/duplicati`        | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml) |
-| 20   | homeassistant/home-assistant     | `ghcr.nju.edu.cn/sqing33/homeassistant`    | [homeassistant.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml) |
-| 21   | jauderho/docker-autocompose      | `ghcr.nju.edu.cn/sqing33/autocompose`      | [autocompose.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml) |
-| 22   | azukaar/cosmos-server            | `ghcr.nju.edu.cn/sqing33/cosmos`           | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml) |
-| 23   | photoprism/photoprism            | `ghcr.nju.edu.cn/sqing33/photoprism`       | [photoprism.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoprism.yaml) |
-| 24   | mongodb/mongodb-community-server | `ghcr.nju.edu.cn/sqing33/mongodb`          | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) |
-| 25   | pihole/pihole                    | `ghcr.nju.edu.cn/sqing33/pihole`           | [pihole.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pihole.yaml) |
-| 26   | jeessy/ddns-go                   | `ghcr.nju.edu.cn/sqing33/ddns-go`          | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) |
-| 27   | ghcr.io/noipcom/noip-duc         | `ghcr.nju.edu.cn/sqing33/noip-duc`         | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml) |
-| 28   | cym1102/nginxwebui               | `ghcr.nju.edu.cn/sqing33/nginxwebui`       | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml) |
-| 29   | node                             | `ghcr.nju.edu.cn/sqing33/node`             | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) |
-| 30   | alpine                           | `ghcr.nju.edu.cn/sqing33/alpine`           | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml) |
-| 31   | moby/buildkit                    | `ghcr.nju.edu.cn/sqing33/buildkit`         | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) |
-| 32   | ollama/ollama                    | `ghcr.nju.edu.cn/sqing33/ollama`           | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml) |
-| 33   | python                           | `ghcr.nju.edu.cn/sqing33/python`           | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml) |
-| 34   | laoyutang/clash-and-dashboard    | `ghcr.nju.edu.cn/sqing33/clash`            | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
-| 35   | docmost/docmost                  | `ghcr.nju.edu.cn/sqing33/docmost`          | [docmost.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docmost.yaml) |
-| 36 | outlinewiki/outline | `ghcr.nju.edu.cn/sqing33/outline` | [outline.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/outline.yaml) |
-| 37 | photoview/photoview | `ghcr.nju.edu.cn/sqing33/photoview` | [photoview.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoview.yaml) |
-| 38 | syncthing/syncthing | `ghcr.nju.edu.cn/sqing33/syncthing` | [syncthing.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml) |
-| 39 | dreamacro/clash | `ghcr.nju.edu.cn/sqing33/clash` | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) |
-| 40 | chishin/nginx-proxy-manager-zh | `ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh` | [nginx-proxy-manager-zh.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager-zh.yaml) |
-| 41 | phpmyadmin | `ghcr.nju.edu.cn/sqing33/phpmyadmin` | [phpmyadmin.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml) |
-| 42 | continuumio/anaconda3 | `ghcr.nju.edu.cn/sqing33/anaconda3` | [anaconda3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/anaconda3.yaml) |
-| 43 | lscr.io/linuxserver/transmission | `ghcr.nju.edu.cn/sqing33/transmission` | [transmission.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml) |
-| 44 | nastool/nas-tools | `ghcr.nju.edu.cn/sqing33/nas-tools` | [nas-tools.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml) |
-| 45 | jxxghp/moviepilot-v2 | `ghcr.nju.edu.cn/sqing33/moviepilot-v2` | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml) |
-| 46 | lscr.io/linuxserver/obsidian | `ghcr.nju.edu.cn/sqing33/obsidian` | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml) |
-| 47 | stilleshan/docsify | `ghcr.nju.edu.cn/sqing33/docsify-stilleshan` | [docsify-stilleshan.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-stilleshan.yaml) |
-| 48 | metacubex/mihomo | `ghcr.nju.edu.cn/sqing33/mihomo` | [mihomo.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml) |
+|     | 源镜像                           | pull 镜像                                        | docker-compose                                                                                                                   |
+| --- | -------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | hello-world                      | `ghcr.nju.edu.cn/sqing33/hello-world`            | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml)                               |
+| 2   | nginx                            | `ghcr.nju.edu.cn/sqing33/nginx`                  | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                                   |
+| 3   | dpanel/dpanel                    | `ghcr.nju.edu.cn/sqing33/dpanel`                 | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                                 |
+| 4   | lscr.io/linuxserver/qbittorrent  | `ghcr.nju.edu.cn/sqing33/qbittorrent`            | [qbittorrent.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                       |
+| 5   | mzz2017/v2raya                   | `ghcr.nju.edu.cn/sqing33/v2raya`                 | [v2raya.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                                 |
+| 6   | 6053537/portainer-ce             | `ghcr.nju.edu.cn/sqing33/portainer`              | [portainer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/portainer.yaml)                           |
+| 7   | mysql/mysql-server               | `ghcr.nju.edu.cn/sqing33/mysql`                  | [mysql.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)                                   |
+| 8   | whyour/qinglong                  | `ghcr.nju.edu.cn/sqing33/qinglong`               | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml)                             |
+| 9   | ghcr.io/imagegenius/immich       | `ghcr.nju.edu.cn/sqing33/immich`                 | [immich.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/immich.yaml)                                 |
+| 10  | quay.io/jupyter/pyspark-notebook | `ghcr.nju.edu.cn/sqing33/jupyter-notebook`       | [jupyter-notebook.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyter-notebook.yaml)             |
+| 11  | redis                            | `ghcr.nju.edu.cn/sqing33/redis`                  | [redis.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                                   |
+| 12  | tiangolo/nginx-rtmp              | `ghcr.nju.edu.cn/sqing33/nginx-rtmp`             | [nginx-rtmp.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)                         |
+| 13  | bytelang/kplayer                 | `ghcr.nju.edu.cn/sqing33/kplayer`                | [kplayer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                               |
+| 14  | networkstatic/iperf3             | `ghcr.nju.edu.cn/sqing33/iperf3`                 | [iperf3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iperf3.yaml)                                 |
+| 15  | xhofe/alist                      | `ghcr.nju.edu.cn/sqing33/alist`                  | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                                   |
+| 16  | henrygd/beszel                   | `ghcr.nju.edu.cn/sqing33/beszel`                 | [beszel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                                 |
+| 17  | lscr.io/linuxserver/duplicati    | `ghcr.nju.edu.cn/sqing33/duplicati`              | [duplicati.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                           |
+| 18  | homeassistant/home-assistant     | `ghcr.nju.edu.cn/sqing33/homeassistant`          | [homeassistant.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)                   |
+| 19  | jauderho/docker-autocompose      | `ghcr.nju.edu.cn/sqing33/autocompose`            | [autocompose.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)                       |
+| 20  | azukaar/cosmos-server            | `ghcr.nju.edu.cn/sqing33/cosmos`                 | [cosmos.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cosmos.yaml)                                 |
+| 21  | mongodb/mongodb-community-server | `ghcr.nju.edu.cn/sqing33/mongodb`                | [mongodb.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                               |
+| 22  | pihole/pihole                    | `ghcr.nju.edu.cn/sqing33/pihole`                 | [pihole.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pihole.yaml)                                 |
+| 23  | jeessy/ddns-go                   | `ghcr.nju.edu.cn/sqing33/ddns-go`                | [ddns-go.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                               |
+| 24  | ghcr.io/noipcom/noip-duc         | `ghcr.nju.edu.cn/sqing33/noip-duc`               | [noip-duc.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/noip-duc.yaml)                             |
+| 25  | cym1102/nginxwebui               | `ghcr.nju.edu.cn/sqing33/nginxwebui`             | [nginxwebui.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml)                         |
+| 26  | node                             | `ghcr.nju.edu.cn/sqing33/node`                   | [node.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                                     |
+| 27  | alpine                           | `ghcr.nju.edu.cn/sqing33/alpine`                 | [alpine.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml)                                 |
+| 28  | moby/buildkit                    | `ghcr.nju.edu.cn/sqing33/buildkit`               | [buildkit.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                             |
+| 29  | ollama/ollama                    | `ghcr.nju.edu.cn/sqing33/ollama`                 | [ollama.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ollama.yaml)                                 |
+| 30  | python                           | `ghcr.nju.edu.cn/sqing33/python`                 | [python.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml)                                 |
+| 31  | laoyutang/clash-and-dashboard    | `ghcr.nju.edu.cn/sqing33/clash`                  | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                                   |
+| 32  | docmost/docmost                  | `ghcr.nju.edu.cn/sqing33/docmost`                | [docmost.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docmost.yaml)                               |
+| 33  | outlinewiki/outline              | `ghcr.nju.edu.cn/sqing33/outline`                | [outline.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/outline.yaml)                               |
+| 34  | photoview/photoview              | `ghcr.nju.edu.cn/sqing33/photoview`              | [photoview.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/photoview.yaml)                           |
+| 35  | syncthing/syncthing              | `ghcr.nju.edu.cn/sqing33/syncthing`              | [syncthing.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                           |
+| 36  | dreamacro/clash                  | `ghcr.nju.edu.cn/sqing33/clash`                  | [clash.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                                   |
+| 37  | chishin/nginx-proxy-manager-zh   | `ghcr.nju.edu.cn/sqing33/nginx-proxy-manager-zh` | [nginx-proxy-manager-zh.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-proxy-manager-zh.yaml) |
+| 38  | phpmyadmin                       | `ghcr.nju.edu.cn/sqing33/phpmyadmin`             | [phpmyadmin.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)                         |
+| 39  | continuumio/anaconda3            | `ghcr.nju.edu.cn/sqing33/anaconda3`              | [anaconda3.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/anaconda3.yaml)                           |
+| 40  | lscr.io/linuxserver/transmission | `ghcr.nju.edu.cn/sqing33/transmission`           | [transmission.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)                     |
+| 41  | nastool/nas-tools                | `ghcr.nju.edu.cn/sqing33/nas-tools`              | [nas-tools.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                           |
+| 42  | jxxghp/moviepilot-v2             | `ghcr.nju.edu.cn/sqing33/moviepilot-v2`          | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml)                   |
+| 43  | lscr.io/linuxserver/obsidian     | `ghcr.nju.edu.cn/sqing33/obsidian`               | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml)                             |
+| 44  | stilleshan/docsify               | `ghcr.nju.edu.cn/sqing33/docsify-stilleshan`     | [docsify-stilleshan.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-stilleshan.yaml)         |
+| 45  | metacubex/mihomo                 | `ghcr.nju.edu.cn/sqing33/mihomo`                 | [mihomo.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                                 |
