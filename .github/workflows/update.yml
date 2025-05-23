@@ -252,14 +252,24 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "===== 检查 ghcr.io 上所有包 ====="
-          # 准备保留列表
           cat target-image-list.txt | sort > keep-list.txt
 
-          # 获取 GitHub Packages 列表（使用 -F 参数避免参数截断）
-          echo "正在获取用户 ${GHCR_USER} 的容器镜像列表..."
+          # 动态判断路径前缀（组织/用户）
+          API_PATH_PREFIX="/users/${GHCR_USER}"  # 默认用户路径
+          if [[ "$GHCR_USER" =~ ^[A-Za-z0-9-]+$ ]]; then
+            # 如果是纯字母数字组合，视为用户路径
+            echo "使用用户级路径: ${API_PATH_PREFIX}"
+          else
+            # 否则视为组织路径
+            API_PATH_PREFIX="/orgs/${GHCR_USER}"
+            echo "使用组织级路径: ${API_PATH_PREFIX}"
+          fi
+
+          # 获取包列表（强制小写处理）
+          echo "正在获取容器镜像列表..."
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "/users/${GHCR_USER}/packages" \
+            "${API_PATH_PREFIX}/packages" \
             -F package_type=container \
             -F per_page=100 \
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
@@ -275,8 +285,10 @@ jobs:
             exit 1
           fi
 
-          # 提取并处理包名
-          jq -r '.[].name' ghcr_packages.json | sort > ghcr-list.txt
+          # 提取包名并转换为全小写（ghcr.io要求小写）
+          jq -r '.[].name' ghcr_packages.json | tr '[:upper:]' '[:lower:]' | sort > ghcr-list.txt
+
+          # 计算需要删除的包
           comm -23 ghcr-list.txt keep-list.txt > to-delete.txt
 
           if [ -s to-delete.txt ]; then
@@ -287,7 +299,7 @@ jobs:
               if ! gh api \
                 -X DELETE \
                 -H "Accept: application/vnd.github+json" \
-                "/users/${GHCR_USER}/packages/container/${pkg}" \
+                "${API_PATH_PREFIX}/packages/container/${pkg}" \
                 --silent \
                 --verbose 2>> debug_ghcr_packages_delete.log; then
                 echo "删除失败，错误日志："
