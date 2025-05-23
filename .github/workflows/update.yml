@@ -255,18 +255,15 @@ jobs:
           # 获取 README 中应保留的镜像名
           cat target-image-list.txt | sort > keep-list.txt
 
-          API_PATH_PREFIX="users/${GHCR_USER}"
-
-          echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
-          # 使用 -F 参数传递查询条件
+          echo "正在从 users/${GHCR_USER}/packages 获取包列表..."
+          # 修正这一行：直接指定完整的 API 路径，并明确 package_type
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "${API_PATH_PREFIX}/packages" \
-            -F package_type=container \
-            -F per_page=100 \
+            "/users/${GHCR_USER}/packages?package_type=container&per_page=100" \ # <--- 关键修正
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
-            cat debug_ghcr_packages_list.log
+            echo "gh api 调试日志（获取列表）："
+            cat debug_ghcr_packages_list.log # 输出调试日志
             exit 1
           fi
 
