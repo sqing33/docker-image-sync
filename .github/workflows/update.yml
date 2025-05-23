@@ -236,6 +236,26 @@ jobs:
             echo "────────────────────────────────────────"
           done < combined-list.txt
 
+      ---
+
+      - name: 调试 gh api 变量
+        run: |
+          echo "GHCR_USER: ${{ github.repository_owner }}"
+          if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
+            echo "错误：GH_TOKEN 为空，请检查你的仓库 Secrets！"
+            exit 1
+          else
+            echo "GH_TOKEN 存在。"
+          fi
+          # 如果你想尝试判断 GHCR_USER 是个人用户还是组织，可以尝试以下（可能不完全可靠，但可作参考）：
+          # if gh api users/${{ github.repository_owner }} > /dev/null 2>&1; then
+          #   echo "${{ github.repository_owner }} 看起来是个人用户。"
+          # elif gh api orgs/${{ github.repository_owner }} > /dev/null 2>&1; then
+          #   echo "${{ github.repository_owner }} 看起来是组织。"
+          # else
+          #   echo "无法判断 ${{ github.repository_owner }} 是个人用户还是组织。"
+          # fi
+
       - name: 删除 ghcr.io 上 README 未列出的镜像包
         env:
           GHCR_USER: ${{ github.repository_owner }} # 仓库所有者
@@ -246,17 +266,22 @@ jobs:
           cat target-image-list.txt | sort > keep-list.txt
 
           # 根据 GHCR_USER 是个人用户还是组织来确定 API 路径前缀
-          # 如果 ${{ github.repository_owner }} 是一个个人用户（例如你的用户名 sqing33），请使用以下行：
+          # 请根据你的实际情况取消注释正确的行，并注释掉不正确的行。
+          # 默认假设 ${{ github.repository_owner }} 是一个个人用户：
           API_PATH_PREFIX="users/${GHCR_USER}"
-          # 如果 ${{ github.repository_owner }} 是一个组织，请取消注释以下行并注释上一行：
+          # 如果 ${{ github.repository_owner }} 是一个组织（例如，如果你的仓库是 my-org/my-repo），请取消注释以下行并注释上一行：
           # API_PATH_PREFIX="orgs/${GHCR_USER}"
 
           echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
+          # 注意：为了调试，我们将 --debug 输出重定向到文件，并在失败时打印出来。
+          # 在生产环境中，通常不需要 --debug 选项。
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
             "${API_PATH_PREFIX}/packages?package_type=container&per_page=100" \
-            > ghcr_packages.json; then
+            --debug > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
+            echo "gh api 调试日志（获取列表）："
+            cat debug_ghcr_packages_list.log # 输出调试日志
             exit 1
           fi
 
@@ -283,14 +308,18 @@ jobs:
             echo "需要删除的包："
             cat to-delete.txt
             while IFS= read -r pkg; do
-              echo "正在删除 ghcr.io 上的包: $pkg"
+              echo "正在删除 ghcr.io 上的包: $pkg (路径: ${API_PATH_PREFIX}/packages/container/${pkg})"
               # 使用正确的 API 路径删除包
+              # 同样为了调试，添加 --debug 选项
               if ! gh api \
                 -X DELETE \
                 -H "Accept: application/vnd.github+json" \
                 "${API_PATH_PREFIX}/packages/container/${pkg}" \
-                --silent; then # --silent 避免在成功时输出太多信息
+                --silent \
+                --debug 2>> debug_ghcr_packages_delete.log; then # 将删除操作的调试输出也追加到日志文件
                 echo "删除 $pkg 失败，可能无权限或包不存在"
+                echo "gh api 调试日志（删除操作）："
+                cat debug_ghcr_packages_delete.log
               fi
             done < to-delete.txt
           else
