@@ -234,7 +234,7 @@ jobs:
       - name: 删除 ghcr.io 上 README 未列出的镜像包
         env:
           GHCR_USER: ${{ github.repository_owner }}
-          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "===== 检查 ghcr.io 上所有包 ====="
           # 获取 README 中应保留的镜像名
