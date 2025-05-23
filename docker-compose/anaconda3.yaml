@@ -7,23 +7,23 @@ services:
       - "18888:8888"
     working_dir: /app
     restart: always
-#    environment:
-#      http_proxy: "http://192.168.10.100:7890"
-#      https_proxy: "http://192.168.10.100:7890"
-#      no_proxy: "localhost,127.0.0.1,.example.com"
+   # environment:
+   #   http_proxy: "http://192.168.10.100:7890"
+   #   https_proxy: "http://192.168.10.100:7890"
+   #   no_proxy: "localhost,127.0.0.1,.example.com"
     volumes:
-      - /vol1/1000/Code:/app
+      - /vol1/1000:/app
     stdin_open: true
     tty: true
     command: >
       /bin/bash -c "
-      mkdir -p /app/conda_envs;
+      mkdir -p /app/Code/conda_envs;
       if ! grep -q 'envs_dirs:' ~/.condarc; then
-        echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
+        echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
         echo 'envs_dirs:' >> ~/.condarc;
-        echo '  - /app/conda_envs' >> ~/.condarc;
+        echo '  - /app/Code/conda_envs' >> ~/.condarc;
         echo 'pkgs_dirs:' >> ~/.condarc;
-        echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
+        echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
       fi;
       echo '设置 pip 镜像源';
       pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
@@ -54,24 +54,24 @@ services:
       - "18888:8080"
     working_dir: /app
     restart: always
-    environment:
-      http_proxy: "http://192.168.10.100:7890"
-      https_proxy: "http://192.168.10.100:7890"
-      no_proxy: "localhost,127.0.0.1,.example.com"
+    # environment:
+    #   http_proxy: "http://192.168.10.100:7890"
+    #   https_proxy: "http://192.168.10.100:7890"
+    #   no_proxy: "localhost,127.0.0.1,.example.com"
     volumes:
-      - /vol1/1000/Code:/app
+      - /vol1/1000:/app
       - /vol1/1000/Docker/miniconda3/code-server:/root/.config/code-server
     stdin_open: true
     tty: true
     command: >
       /bin/bash -c "
-      mkdir -p /app/conda_envs;
+      mkdir -p /app/Code/conda_envs;
       if ! grep -q 'envs_dirs:' ~/.condarc; then
-        echo '将 conda 环境和依赖安装位置设置为 /app/conda_envs...';
+        echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
         echo 'envs_dirs:' >> ~/.condarc;
-        echo '  - /app/conda_envs' >> ~/.condarc;
+        echo '  - /app/Code/conda_envs' >> ~/.condarc;
         echo 'pkgs_dirs:' >> ~/.condarc;
-        echo '  - /app/conda_envs/pkgs' >> ~/.condarc;
+        echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
       fi;
       echo '设置 pip 镜像源';
       pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
@@ -83,3 +83,69 @@ services:
       echo '启动 code-server...';
       code-server --bind-addr 0.0.0.0:8080 --auth none /app;
       "
+# miniconda + JupyterLab + code-server
+services:
+  miniconda_dev:
+    image: continuumio/miniconda3
+    container_name: miniconda_dev
+    ports:
+      - "18888:8888" # JupyterLab 端口
+      - "18080:8080" # Code-Server 端口
+    working_dir: /app
+    restart: always
+    # environment:
+    #   http_proxy: "http://192.168.10.100:7890"
+    #   https_proxy: "http://192.168.10.100:7890"
+    #   no_proxy: "localhost,127.0.0.1,.example.com"
+    volumes:
+      - /vol1/1000:/app
+      - /vol1/1000/Docker/miniconda3/code-server:/root/.config/code-server
+      - /vol1/1000/Docker/miniconda3/supervisord.conf:/etc/supervisord.conf
+    stdin_open: true
+    tty: true
+    # 更改了 command 的格式
+    command: 
+      - bash
+      - -c
+      - |
+        # --- Conda 环境设置 ---
+        mkdir -p /app/Code/conda_envs;
+        if ! grep -q 'envs_dirs:' ~/.condarc; then
+          echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
+          echo 'envs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs' >> ~/.condarc; # 确保两个空格
+          echo 'pkgs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc; # 确保两个空格
+        fi; # fi 后面紧跟分号
+        echo '设置 pip 镜像源';
+        pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
+        pip config set install.trusted-host mirrors.huaweicloud.com;
+
+        # --- 安装 Supervisord ---
+        echo '安装 supervisord...';
+        apt update && apt install -y supervisor;
+
+        # --- JupyterLab 安装 ---
+        echo '开始 JupyterLab 环境设置...';
+        /opt/conda/bin/conda install jupyterlab -y --quiet;
+        echo '安装 JupyterLab 中文语言包...';
+        /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
+        mkdir -p ~/.jupyter;
+        if [ ! -f ~/.jupyter/jupyter_lab_config.py ]; then # 确保 [ ] 内部有空格
+          echo 'JupyterLab 配置文件不存在，正在生成...';
+          /opt/conda/bin/jupyter lab --generate-config;
+        else
+          echo 'JupyterLab 配置文件已存在，跳过生成。';
+        fi;
+        echo '添加终端配置到 JupyterLab 配置文件...';
+        echo "c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}" >> ~/.jupyter/jupyter_lab_config.py;
+
+        # --- Code-Server 安装 ---
+        echo '安装 curl';
+        apt update && apt install curl -y;
+        echo '安装/更新 code-server...';
+        curl -fsSL https://code-server.dev/install.sh | sh;
+
+        # --- 启动 Supervisord ---
+        echo '启动 supervisord...';
+        /usr/bin/supervisord -c /etc/supervisord.conf
