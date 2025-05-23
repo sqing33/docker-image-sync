@@ -7,44 +7,48 @@ services:
       - "18888:8888"
     working_dir: /app
     restart: always
-   # environment:
-   #   http_proxy: "http://192.168.10.100:7890"
-   #   https_proxy: "http://192.168.10.100:7890"
-   #   no_proxy: "localhost,127.0.0.1,.example.com"
+    # environment:
+    #   http_proxy: "http://192.168.10.100:7890"
+    #   https_proxy: "http://192.168.10.100:7890"
+    #   no_proxy: "localhost,127.0.0.1,.example.com"
     volumes:
       - /vol1/1000:/app
     stdin_open: true
     tty: true
-    command: >
-      /bin/bash -c "
-      mkdir -p /app/Code/conda_envs;
-      if ! grep -q 'envs_dirs:' ~/.condarc; then
-        echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
-        echo 'envs_dirs:' >> ~/.condarc;
-        echo '  - /app/Code/conda_envs' >> ~/.condarc;
-        echo 'pkgs_dirs:' >> ~/.condarc;
-        echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
-      fi;
-      echo '设置 pip 镜像源';
-      pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
-      pip config set install.trusted-host mirrors.huaweicloud.com;
-      echo '开始 JupyterLab 环境设置...';
-      /opt/conda/bin/conda install jupyterlab -y --quiet;
-      echo '安装 JupyterLab 中文语言包...';
-      /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
-      mkdir -p ~/.jupyter;
-      if [ ! -f ~/.jupyter/jupyter_lab_config.py; ]; then
-        echo 'JupyterLab 配置文件不存在，正在生成...';
-        /opt/conda/bin/jupyter lab --generate-config;
-      else
-        echo 'JupyterLab 配置文件已存在，跳过生成。';
-      fi;
-      echo '添加终端配置到 JupyterLab 配置文件...';
-      echo \"c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}\" >> ~/.jupyter/jupyter_lab_config.py;
-      echo '启动 JupyterLab 服务器...';
-      /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='';
-      "
-
+    # 更改了 command 的格式
+    command:
+      - bash
+      - -c
+      - |
+        # --- Conda 环境设置 ---
+        mkdir -p /app/Code/conda_envs;
+        if ! grep -q 'envs_dirs:' ~/.condarc; then
+          echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
+          echo 'envs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs' >> ~/.condarc;
+          echo 'pkgs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
+        fi;
+        echo '设置 pip 镜像源';
+        pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
+        pip config set install.trusted-host mirrors.huaweicloud.com;
+        echo '开始 JupyterLab 环境设置...';
+        /opt/conda/bin/conda install jupyterlab -y --quiet;
+        echo '安装 JupyterLab 中文语言包...';
+        /opt/conda/bin/conda install -c conda-forge jupyterlab-language-pack-zh-CN -y --quiet;
+        mkdir -p ~/.jupyter;
+        # 修正了 if 语句中文件检测的语法：[ ! -f filename ]
+        if [ ! -f ~/.jupyter/jupyter_lab_config.py ]; then
+          echo 'JupyterLab 配置文件不存在，正在生成...';
+          /opt/conda/bin/jupyter lab --generate-config;
+        else
+          echo 'JupyterLab 配置文件已存在，跳过生成。';
+        fi;
+        echo '添加终端配置到 JupyterLab 配置文件...';
+        echo "c.ServerApp.terminado_settings = {'shell_command' : ['/bin/bash']}" >> ~/.jupyter/jupyter_lab_config.py;
+        echo '启动 JupyterLab 服务器...';
+        /opt/conda/bin/jupyter lab --notebook-dir=/app --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='';
+        
 # miniconda + code-server
 services:
   miniconda3:
@@ -63,26 +67,30 @@ services:
       - /vol1/1000/Docker/miniconda3/code-server:/root/.config/code-server
     stdin_open: true
     tty: true
-    command: >
-      /bin/bash -c "
-      mkdir -p /app/Code/conda_envs;
-      if ! grep -q 'envs_dirs:' ~/.condarc; then
-        echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
-        echo 'envs_dirs:' >> ~/.condarc;
-        echo '  - /app/Code/conda_envs' >> ~/.condarc;
-        echo 'pkgs_dirs:' >> ~/.condarc;
-        echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
-      fi;
-      echo '设置 pip 镜像源';
-      pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
-      pip config set install.trusted-host mirrors.huaweicloud.com;
-      echo '安装 curl';
-      apt update && apt install curl -y;
-      echo '安装/更新 code-server...';
-      curl -fsSL https://code-server.dev/install.sh | sh;
-      echo '启动 code-server...';
-      code-server --bind-addr 0.0.0.0:8080 --auth none /app;
-      "
+    # 更改了 command 的格式
+    command:
+      - bash
+      - -c
+      - |
+        # --- Conda 环境设置 ---
+        mkdir -p /app/Code/conda_envs;
+        if ! grep -q 'envs_dirs:' ~/.condarc; then
+          echo '将 conda 环境和依赖安装位置设置为 /app/Code/conda_envs...';
+          echo 'envs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs' >> ~/.condarc;
+          echo 'pkgs_dirs:' >> ~/.condarc;
+          echo '  - /app/Code/conda_envs/pkgs' >> ~/.condarc;
+        fi;
+        echo '设置 pip 镜像源';
+        pip config set global.index-url https://mirrors.huaweicloud.com/repository/pypi/simple;
+        pip config set install.trusted-host mirrors.huaweicloud.com;
+        echo '安装 curl';
+        apt update && apt install curl -y;
+        echo '安装/更新 code-server...';
+        curl -fsSL https://code-server.dev/install.sh | sh;
+        echo '启动 code-server...';
+        code-server --bind-addr 0.0.0.0:8080 --auth none /app;
+        
 # miniconda + JupyterLab + code-server
 services:
   miniconda_dev:
