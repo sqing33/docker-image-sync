@@ -248,22 +248,35 @@ jobs:
 
       - name: 删除 ghcr.io 上 README 未列出的镜像包
         env:
-          GHCR_USER: ${{ github.repository_owner }} # 仓库所有者
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}     # GitHub Actions 默认 token
+          GHCR_USER: ${{ github.repository_owner }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "===== 检查 ghcr.io 上所有包 ====="
-          # 获取 README 中应保留的镜像名
           cat target-image-list.txt | sort > keep-list.txt
 
-          echo "正在从 users/${GHCR_USER}/packages 获取包列表..."
-          # 修正这一行：直接指定完整的 API 路径，并明确 package_type
+          # 动态判断组织类型
+          if [[ "$GHCR_USER" =~ ^[a-zA-Z0-9-]+$ ]]; then
+            API_PATH_PREFIX="/users/${GHCR_USER}"
+          else
+            API_PATH_PREFIX="/orgs/${GHCR_USER}"
+          fi
+
+          echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "/users/${GHCR_USER}/packages?package_type=container&per_page=100" \ # <--- 关键修正
+            "${API_PATH_PREFIX}/packages" \
+            -F package_type=container \
+            -F per_page=100 \
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
-            echo "gh api 调试日志（获取列表）："
-            cat debug_ghcr_packages_list.log # 输出调试日志
+            cat debug_ghcr_packages_list.log
+            exit 1
+          fi
+
+          # 检查数据有效性
+          if [ ! -s ghcr_packages.json ] || ! jq empty ghcr_packages.json 2>/dev/null; then
+            echo "获取到的包数据无效或为空"
+            cat ghcr_packages.json
             exit 1
           fi
 
