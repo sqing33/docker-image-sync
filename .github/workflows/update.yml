@@ -31,9 +31,9 @@ jobs:
               print $4
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
-          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
+          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' |
           # 提取镜像名称（去除域名和标签）
-          sed 's|^ghcr.nju.edu.cn/sqing33/||' | 
+          sed 's|^ghcr.nju.edu.cn/sqing33/||' |
           sed 's/:[^:]*$//' > target-image-list.txt
           echo "===== target-image-list.txt 内容 ====="
           cat target-image-list.txt
@@ -76,7 +76,6 @@ jobs:
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
-          # 生成需要保留的镜像列表
           touch keep-images.txt
           while IFS= read -r target_image; do
             target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
@@ -88,22 +87,18 @@ jobs:
             fi
           done < target-image-list.txt
 
-          # 更新镜像列表为仅保留存在的镜像
           mv keep-images.txt target-image-list.txt
 
-          # 如果存在需要删除的条目，更新README.md
           if [ -f deleted-images.txt ]; then
             echo "开始清理README中的无效条目..."
             while IFS= read -r del_image; do
-              # 转义特殊字符并匹配 pull 镜像列
               escaped_del_image=$(printf '%s' "$del_image" | sed 's/[][\\\^\$\.\*?+(){}|]/\\&/g')
               sed -i "/|.*\`ghcr.nju.edu.cn\/$GHCR_USER\/$escaped_del_image\(:[^\`]*\)\?\`/d" README.md
             done < deleted-images.txt
 
-            # 重新编号并修复表格格式
             awk -F '|' '
               BEGIN { count=0 }
-              /^### 本仓库已同步的 Docker 镜像/ { 
+              /^### 本仓库已同步的 Docker 镜像/ {
                 print
                 count=0
                 next
@@ -122,7 +117,6 @@ jobs:
               { print }
             ' README.md > README.tmp && mv README.tmp README.md
 
-            # 提交更改
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
             git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
@@ -130,10 +124,8 @@ jobs:
             git commit -m "自动清理已删除的镜像条目" || echo "无变更可提交"
             git push origin main
 
-            # 从 combined-list.txt 删除已标记的条目
             if [ -f deleted-images.txt ]; then
               while IFS= read -r del_image; do
-                # 删除匹配目标镜像的行（格式：源镜像|目标镜像）
                 sed -i "/|${del_image}$/d" combined-list.txt
               done < deleted-images.txt
             fi
@@ -153,18 +145,15 @@ jobs:
             target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
             need_update=false
 
-            # 获取源镜像清单列表
             source_manifest=$(skopeo inspect --raw "$source_image_full")
             source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
 
-            # 检查目标镜像是否存在
             if target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null); then
               target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
             else
               target_digest=""
             fi
 
-            # 比较清单 digest
             if [ "$source_digest" != "$target_digest" ]; then
               echo "检测到清单更新，开始全架构同步..."
               need_update=true
@@ -173,12 +162,9 @@ jobs:
               continue
             fi
 
-            # 获取所有支持的架构（处理嵌套清单）
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
-              # 多架构清单：提取所有有效架构
               ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
             else
-              # 单架构镜像：直接提取架构
               ARCH=$(echo "$source_manifest" | jq -r '.architecture')
               ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
             fi
@@ -188,36 +174,30 @@ jobs:
               ARCHS="amd64"
             fi
 
-            # 同步各架构镜像
             for arch in $ARCHS; do
               echo "▸ 处理架构: $arch"
               target_tag="$target_image_base:latest-$arch"
-              
-              # 获取架构特定 digest（处理 arm/armv7 别名）
+
               arch_digest=$(echo "$source_manifest" | jq -r \
                 --arg arch "$arch" \
                 '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
 
-              # 如果 digest 为空，尝试通过平台标签匹配
               if [ -z "$arch_digest" ]; then
                 arch_digest=$(echo "$source_manifest" | jq -r \
                   --arg arch "$arch" \
                   '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
               fi
 
-              # 最终检查 digest 有效性
               if [ -z "$arch_digest" ]; then
                 echo "⚠️ 警告：架构 $arch 不存在于源镜像中，已跳过"
                 continue
               fi
 
-              # 拉取并推送架构镜像
               docker pull --platform "linux/$arch" "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest"
               docker tag "$(echo "$source_image_full" | sed 's|docker://||')@$arch_digest" "$target_tag"
               docker push "$target_tag"
             done
 
-            # 更新 manifest 列表
             echo "🔄 重建多架构manifest列表..."
             docker manifest rm "$target_image_base:latest" 2>/dev/null || true
             amend_args=()
@@ -240,10 +220,15 @@ jobs:
           # 获取 README 中应保留的镜像名
           cat target-image-list.txt | sort > keep-list.txt
 
-          # 获取 ghcr.io 上所有包（镜像名）
+          # 根据 GHCR_USER 是个人用户还是组织来确定 API 路径
+          # 假设 GHCR_USER (${{ github.repository_owner }}) 是个人用户
+          API_PATH_PREFIX="users/${GHCR_USER}"
+          # 如果是组织，请使用: API_PATH_PREFIX="orgs/${GHCR_USER}"
+
+          echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/user/packages?package_type=container&per_page=100" \
+            "${API_PATH_PREFIX}/packages?package_type=container&per_page=100" \
             > ghcr_packages.json; then
             echo "获取包列表失败，请检查权限或重试"
             exit 1
@@ -270,11 +255,11 @@ jobs:
             echo "需要删除的包："
             cat to-delete.txt
             while IFS= read -r pkg; do
-              echo "正在删除 ghcr.io 上的包: $pkg"
+              echo "正在删除 ghcr.io 上的包: $pkg (路径: ${API_PATH_PREFIX}/packages/container/${pkg})"
               if ! gh api \
                 -X DELETE \
                 -H "Accept: application/vnd.github+json" \
-                "https://api.github.com/user/packages/container/${pkg}" \
+                "${API_PATH_PREFIX}/packages/container/${pkg}" \
                 --silent; then
                 echo "删除 $pkg 失败，可能无权限或包不存在"
               fi
@@ -282,4 +267,3 @@ jobs:
           else
             echo "无需要删除的包"
           fi
-
