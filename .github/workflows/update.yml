@@ -252,37 +252,38 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "===== 检查 ghcr.io 上所有包 ====="
+          # 准备保留列表
           cat target-image-list.txt | sort > keep-list.txt
 
-          # 获取 GitHub Packages 列表（用户级）
+          # 获取 GitHub Packages 列表（使用 -F 参数避免参数截断）
           echo "正在获取用户 ${GHCR_USER} 的容器镜像列表..."
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "/users/${GHCR_USER}/packages?package_type=container&per_page=100" \
+            "/users/${GHCR_USER}/packages" \
+            -F package_type=container \
+            -F per_page=100 \
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
             cat debug_ghcr_packages_list.log
             exit 1
           fi
 
-          # 验证返回数据有效性
+          # 验证数据有效性
           if [ ! -s ghcr_packages.json ] || ! jq empty ghcr_packages.json 2>/dev/null; then
-            echo "获取到的包数据无效或为空"
+            echo "错误：获取的包数据无效"
             cat ghcr_packages.json
             exit 1
           fi
 
-          # 提取包名并排序
+          # 提取并处理包名
           jq -r '.[].name' ghcr_packages.json | sort > ghcr-list.txt
-
-          # 计算需要删除的包
           comm -23 ghcr-list.txt keep-list.txt > to-delete.txt
 
           if [ -s to-delete.txt ]; then
             echo "需要删除的包："
             cat to-delete.txt
             while IFS= read -r pkg; do
-              echo "正在删除包: $pkg"
+              echo "▸ 正在删除 $pkg..."
               if ! gh api \
                 -X DELETE \
                 -H "Accept: application/vnd.github+json" \
