@@ -136,7 +136,7 @@ jobs:
             if [ -f deleted-images.txt ]; then
               while IFS= read -r del_image; do
                 sed -i "/|${del_image}$/d" combined-list.txt
-              done < deleted-images.txt
+              done < combined-list.txt
             fi
           fi
 
@@ -236,8 +236,6 @@ jobs:
             echo "────────────────────────────────────────"
           done < combined-list.txt
 
-      ---
-
       - name: 调试 gh api 变量
         run: |
           echo "GHCR_USER: ${{ github.repository_owner }}"
@@ -247,14 +245,6 @@ jobs:
           else
             echo "GH_TOKEN 存在。"
           fi
-          # 如果你想尝试判断 GHCR_USER 是个人用户还是组织，可以尝试以下（可能不完全可靠，但可作参考）：
-          # if gh api users/${{ github.repository_owner }} > /dev/null 2>&1; then
-          #   echo "${{ github.repository_owner }} 看起来是个人用户。"
-          # elif gh api orgs/${{ github.repository_owner }} > /dev/null 2>&1; then
-          #   echo "${{ github.repository_owner }} 看起来是组织。"
-          # else
-          #   echo "无法判断 ${{ github.repository_owner }} 是个人用户还是组织。"
-          # fi
 
       - name: 删除 ghcr.io 上 README 未列出的镜像包
         env:
