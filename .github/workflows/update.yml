@@ -255,23 +255,18 @@ jobs:
           # 获取 README 中应保留的镜像名
           cat target-image-list.txt | sort > keep-list.txt
 
-          # 根据 GHCR_USER 是个人用户还是组织来确定 API 路径前缀
-          # 请根据你的实际情况取消注释正确的行，并注释掉不正确的行。
-          # 默认假设 ${{ github.repository_owner }} 是一个个人用户：
-          # API_PATH_PREFIX="users/${GHCR_USER}"
-          # 如果 ${{ github.repository_owner }} 是一个组织（例如，如果你的仓库是 my-org/my-repo），请取消注释以下行并注释上一行：
-          API_PATH_PREFIX="orgs/${GHCR_USER}"
+          API_PATH_PREFIX="users/${GHCR_USER}"
 
           echo "正在从 ${API_PATH_PREFIX}/packages 获取包列表..."
-          # 注意：为了调试，我们将 --verbose 输出重定向到文件，并在失败时打印出来。
-          # 在生产环境中，通常不需要 --verbose 选项。
+          # 使用 -F 参数传递查询条件
           if ! gh api \
             -H "Accept: application/vnd.github+json" \
-            "${API_PATH_PREFIX}/packages?package_type=container&per_page=100" \
+            "${API_PATH_PREFIX}/packages" \
+            -F package_type=container \
+            -F per_page=100 \
             --verbose > ghcr_packages.json 2> debug_ghcr_packages_list.log; then
             echo "获取包列表失败，请检查权限或重试"
-            echo "gh api 调试日志（获取列表）："
-            cat debug_ghcr_packages_list.log # 输出调试日志
+            cat debug_ghcr_packages_list.log
             exit 1
           fi
 
