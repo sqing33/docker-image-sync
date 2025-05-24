@@ -72,3 +72,4 @@
 | 44 | lscr.io/linuxserver/jackett | `ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
 | 45 | easychen/cookiecloud | `ghcr.nju.edu.cn/sqing33/cookiecloud` | [cookiecloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml) |
 | 46 | qdtoday/qd | `ghcr.nju.edu.cn/sqing33/qd` | [qd.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) |
+| 47 | whyour/qinglong | `ghcr.nju.edu.cn/sqing33/qinglong` | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
