@@ -64,3 +64,4 @@
 | 36 | gdy666/lucky | `ghcr.nju.edu.cn/sqing33/lucky` | [lucky.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml) |
 | 37 | gitea/gitea | `ghcr.nju.edu.cn/sqing33/gitea` | [gitea.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea.yaml) |
 | 38 | gotify/server | `ghcr.nju.edu.cn/sqing33/server` | [server.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/server.yaml) |
+| 39 | ghcr.io/requarks/wiki | `ghcr.nju.edu.cn/sqing33/wiki` | [wiki.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wiki.yaml) |
