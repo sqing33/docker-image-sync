@@ -64,6 +64,9 @@ jobs:
           username: ${{ env.GHCR_USER }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
   sync_single_image:
     needs: docker-image-sync # 确保 docker-image-sync 任务名称正确
     runs-on: ubuntu-latest
@@ -104,8 +107,7 @@ jobs:
 
       # 登录步骤已移动到 docker-image-sync job
 
-      - name: 设置 Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      # 设置 Docker Buildx 步骤已移动到 docker-image-sync job
 
       - name: 拉取并推送多架构镜像
         run: | # 注意：这里所有的 inputs.xxx 都需要改成 matrix.xxx
