@@ -7,16 +7,16 @@ permissions:
 on:
   workflow_dispatch:
     inputs:
-      dockerhub_image:
-        description: "要同步的 Docker 镜像"
+      images:
+        description: "要同步的 Docker 镜像列表，格式为 '镜像1,镜像2,镜像3'"
         required: true
         default: ""
-      tag:
-        description: "Docker 镜像版本"
-        required: true
-        default: "latest"
-      ghcr_image:
-        description: "同步的镜像名称（留空则自动提取）"
+      tags:
+        description: "对应的 Docker 镜像版本列表，格式为 '版本1,版本2,版本3'，如果某个镜像不需要指定版本，则用逗号填充，例如 ',,1.0' 表示第三个镜像使用 1.0 版本，前两个使用默认的 latest"
+        required: false
+        default: ""
+      ghcr_names:
+        description: "对应的同步后的镜像名称列表，格式为 '名称1,名称2,名称3'，如果某个镜像不需要指定名称，则用逗号填充，例如 ',,my-image' 表示第三个镜像同步后名称为 my-image，前两个自动提取"
         required: false
         default: ""
 
@@ -28,11 +28,42 @@ jobs:
       - name: 安装依赖工具
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
 
+      - name: 处理输入并循环同步镜像
+        id: loop_images
+        run: |
+          IFS=',' read -r -a image_array <<< "${{ inputs.images }}"
+          IFS=',' read -r -a tag_array <<< "${{ inputs.tags }}"
+          IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
+
+          matrix_json='{"include":[]}'
+
+          for i in "${!image_array[@]}"; do
+            current_image="${image_array[$i]}"
+            current_tag="${tag_array[$i]:-latest}"
+            current_ghcr_name="${ghcr_name_array[$i]}"
+
+            if [ -z "$current_image" ]; then
+              echo "警告：第 $((i+1)) 个镜像名称为空，已跳过。"
+              continue
+            fi
+
+            matrix_json=$(echo "$matrix_json" | jq --arg image "$current_image" --arg tag "$current_tag" --arg ghcr_name "$current_ghcr_name" '.include += [{"dockerhub_image": $image, "tag": $tag, "ghcr_image": $ghcr_name}]')
+          done
+          echo "matrix<<EOF"
+          echo "$matrix_json"
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  sync_single_image:
+    needs: docker-image-sync # 确保 docker-image-sync 任务名称正确
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.docker-image-sync.outputs.matrix) }}
+    steps:
       - name: 设置环境变量
         run: |
           # 自动获取所有可用架构
           echo "🔄 自动获取所有可用架构..."
-          RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}")
+          RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ matrix.dockerhub_image }}:${{ matrix.tag }}")
           
           # 获取有效架构列表
           if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
@@ -49,10 +80,10 @@ jobs:
           echo "ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')" >> $GITHUB_ENV
 
           # 设置 IMAGE_NAME
-          if [ -z "${{ inputs.ghcr_image }}" ]; then
-            IMAGE_NAME=$(basename "${{ inputs.dockerhub_image }}")
+          if [ -z "${{ matrix.ghcr_image }}" ]; then
+            IMAGE_NAME=$(basename "${{ matrix.dockerhub_image }}")
           else
-            IMAGE_NAME="${{ inputs.ghcr_image }}"
+            IMAGE_NAME="${{ matrix.ghcr_image }}"
           fi
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
           echo "GHCR_USER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
@@ -71,10 +102,10 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: 拉取并推送多架构镜像
-        run: |
+        run: | # 注意：这里所有的 inputs.xxx 都需要改成 matrix.xxx
           ARCHS=(${{ env.ARCHS_STR }})
           declare -a VALID_ARCHS=()
-          FULL_MANIFEST=$(skopeo inspect --raw "docker://${{ inputs.dockerhub_image }}:${{ inputs.tag }}" | jq .)
+          FULL_MANIFEST=$(skopeo inspect --raw "docker://${{ matrix.dockerhub_image }}:${{ matrix.tag }}" | jq .)
 
           for arch in "${ARCHS[@]}"; do
             echo "🔄 正在检查 $arch 架构支持..."
@@ -83,10 +114,10 @@ jobs:
               VALID_ARCHS+=("$arch")
               
               echo "🚀 正在同步 $arch 架构..."
-              docker pull --platform "linux/$arch" "${{ inputs.dockerhub_image }}:${{ inputs.tag }}"
-              docker tag "${{ inputs.dockerhub_image }}:${{ inputs.tag }}" \
-                "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch"
-              docker push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch"
+              docker pull --platform "linux/$arch" "${{ matrix.dockerhub_image }}:${{ matrix.tag }}"
+              docker tag "${{ matrix.dockerhub_image }}:${{ matrix.tag }}" \
+                "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}-$arch"
+              docker push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}-$arch"
             else
               echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
             fi
@@ -100,34 +131,36 @@ jobs:
           echo "VALID_ARCHS=${VALID_ARCHS[*]}" >> $GITHUB_ENV
 
       - name: 创建多架构 Manifest
-        if: env.VALID_ARCHS != ''
+        if: env.VALID_ARCHS != '' && needs.docker-image-sync.outputs.matrix != '' # 确保 matrix 不为空
         run: |
           echo "有效架构列表：${{ env.VALID_ARCHS }}"
           declare -a MANIFEST_ARGS=()
 
-          for arch in ${{ env.VALID_ARCHS }}; do
-            MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch")
+          for arch in ${{ env.VALID_ARCHS }};
+          do
+            MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}-$arch")
           done
 
           echo "🛠️ 创建多架构清单..."
-          docker manifest create "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}" \
+          docker manifest create "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}" \
             "${MANIFEST_ARGS[@]}" \
             --insecure
 
           echo "🚚 推送清单..."
-          docker manifest push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+          docker manifest push "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}"
 
       - name: 清理临时镜像
         run: |
           docker image prune -a --force
           if [ -n "${{ env.VALID_ARCHS }}" ]; then
-            for arch in ${{ env.VALID_ARCHS }}; do
-              docker rmi "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}-$arch" || true
+            for arch in ${{ env.VALID_ARCHS }};
+            do
+              docker rmi "ghcr.io/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}-$arch" || true
             done
           fi
 
       - name: 创建 docker-compose.yaml 文件
-        if: env.VALID_ARCHS != ''
+        if: env.VALID_ARCHS != '' && needs.docker-image-sync.outputs.matrix != '' # 确保 matrix 不为空
         run: |
           mkdir -p docker-compose
           cp docker-compose/example.yaml docker-compose/${{ env.IMAGE_NAME }}.yaml
@@ -138,7 +171,7 @@ jobs:
           git push origin main
 
       - name: 更新 README.md 文件
-        if: env.VALID_ARCHS != ''
+        if: env.VALID_ARCHS != '' && needs.docker-image-sync.outputs.matrix != '' # 确保 matrix 不为空
         run: |
           # 提取现有表格数据行
           data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
@@ -155,33 +188,33 @@ jobs:
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
 
           # 获取当前镜像名称
-          current_image=$(echo "${{ inputs.dockerhub_image }}" | tr '[:upper:]' '[:lower:]')
+          current_image_name_for_readme=$(echo "${{ matrix.dockerhub_image }}" | tr '[:upper:]' '[:lower:]') # 使用 matrix.dockerhub_image
 
           echo "Existing images: $existing_images"
-          echo "Current image: $current_image"
+          echo "Current image for README: $current_image_name_for_readme"
 
           # 检查镜像是否已存在
-          if echo "$existing_images" | grep -qxF "$current_image"; then
-              echo "镜像 ${{ inputs.dockerhub_image }} 已存在，跳过 README 更新"
+          if echo "$existing_images" | grep -qxF "$current_image_name_for_readme"; then
+              echo "镜像 ${{ matrix.dockerhub_image }} 已存在，跳过 README 更新"
           else
-              echo "添加新镜像 ${{ inputs.dockerhub_image }} 到 README"
+              echo "添加新镜像 ${{ matrix.dockerhub_image }} 到 README"
 
               # 计算当前镜像数量
               count=$(echo "$data_lines" | wc -l)
               new_count=$((count + 1))
 
               # 生成 pull 命令
-              if [ "${{ inputs.tag }}" = "latest" ]; then
+              if [ "${{ matrix.tag }}" = "latest" ]; then
                 pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}"
               else
-                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}"
+                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}"
               fi
 
               # 为每个镜像创建一个docker-compose.yaml文件的链接
               compose_file="[${{ env.IMAGE_NAME }}.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/${{ env.IMAGE_NAME }}.yaml)"
 
               # 生成新表格行
-              new_row="| $new_count | ${{ inputs.dockerhub_image }} | \`$pull_cmd\` | $compose_file |"
+              new_row="| $new_count | ${{ matrix.dockerhub_image }} | \`$pull_cmd\` | $compose_file |"
 
               # 生成新的表格内容
               {
