@@ -25,6 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.loop_images.outputs.matrix }}
+      ghcr_user: ${{ steps.set_ghcr_user.outputs.ghcr_user }}
     steps:
       - name: 安装依赖工具
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
@@ -55,7 +56,8 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: 设置 GHCR_USER 环境变量
-        run: echo "GHCR_USER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        id: set_ghcr_user
+        run: echo "ghcr_user=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
 
       - name: 登录到 GitHub 容器注册表
         uses: docker/login-action@v3
@@ -75,6 +77,7 @@ jobs:
     steps:
       - name: 设置环境变量
         run: |
+          echo "GHCR_USER=${{ needs.docker-image-sync.outputs.ghcr_user }}" >> $GITHUB_ENV
           # 自动获取所有可用架构
           echo "🔄 自动获取所有可用架构..."
           RAW_MANIFEST=$(skopeo inspect --raw "docker://${{ matrix.dockerhub_image }}:${{ matrix.tag }}")
