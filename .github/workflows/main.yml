@@ -23,7 +23,8 @@ on:
 jobs:
   docker-image-sync:
     runs-on: ubuntu-latest
-
+    outputs:
+      matrix: ${{ steps.loop_images.outputs.matrix }}
     steps:
       - name: 安装依赖工具
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
@@ -49,8 +50,8 @@ jobs:
 
             matrix_json=$(echo "$matrix_json" | jq --arg image "$current_image" --arg tag "$current_tag" --arg ghcr_name "$current_ghcr_name" '.include += [{"dockerhub_image": $image, "tag": $tag, "ghcr_image": $ghcr_name}]')
           done
-          echo "matrix<<EOF"
-          echo "$matrix_json"
+          echo "matrix<<EOF" >> $GITHUB_OUTPUT
+          echo "$matrix_json" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
   sync_single_image:
