@@ -24,8 +24,8 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|     | 源镜像                           | pull 镜像                                        | docker-compose                                                                                                                   |
-| --- | -------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+|   | 源镜像 | pull 镜像 | docker-compose |
+| ---- | -------- | --------- | -------------- |
 | 1   | hello-world                      | `ghcr.nju.edu.cn/sqing33/hello-world`            | [example.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml)                               |
 | 2   | nginx                            | `ghcr.nju.edu.cn/sqing33/nginx`                  | [nginx.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                                   |
 | 3   | dpanel/dpanel                    | `ghcr.nju.edu.cn/sqing33/dpanel`                 | [dpanel.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                                 |
@@ -59,3 +59,4 @@
 | 31  | jxxghp/moviepilot-v2             | `ghcr.nju.edu.cn/sqing33/moviepilot-v2`          | [moviepilot-v2.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml)                   |
 | 32  | lscr.io/linuxserver/obsidian     | `ghcr.nju.edu.cn/sqing33/obsidian`               | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml)                             |
 | 33  | metacubex/mihomo                 | `ghcr.nju.edu.cn/sqing33/mihomo`                 | [mihomo.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                                 |
+| 34 | gdy666/lucky | `ghcr.nju.edu.cn/sqing33/lucky` | [lucky.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml) |
