@@ -60,3 +60,4 @@
 | 32  | lscr.io/linuxserver/obsidian     | `ghcr.nju.edu.cn/sqing33/obsidian`               | [obsidian.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/obsidian.yaml)                             |
 | 33  | metacubex/mihomo                 | `ghcr.nju.edu.cn/sqing33/mihomo`                 | [mihomo.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                                 |
 | 34 | gdy666/lucky | `ghcr.nju.edu.cn/sqing33/lucky` | [lucky.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml) |
+| 35 | dperson/samba | `ghcr.nju.edu.cn/sqing33/samba` | [samba.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml) |
