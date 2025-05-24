@@ -70,3 +70,4 @@
 | 42 | lscr.io/linuxserver/emby | `ghcr.nju.edu.cn/sqing33/emby` | [emby.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml) |
 | 43 | xiaoyaliu/alist | `ghcr.nju.edu.cn/sqing33/alist` | [alist.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml) |
 | 44 | lscr.io/linuxserver/jackett | `ghcr.nju.edu.cn/sqing33/jackett` | [jackett.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml) |
+| 45 | easychen/cookiecloud | `ghcr.nju.edu.cn/sqing33/cookiecloud` | [cookiecloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml) |
