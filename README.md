@@ -66,3 +66,4 @@
 | 38 | gotify/server | `ghcr.nju.edu.cn/sqing33/server` | [server.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/server.yaml) |
 | 39 | ghcr.io/requarks/wiki | `ghcr.nju.edu.cn/sqing33/wiki` | [wiki.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wiki.yaml) |
 | 40 | phpmyadmin | `ghcr.nju.edu.cn/sqing33/phpmyadmin` | [phpmyadmin.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml) |
+| 41 | adminer | `ghcr.nju.edu.cn/sqing33/adminer` | [adminer.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml) |
