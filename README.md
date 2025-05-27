@@ -76,3 +76,4 @@
 | 48 | lscr.io/linuxserver/prowlarr | `ghcr.nju.edu.cn/sqing33/prowlarr` | [prowlarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prowlarr.yaml) |
 | 49 | lscr.io/linuxserver/sonarr | `ghcr.nju.edu.cn/sqing33/sonarr` | [sonarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sonarr.yaml) |
 | 50 | lscr.io/linuxserver/radarr | `ghcr.nju.edu.cn/sqing33/radarr` | [radarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/radarr.yaml) |
+| 51 | lscr.io/linuxserver/lidarr | `ghcr.nju.edu.cn/sqing33/lidarr` | [lidarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lidarr.yaml) |
