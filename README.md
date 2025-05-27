@@ -74,3 +74,4 @@
 | 46 | qdtoday/qd | `ghcr.nju.edu.cn/sqing33/qd` | [qd.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) |
 | 47 | whyour/qinglong | `ghcr.nju.edu.cn/sqing33/qinglong` | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
 | 48 | lscr.io/linuxserver/prowlarr | `ghcr.nju.edu.cn/sqing33/prowlarr` | [prowlarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prowlarr.yaml) |
+| 49 | lscr.io/linuxserver/sonarr | `ghcr.nju.edu.cn/sqing33/sonarr` | [sonarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sonarr.yaml) |
