@@ -73,4 +73,3 @@
 | 45 | easychen/cookiecloud | `ghcr.nju.edu.cn/sqing33/cookiecloud` | [cookiecloud.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml) |
 | 46 | qdtoday/qd | `ghcr.nju.edu.cn/sqing33/qd` | [qd.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) |
 | 47 | whyour/qinglong | `ghcr.nju.edu.cn/sqing33/qinglong` | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
-| 48 | lscr.io/linuxserver/prowlarr | `ghcr.nju.edu.cn/sqing33/prowlarr` | [prowlarr.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prowlarr.yaml) |
