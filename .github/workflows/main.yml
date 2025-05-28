@@ -113,12 +113,10 @@ jobs:
                 echo "✔️ 确认存在 $arch 架构镜像"
                 VALID_ARCHS+=("$arch")
                 echo "🚀 正在同步 $arch 架构..."
-                # 每次 push 前都重新登录，防止 session 失效
-                echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
                 docker pull --platform "linux/$arch" "$current_image:$current_tag"
                 docker tag "$current_image:$current_tag" \
-                  "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
-                docker push "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
+                  "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
+                docker push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
               else
                 echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
               fi
@@ -157,34 +155,39 @@ jobs:
 
             # 更新 README.md 文件
             data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
-            # 获取已存在的完整镜像名（带标签）
-            existing_images=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); gsub(/`/, "", $2); print $2} /^[^|]/ {capture=0}' README.md | grep -vE '^源镜像$|-+$' | sed '/^$/d')
-            current_image_name_for_readme="$full_image"
+            existing_images=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); gsub(/`/, "", $2); print $2} /^[^|]/ {capture=0}' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
+            current_image_name_for_readme=$(echo "$current_image" | tr '[:upper:]' '[:lower:]')
             echo "Existing images: $existing_images"
             echo "Current image for README: $current_image_name_for_readme"
             if echo "$existing_images" | grep -qxF "$current_image_name_for_readme"; then
-              echo "镜像 $full_image 已存在，跳过 README 更新"
+              echo "镜像 $current_image 已存在，跳过 README 更新"
             else
-              echo "添加新镜像 $full_image 到 README"
-              # 找到表格最后一行的行号（最后一个以 | 数字 开头的行）
-              last_table_line=$(awk '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|[ ]*[0-9]+/ {line=NR; last_num=$2} in_table && /^[^|]/ {in_table=0} END {print line}' README.md)
-              # 获取最后一行的编号
-              last_num=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|[ ]*[0-9]+/ {num=$2} in_table && /^[^|]/ {in_table=0} END {gsub(/ /, "", num); print num+0}' README.md)
-              if [ -z "$last_num" ] || [ "$last_num" -eq 0 ]; then last_num=0; fi
-              new_index=$((last_num + 1))
+              echo "添加新镜像 $current_image 到 README"
+              count=$(echo "$data_lines" | wc -l)
+              new_count=$((count + 1))
               pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+              # 如果 target_tag 是 latest，则从 pull_cmd 中移除 :latest
               if [[ "$target_tag" == "latest" ]]; then
                 pull_cmd="${pull_cmd%:latest}"
               fi
               pull_cmd="\`$pull_cmd\`"
               compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_index" "$full_image" "$pull_cmd" "$compose_file" "$sync_status"
-              awk -v insert_line=$last_table_line -v new_row="$new_row" 'NR==insert_line{print; print new_row; next}1' README.md > README.tmp && mv README.tmp README.md
+              # 源镜像显示完整镜像名（包含标签）
+              display_image_name="$full_image"
+              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd" "$compose_file" "$sync_status"
+              {
+                echo "### 本仓库已同步的 Docker 镜像"
+                echo ""
+                echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
+                echo "| ---- | -------- | --------- | -------------- | ---- |"
+                echo "$data_lines"
+                echo "$new_row"
+              } > new_table_content.txt
+              awk '/^### 本仓库已同步的 Docker 镜像/ {while ((getline line < "new_table_content.txt") > 0) {print line} close("new_table_content.txt"); while ((getline line) > 0) {if (line ~ /^[^|]/) {print line; break}}; next} { print }' README.md > README.tmp && mv README.tmp README.md
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
               git add README.md
-              git status
               git commit -m "更新README.md，添加新的镜像表格条目" || true
               git pull --rebase origin main
               git push origin main
