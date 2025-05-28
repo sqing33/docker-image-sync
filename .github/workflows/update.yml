@@ -29,9 +29,9 @@ jobs:
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 镜像列（第3列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $4);
-              gsub(/`/, "", $4);
-              print $4
+              gsub(/^[ \t]+|[ \t]+$/, "", $3);
+              gsub(/`/, "", $3);
+                print $3
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
@@ -52,7 +52,7 @@ jobs:
               # 提取源镜像列（第2列，在删除用途列后）
               gsub(/^[ \t]+|[ \t]+$/, "", $3);
               gsub(/`/, "", $3);
-              print $3
+                print $3
           }
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
@@ -65,7 +65,7 @@ jobs:
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 镜像列（第3列）和同步状态列（第5列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull image
+              gsub(/^[ \t]+|[ \t]+$/, "", $3); # pull image
               gsub(/`/, "", $3);
               gsub(/^[ \t]+|[ \t]+$/, "", $5); # sync status
               print $3 "|" $5
