@@ -156,47 +156,49 @@ jobs:
             git push origin main
 
             # 更新 README.md 文件
-            # === 优化 README.md 镜像表格去重逻辑（彻底去重，防止重复） ===
-            # 1. 提取已有表格内容（不含表头），去除空行
-            data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md | sed '/^$/d')
-            # 2. 生成新条目内容（不带行号）
-            pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
-            if [[ "$target_tag" == "latest" ]]; then
-              pull_cmd="${pull_cmd%:latest}"
+            # === 优化 README.md 镜像表格去重逻辑（同步前判断第二列是否已存在） ===
+            # 获取已存在的源镜像（第二列，含标签）
+            existing_sources=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^ +| +$/, "", $2); print $2} /^[^|]/ {capture=0}' README.md | sed '/^$/d')
+            # 判断当前 full_image 是否已存在于 existing_sources
+            already_exists=false
+            for src in $existing_sources; do
+              if [ "$src" = "$full_image" ]; then
+                already_exists=true
+                break
+              fi
+            done
+            if $already_exists; then
+              echo "镜像 $full_image 已存在于 README 表格，跳过添加。"
+            else
+              echo "添加新镜像 $full_image 到 README"
+              count=$(echo "$existing_sources" | wc -l)
+              new_count=$((count + 1))
+              pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+              if [[ "$target_tag" == "latest" ]]; then
+                pull_cmd="${pull_cmd%:latest}"
+              fi
+              pull_cmd="\`$pull_cmd\`"
+              compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
+              display_image_name="$full_image"
+              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd" "$compose_file" "$sync_status"
+              data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
+              {
+                echo "### 本仓库已同步的 Docker 镜像"
+                echo ""
+                echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
+                echo "| ---- | -------- | --------- | -------------- | ---- |"
+                echo "$data_lines"
+                echo "$new_row"
+              } > new_table_content.txt
+              awk '/^### 本仓库已同步的 Docker 镜像/ {while ((getline line < "new_table_content.txt") > 0) {print line} close("new_table_content.txt"); while ((getline line) > 0) {if (line ~ /^[^|]/) {print line; break}}; next} { print }' README.md > README.tmp && mv README.tmp README.md
+              git config --global user.name "GitHub Actions"
+              git config --global user.email "actions@github.com"
+              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+              git add README.md
+              git commit -m "更新README.md，添加新的镜像表格条目" || true
+              git pull --rebase origin main
+              git push origin main
             fi
-            pull_cmd="\`$pull_cmd\`"
-            compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-            display_image_name="$full_image"
-            new_row_no_idx="| $display_image_name | $pull_cmd | $compose_file | $sync_status |"
-            # 3. 合并已有条目和新条目，去重（以源镜像:标签为唯一键）
-            all_rows=$(echo "$data_lines" | awk -F'|' '{gsub(/^ +| +$/, "", $2); print "|"$2"|"$3"|"$4"|"$5"|"}' ; echo "$new_row_no_idx")
-            # 去重（只保留唯一的源镜像:标签）
-            unique_rows=$(echo "$all_rows" | awk -F'|' '!seen[$2]++')
-            # 4. 重新生成带行号的表格内容
-            final_rows=""
-            idx=1
-            while IFS= read -r line; do
-              [ -z "$line" ] && continue
-              rest=$(echo "$line" | cut -d'|' -f3-)
-              final_rows+="| $idx |$rest\n"
-              idx=$((idx+1))
-            done <<< "$unique_rows"
-            # 5. 重建表格
-            {
-              echo "### 本仓库已同步的 Docker 镜像"
-              echo ""
-              echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
-              echo "| ---- | -------- | --------- | -------------- | ---- |"
-              echo -e "$final_rows"
-            } > new_table_content.txt
-            awk '/^### 本仓库已同步的 Docker 镜像/ {while ((getline line < "new_table_content.txt") > 0) {print line} close("new_table_content.txt"); while ((getline line) > 0) {if (line ~ /^[^|]/) {print line; break}}; next} { print }' README.md > README.tmp && mv README.tmp README.md
-            git config --global user.name "GitHub Actions"
-            git config --global user.email "actions@github.com"
-            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-            git add README.md
-            git commit -m "更新README.md，去重并添加新的镜像表格条目" || true
-            git pull --rebase origin main
-            git push origin main
             echo "===== 同步完成: $current_image:$current_tag =====\n"
           done
           # 所有镜像同步完后再做全局 prune（可选）
