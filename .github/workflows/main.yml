@@ -166,22 +166,25 @@ jobs:
               echo "镜像 $full_image 已存在，跳过 README 更新"
             else
               echo "添加新镜像 $full_image 到 README"
-              # 找到表格最后一行的行号
-              last_table_line=$(awk '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|/ {line=NR} in_table && /^[^|]/ {in_table=0} END {print line}' README.md)
+              # 找到表格最后一行的行号（最后一个以 | 数字 开头的行）
+              last_table_line=$(awk '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|[ ]*[0-9]+/ {line=NR; last_num=$2} in_table && /^[^|]/ {in_table=0} END {print line}' README.md)
+              # 获取最后一行的编号
+              last_num=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|[ ]*[0-9]+/ {num=$2} in_table && /^[^|]/ {in_table=0} END {gsub(/ /, "", num); print num+0}' README.md)
+              if [ -z "$last_num" ] || [ "$last_num" -eq 0 ]; then last_num=0; fi
+              new_index=$((last_num + 1))
               pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
               if [[ "$target_tag" == "latest" ]]; then
                 pull_cmd="${pull_cmd%:latest}"
               fi
               pull_cmd="\`$pull_cmd\`"
               compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-              # 自动编号
-              new_index=$(( $(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\| [0-9]+/ {print $2} in_table && /^[^|]/ {in_table=0}' README.md | tail -1 | tr -d ' ') + 1 ))
               printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_index" "$full_image" "$pull_cmd" "$compose_file" "$sync_status"
               awk -v insert_line=$last_table_line -v new_row="$new_row" 'NR==insert_line{print; print new_row; next}1' README.md > README.tmp && mv README.tmp README.md
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
               git add README.md
+              git status
               git commit -m "更新README.md，添加新的镜像表格条目" || true
               git pull --rebase origin main
               git push origin main
