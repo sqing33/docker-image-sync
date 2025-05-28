@@ -25,7 +25,7 @@
 ### 本仓库已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 |
-| ---- | -------- | --------- | -------------- | ------------- |
+| ---- | -------- | --------- | -------------- |
 | 1   | hello-world                      | `ghcr.nju.edu.cn/sqing33/hello-world`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml)                               | ✔️ |
 | 2   | nginx                            | `ghcr.nju.edu.cn/sqing33/nginx`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                                   | ✔️ |
 | 3   | dpanel/dpanel                    | `ghcr.nju.edu.cn/sqing33/dpanel`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                                 | ✔️ |
@@ -78,3 +78,5 @@
 | 50 | milvusdb/milvus | `ghcr.nju.edu.cn/sqing33/milvus:v2.5.10` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml) | ✔️ |
 | 51 | node | `ghcr.nju.edu.cn/sqing33/node:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) | ✔️ |
 | 52 | bash | `ghcr.nju.edu.cn/sqing33/bash:latest` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml) | ❌ |
+| 53  | busybox                        | `ghcr.nju.edu.cn/sqing33/busybox:latest`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ❌ |
+
