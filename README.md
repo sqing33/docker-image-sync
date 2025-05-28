@@ -78,4 +78,5 @@
 | 50 | milvusdb/milvus | `ghcr.nju.edu.cn/sqing33/milvus:v2.5.10` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml) | ✔️ |
 | 51 | node | `ghcr.nju.edu.cn/sqing33/node:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) | ✔️ |
 | 52  | bash:devel-alpine3.21          | ghcr.nju.edu.cn/sqing33/bash                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
+| 53  | busybox                        | ghcr.nju.edu.cn/sqing33/busybox                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ❌ |
 
