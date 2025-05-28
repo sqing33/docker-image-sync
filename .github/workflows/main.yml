@@ -164,8 +164,8 @@ jobs:
               count=$(echo "$data_lines" | wc -l)
               new_count=$((count + 1))
               pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
-              compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"}]}}}
-              new_row="| $new_count | $current_image | `$pull_cmd` | $compose_file | $sync_status |"
+              compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
+              new_row="| $new_count | $current_image | \`$pull_cmd\` | $compose_file | $sync_status |"
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
