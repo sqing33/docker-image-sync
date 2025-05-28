@@ -108,38 +108,32 @@ jobs:
               IMAGE_NAME="$current_ghcr_name"
             fi
             declare -a VALID_ARCHS=()
-            # FULL_MANIFEST=$(skopeo inspect --raw "docker://$full_image_for_sync" | jq .) # Not strictly needed if skopeo can pull specific arch later
-            # For simplicity, let's try pulling directly for each arch. Skopeo copy is more efficient for multi-arch manifests if source supports it well.
-            # For now, sticking to docker pull --platform which is more common.
-
-            # Create a temporary manifest list to amend
-            TEMP_MANIFEST_LIST_NAME="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:${target_tag}-temp-manifest"
+            
+            TEMP_MANIFEST_LIST_NAME="ghcr.io/${GHCR_USER}/$IMAGE_NAME:${target_tag}-temp-manifest" # Use GHCR_USER from env
 
             for arch in $ARCHS_STR; do
               echo "🔄 正在检查和同步 $arch 架构..."
-              # Instead of pre-checking with jq, try to pull. If it fails, skopeo copy might also fail.
-              # Docker pull is a good validation.
-              echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin # Login per arch just in case of session timeouts
+              echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
               if docker pull --platform "linux/$arch" "$full_image_for_sync"; then
                 echo "✔️ $arch 架构拉取成功"
                 VALID_ARCHS+=("$arch")
                 docker tag "$full_image_for_sync" \
                   "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
                 docker push "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
-                # Add to manifest args for later
-                if [ ${#VALID_ARCHS[@]} -eq 1 ]; then # First valid arch, create the manifest
+                
+                if [ ${#VALID_ARCHS[@]} -eq 1 ]; then 
                     docker manifest create "$TEMP_MANIFEST_LIST_NAME" \
-                        "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --insecure
-                else # Subsequent valid archs, amend the manifest
+                        "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch" --insecure
+                else 
                     docker manifest annotate "$TEMP_MANIFEST_LIST_NAME" \
-                        "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --arch "$arch" # Annotate might be needed if create/amend doesn't pick it up
+                        "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch" --arch "$arch"
                     docker manifest create "$TEMP_MANIFEST_LIST_NAME" \
-                        --amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --insecure
+                        --amend "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch" --insecure
                 fi
               else
                 echo "⚠️ 警告：拉取 $arch 架构镜像失败，已跳过"
               fi
-              docker rmi "$full_image_for_sync" >/dev/null 2>&1 || true # Clean up the specific arch image if it was pulled with that tag
+              docker rmi "$full_image_for_sync" >/dev/null 2>&1 || true 
               echo "----------------------------------------"
             done
 
@@ -148,32 +142,27 @@ jobs:
               continue
             fi
 
-            echo "🛠️ 创建并推送最终的多架构清单 (ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag)..."
-            docker manifest push "$TEMP_MANIFEST_LIST_NAME" --purge # Push the temp manifest
-            # Now tag this manifest to the final name
-            # Skopeo is better for retagging manifests without pulling
+            echo "🛠️ 创建并推送最终的多架构清单 (ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag)..."
+            docker manifest push "$TEMP_MANIFEST_LIST_NAME" --purge 
              echo "Retagging manifest using skopeo..."
-             skopeo copy --all "docker://$TEMP_MANIFEST_LIST_NAME" "docker://ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+             skopeo copy --all "docker://$TEMP_MANIFEST_LIST_NAME" "docker://ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag"
 
-            # Clean up temporary images
             for arch_cleanup in ${VALID_ARCHS[@]}; do
-              docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch_cleanup" >/dev/null 2>&1 || true
+              docker rmi "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch_cleanup" >/dev/null 2>&1 || true
             done
-            docker manifest rm "$TEMP_MANIFEST_LIST_NAME" >/dev/null 2>&1 || true # Clean up temp manifest from local
+            docker manifest rm "$TEMP_MANIFEST_LIST_NAME" >/dev/null 2>&1 || true 
 
-            # Create docker-compose.yaml file
             mkdir -p docker-compose
             compose_file_name="$IMAGE_NAME" 
-            # Check if example.yaml exists before copying
             if [ -f "docker-compose/example.yaml" ]; then
               cp docker-compose/example.yaml "docker-compose/$compose_file_name.yaml"
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git add "docker-compose/$compose_file_name.yaml"
-              # Commit only if there are changes to be committed for this file
               if ! git diff --staged --quiet "docker-compose/$compose_file_name.yaml"; then
                 git commit -m "添加/更新 $compose_file_name.yaml 文件 (镜像: $IMAGE_NAME)" || echo "No changes to commit for compose file, or commit failed."
-                git pull --rebase origin main # It's better to pull before loop or after loop
+                # Consider moving git pull/push outside the loop for efficiency
+                git pull --rebase origin main 
                 git push origin main
               else
                 echo "No changes detected for docker-compose/$compose_file_name.yaml"
@@ -182,8 +171,6 @@ jobs:
               echo "警告: docker-compose/example.yaml 未找到，跳过创建 $compose_file_name.yaml"
             fi
             
-            # Update README.md file
-            # 1. Robustly get existing source image keys for duplicate checking
             temp_readme_keys_file=$(mktemp)
             awk -F '|' '
                 BEGIN { capture_block = 0 }
@@ -207,7 +194,6 @@ jobs:
                         }
                     }
                 }
-                # Stop capturing if we are in the block and hit a line not starting with | or another H3 (end of table)
                 capture_block && (!/^\|/ && !/^[[:space:]]*$/ && !/^### 本仓库已同步的 Docker 镜像/) { capture_block = 0 }
             ' README.md > "$temp_readme_keys_file"
             existing_sources_keys=$(<"$temp_readme_keys_file")
@@ -223,12 +209,9 @@ jobs:
             else
               echo "添加新镜像 '$key_for_readme_check' 到 README"
               
-              # 2. Robustly get existing data lines from the *last* table instance
               last_h3_linenum=$(grep -n "^### 本仓库已同步的 Docker 镜像" README.md | tail -n 1 | cut -d: -f1)
               data_lines=""
               if [ -n "$last_h3_linenum" ]; then
-                  # Extract lines that look like data rows from that point onwards
-                  # A data row is | number | source | pull | compose | status |
                   data_lines=$(tail -n "+$last_h3_linenum" README.md | awk '/^\| *[0-9]+ *\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|/')
               fi
 
@@ -243,7 +226,7 @@ jobs:
                 display_image_name_for_readme="$current_image_from_input:$effective_input_tag"
               fi
               
-              pull_cmd_val="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME"
+              pull_cmd_val="ghcr.nju.edu.cn/${GHCR_USER}/$IMAGE_NAME" # Use GHCR_USER from env
               if [ "$target_tag" != "latest" ]; then
                 pull_cmd_val="$pull_cmd_val:$target_tag"
               fi
@@ -252,7 +235,6 @@ jobs:
               
               printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name_for_readme" "$pull_cmd_markdown" "$compose_file_markdown" "$sync_status"
               
-              # 3. Construct new table content
               new_table_content_file=$(mktemp)
               {
                 echo "### 本仓库已同步的 Docker 镜像"
@@ -260,58 +242,62 @@ jobs:
                 echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
                 echo "| ---- | -------- | --------- | -------------- | ---- |"
                 if [ -n "$data_lines" ]; then
-                    echo "$data_lines" # These are the PREVIOUSLY existing data lines
+                    echo "$data_lines" 
                 fi
-                echo -n "$new_row" # Append the new row
+                echo -n "$new_row" 
               } > "$new_table_content_file"
               
-              # 4. More robust awk for replacement (replaces the entire block from first H3)
+              # AWK script content stored in a variable
+              awk_script_content=$(printf '%s\n' \
+              'BEGIN { table_replaced = 0 }' \
+              '/^### 本仓库已同步的 Docker 镜像/ {' \
+              '    if (!table_replaced) {' \
+              '        while ((getline line < new_content_filename_var) > 0) { print line }' \
+              '        close(new_content_filename_var)' \
+              '        table_replaced = 1' \
+              '        while (getline > 0) {' \
+              '            if (line !~ /^\|/ && line !~ /^### 本仓库已同步的 Docker 镜像/ && line !~ /^[[:space:]]*$/) {' \
+              '                print line' \
+              '                break' \
+              '            }' \
+              '        }' \
+              '    }' \
+              '    next' \
+              '}' \
+              '{ print }')
+
               awk_script_file=$(mktemp)
-              cat <<'EOF_AWK' > "$awk_script_file"
-              BEGIN { table_replaced = 0 }
-              /^### 本仓库已同步的 Docker 镜像/ {
-                  if (!table_replaced) {
-                      while ((getline line < new_content_filename) > 0) { print line }
-                      close(new_content_filename)
-                      table_replaced = 1
-                      # Consume the entire old table block from input README.md
-                      # This includes duplicated H3s, headers, blank lines within the block, and data rows.
-                      while (getline > 0) {
-                          # If it's NOT a table line (doesn't start with |)
-                          # AND NOT another H3 for this table
-                          # AND NOT a blank line (blank lines are consumed if they are part of the block)
-                          # then we consider it the end of the old block.
-                          if (line !~ /^\|/ && line !~ /^### 本仓库已同步的 Docker 镜像/ && line !~ /^[[:space:]]*$/) {
-                              print line # This is the first line AFTER the old table block
-                              break
-                          }
-                          # Else, it's part of the old block, consume it (do nothing)
-                      }
-                  }
-                  # Whether we replaced or this is a subsequent H3 (already consumed if part of block),
-                  # we skip printing the current matched H3 line via `next`
-                  next
-              }
-              # Print all other lines (before the table section, or after if EOF was hit in consume loop)
-              { print }
-              EOF_AWK
-              awk -v new_content_filename="$new_table_content_file" -f "$awk_script_file" README.md > README.tmp && mv README.tmp README.md
+              echo "$awk_script_content" > "$awk_script_file"
+              
+              awk -v new_content_filename_var="$new_table_content_file" -f "$awk_script_file" README.md > README.tmp && mv README.tmp README.md
+              
               rm "$new_table_content_file" "$awk_script_file"
               
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
-              git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+              git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
               git add README.md
               if ! git diff --staged --quiet README.md; then
                   git commit -m "更新README.md，添加新的镜像表格条目: $display_image_name_for_readme" || echo "README commit failed or no changes."
-                  git pull --rebase origin main # Pull before push
+                  # Consider moving git pull/push outside the loop for efficiency
+                  git pull --rebase origin main 
                   git push origin main
               else
                   echo "No changes detected for README.md"
               fi
             fi
-            echo "===== 同步完成: $full_image_for_sync (推送到 ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag) =====\n"
+            echo "===== 同步完成: $full_image_for_sync (推送到 ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag) =====\n" # Use GHCR_USER from env
           done
           docker image prune -a --force
         env:
+          # GITHUB_TOKEN is automatically available to the workflow script
+          # GHCR_USER is set in a previous step and available in the environment
+          # No need to redefine GITHUB_TOKEN here unless you intend to override the default one,
+          # but the ${{ secrets.GITHUB_TOKEN }} is correctly used directly where needed.
+          # If you were using it as `env.GITHUB_TOKEN` in the script, then defining it here would be necessary.
+          # For `docker login`, it uses `${{ secrets.GITHUB_TOKEN }}` directly.
+          # For `git remote set-url`, I've put `${GITHUB_TOKEN}` which implies it's set in the shell env.
+          # The `secrets.GITHUB_TOKEN` is passed to `docker login` action.
+          # For the `git` commands in the script, we need to ensure `GITHUB_TOKEN` is available.
+          # Setting it explicitly in the `env` block for the step ensures it's available.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
