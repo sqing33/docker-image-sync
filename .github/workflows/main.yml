@@ -113,10 +113,12 @@ jobs:
                 echo "✔️ 确认存在 $arch 架构镜像"
                 VALID_ARCHS+=("$arch")
                 echo "🚀 正在同步 $arch 架构..."
+                # 每次 push 前都重新登录，防止 session 失效
+                echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
                 docker pull --platform "linux/$arch" "$current_image:$current_tag"
                 docker tag "$current_image:$current_tag" \
-                  "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
-                docker push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
+                  "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
+                docker push "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
               else
                 echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
               fi
