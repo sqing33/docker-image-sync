@@ -71,4 +71,5 @@
 | 43  | sqing33/douyin-live-recorder-webui:0.1 | `ghcr.nju.edu.cn/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
 | 44  | sqing33/docsify                        | `ghcr.nju.edu.cn/sqing33/docsify-sqing`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)              | ✔️   |
 | 2   | sqing33/douyin-live-recorder-webui:0.1 | `ghcr.nju.edu.cn/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌ |
+| 2   | sqing33/docsify                | `ghcr.nju.edu.cn/sqing33/docsify-sqing`          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)     | ✔️ |
 
