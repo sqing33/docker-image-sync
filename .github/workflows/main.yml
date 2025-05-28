@@ -166,26 +166,18 @@ jobs:
               echo "镜像 $full_image 已存在，跳过 README 更新"
             else
               echo "添加新镜像 $full_image 到 README"
-              count=$(echo "$data_lines" | wc -l)
-              new_count=$((count + 1))
+              # 找到表格最后一行的行号
+              last_table_line=$(awk '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\|/ {line=NR} in_table && /^[^|]/ {in_table=0} END {print line}' README.md)
               pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
-              # 如果 target_tag 是 latest，则从 pull_cmd 中移除 :latest
               if [[ "$target_tag" == "latest" ]]; then
                 pull_cmd="${pull_cmd%:latest}"
               fi
               pull_cmd="\`$pull_cmd\`"
               compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-              display_image_name="$full_image"
-              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd" "$compose_file" "$sync_status"
-              {
-                echo "### 本仓库已同步的 Docker 镜像"
-                echo ""
-                echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
-                echo "| ---- | -------- | --------- | -------------- | ---- |"
-                echo "$data_lines"
-                echo "$new_row"
-              } > new_table_content.txt
-              awk '/^### 本仓库已同步的 Docker 镜像/ {while ((getline line < "new_table_content.txt") > 0) {print line} close("new_table_content.txt"); while ((getline line) > 0) {if (line ~ /^[^|]/) {print line; break}}; next} { print }' README.md > README.tmp && mv README.tmp README.md
+              # 自动编号
+              new_index=$(( $(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {in_table=1} in_table && /^\| [0-9]+/ {print $2} in_table && /^[^|]/ {in_table=0}' README.md | tail -1 | tr -d ' ') + 1 ))
+              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_index" "$full_image" "$pull_cmd" "$compose_file" "$sync_status"
+              awk -v insert_line=$last_table_line -v new_row="$new_row" 'NR==insert_line{print; print new_row; next}1' README.md > README.tmp && mv README.tmp README.md
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git

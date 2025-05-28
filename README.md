@@ -24,15 +24,8 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|   | 源镜像 | pull 镜像 | docker-compose | 同步 |
-| ---- | -------- | --------- | -------------- | ---- |
-| 2   | mysql                          | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ✔️ |
-| 2   | phpmyadmin                     | `ghcr.nju.edu.cn/sqing33/phpmyadmin`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)        | ✔️ |
-
-### 本仓库已同步的 Docker 镜像
-
-|   | 源镜像 | pull 镜像 | docker-compose | 同步 |
-| ---- | -------- | --------- | -------------- | ---- |
+|     | 源镜像                                 | pull 镜像                                            | docker-compose                                                                                                | 同步 |
+| --- | -------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---- |
 | 1   | nginx                                  | `ghcr.nju.edu.cn/sqing33/nginx`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                      | ✔️   |
 | 2   | dpanel/dpanel                          | `ghcr.nju.edu.cn/sqing33/dpanel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                     | ✔️   |
 | 3   | lscr.io/linuxserver/qbittorrent        | `ghcr.nju.edu.cn/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
@@ -41,7 +34,7 @@
 | 6   | redis                                  | `ghcr.nju.edu.cn/sqing33/redis`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                      | ✔️   |
 | 7   | tiangolo/nginx-rtmp                    | `ghcr.nju.edu.cn/sqing33/nginx-rtmp`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)                 | ✔️   |
 | 8   | bytelang/kplayer                       | `ghcr.nju.edu.cn/sqing33/kplayer`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                    | ✔️   |
-| 9  | xhofe/alist                            | `ghcr.nju.edu.cn/sqing33/alist`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ✔️   |
+| 9   | xhofe/alist                            | `ghcr.nju.edu.cn/sqing33/alist`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ✔️   |
 | 10  | henrygd/beszel                         | `ghcr.nju.edu.cn/sqing33/beszel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                     | ✔️   |
 | 11  | lscr.io/linuxserver/duplicati          | `ghcr.nju.edu.cn/sqing33/duplicati`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                  | ✔️   |
 | 12  | homeassistant/home-assistant           | `ghcr.nju.edu.cn/sqing33/homeassistant`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)              | ✔️   |
