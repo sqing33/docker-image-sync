@@ -170,7 +170,7 @@ jobs:
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
                 echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
-                echo "| ---- | -------- | --------- | -------------- |"
+                echo "| ---- | -------- | --------- | -------------- | ---- |"
                 echo "$data_lines"
                 echo "$new_row"
               } > new_table_content.txt
