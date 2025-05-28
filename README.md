@@ -33,4 +33,6 @@
 ### 本仓库已同步的 Docker 镜像
 ### 本仓库已同步的 Docker 镜像
 ### 本仓库已同步的 Docker 镜像
+### 本仓库已同步的 Docker 镜像
 | 8   | lscr.io/linuxserver/jackett    | `ghcr.nju.edu.cn/sqing33/jackett`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)           | ✔️ |
+| 10  | gdy666/lucky                   | `ghcr.nju.edu.cn/sqing33/lucky`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)             | ✔️ |
