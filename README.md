@@ -79,4 +79,5 @@
 | 51  | node:alpine                    | `ghcr.nju.edu.cn/sqing33/node:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
 | 52  | node                           | `ghcr.nju.edu.cn/sqing33/node`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
 | 53  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
+| 54  | bash:devel                     | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
 
