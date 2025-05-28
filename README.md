@@ -26,7 +26,6 @@
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 |
 | ---- | -------- | --------- | -------------- | ---- |
-
 | 2   | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 
 ### 本仓库已同步的 Docker 镜像
