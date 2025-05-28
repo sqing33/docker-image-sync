@@ -63,12 +63,12 @@ jobs:
              fi
              current_ghcr_name="${ghcr_name_array[$i]}"
  
-             # 根据 change_tag_to_latest 和是否包含 alpine 决定最终标签
+             # 根据 change_tag_to_latest 和是否包含 'alpine' 决定最终标签
              target_tag="$current_tag"
-             if [ "${{ inputs.change_tag_to_latest }}" == "是" ] && [[ ! "$current_tag" =~ "alpine" ]]; then
+             if [[ "$current_tag" =~ "alpine" ]]; then
+               target_tag="alpine"
+             elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
                target_tag="latest"
-             elif [[ "$current_tag" =~ "alpine" ]]; then
-               target_tag="$current_tag"
              fi
  
              # 根据 change_tag_to_latest 和最终标签决定同步状态
