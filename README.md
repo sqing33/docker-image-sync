@@ -76,4 +76,5 @@
 | 48  | jupyter/scipy-notebook         | `ghcr.nju.edu.cn/sqing33/jupyterlab`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)        | ✔️ |
 | 49  | continuumio/miniconda3         | `ghcr.nju.edu.cn/sqing33/miniconda3`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)        | ✔️ |
 | 50  | linuxserver/code-server        | `ghcr.nju.edu.cn/sqing33/vscode`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vscode.yaml)            | ✔️ |
+| 51  | pgvector/pgvector:0.8.0-pg17   | `ghcr.nju.edu.cn/sqing33/postgres`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml)          | ❌ |
 
