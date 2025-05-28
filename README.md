@@ -81,4 +81,5 @@
 | 53  | streamrec/stream-rec-front     | `ghcr.nju.edu.cn/sqing33/stream-rec-front`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec-front.yaml)  | ✔️ |
 | 54  | ghcr.io/metacubex/metacubexd   | `ghcr.nju.edu.cn/sqing33/metacubexd`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)        | ✔️ |
 | 55  | p3terx/aria2-pro               | `ghcr.nju.edu.cn/sqing33/aria2`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2.yaml)             | ✔️ |
+| 56  | p3terx/ariang                  | `ghcr.nju.edu.cn/sqing33/aria2-webui`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2-webui.yaml)       | ✔️ |
 
