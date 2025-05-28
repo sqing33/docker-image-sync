@@ -26,12 +26,6 @@
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 |
 | ---- | -------- | --------- | -------------- | ---- |
-| 2   | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
-
-### 本仓库已同步的 Docker 镜像
-
-|   | 源镜像 | pull 镜像 | docker-compose | 同步 |
-| ---- | -------- | --------- | -------------- | ---- |
 | 1   | nginx                                  | `ghcr.nju.edu.cn/sqing33/nginx`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                      | ✔️   |
 | 2   | dpanel/dpanel                          | `ghcr.nju.edu.cn/sqing33/dpanel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                     | ✔️   |
 | 3   | lscr.io/linuxserver/qbittorrent        | `ghcr.nju.edu.cn/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
