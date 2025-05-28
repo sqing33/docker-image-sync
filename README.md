@@ -72,4 +72,5 @@
 | 44  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 | 45  | mysql:9.3.0                    | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ❌ |
 | 46  | kuingsmile/piclist             | `ghcr.nju.edu.cn/sqing33/piclist`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/piclist.yaml)           | ✔️ |
+| 47  | dko0/lsky-pro                  | `ghcr.nju.edu.cn/sqing33/lsky-pro`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky-pro.yaml)          | ✔️ |
 
