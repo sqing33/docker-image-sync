@@ -77,4 +77,5 @@
 | 49  | node                           | `ghcr.nju.edu.cn/sqing33/node`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
 | 50  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 | 51  | bash:devel                     | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
+| 52  | gotify/server                  | `ghcr.nju.edu.cn/sqing33/gotify`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)            | ✔️ |
 
