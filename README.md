@@ -32,5 +32,5 @@
 | ---- | -------- | --------- | -------------- | ---- |
 ### 本仓库已同步的 Docker 镜像
 ### 本仓库已同步的 Docker 镜像
-| 6   | mysql                          | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ✔️ |
-| 8   | phpmyadmin                     | `ghcr.nju.edu.cn/sqing33/phpmyadmin`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)        | ✔️ |
+### 本仓库已同步的 Docker 镜像
+| 8   | lscr.io/linuxserver/jackett    | `ghcr.nju.edu.cn/sqing33/jackett`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)           | ✔️ |
