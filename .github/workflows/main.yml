@@ -156,7 +156,7 @@ jobs:
             # 更新 README.md 文件
             
             data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
-            existing_images=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); gsub(/`/, "", $2); print $2} /^[^|]/ {capture=0}' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
+            existing_images=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^[ \t]+|[ \t]+$/, "", $3); gsub(/`/, "", $3); print $3} /^[^|]/ {capture=0}' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
             current_image_name_for_readme=$(echo "$current_image" | tr '[:upper:]' '[:lower:]')
             echo "现有镜像: $existing_images"
             echo "README 的当前镜像: $current_image_name_for_readme"
