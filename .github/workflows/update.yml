@@ -23,20 +23,15 @@ jobs:
         id: extract-target-images
         run: |
           awk -F '|' '
-          /^### 本仓库已同步的 Docker 镜像/ {print; getline; print; getline; print "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"; next}
-          /^\| ----/ {print; next}
-          {print}
-          /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-          capture && /^\| [0-9]+/ {
-              # 提取 pull 镜像列（第3列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $3);
-              gsub(/`/, "", $3);
-                print $3
-          }
-          /^### 部分镜像 docker run 命令/ {capture=0}
-          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | 
-          # 提取镜像名称（去除域名和标签）
-          sed 's|^ghcr.nju.edu.cn/sqing33/||' | 
+            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+            capture && /^\| *[0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull 镜像在第4列
+              gsub(/`/, "", $4);
+              print $4
+            }
+            capture && !/^\|/ {capture=0}
+          ' README.md | grep -vE '^$' | \
+          sed 's|^ghcr.nju.edu.cn/sqing33/||' | \
           sed 's/:[^:]*$//' > target-image-list.txt
           echo "===== target-image-list.txt 内容 ====="
           cat target-image-list.txt
@@ -44,33 +39,28 @@ jobs:
         id: extract-source-images
         run: |
           awk -F '|' '
-          /^### 本仓库已同步的 Docker 镜像/ {print; getline; print; getline; print "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"; next}
-          /^\| ----/ {print; next}
-          {print}
-          /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-          capture && /^\| [0-9]+/ {
-              # 提取源镜像列（第2列，在删除用途列后）
-              gsub(/^[ \t]+|[ \t]+$/, "", $3);
+            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+            capture && /^\| *[0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $3); # 源镜像在第3列
               gsub(/`/, "", $3);
-                print $3
-          }
-          /^### 部分镜像 docker run 命令/ {capture=0}
-          ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
+              print $3
+            }
+            capture && !/^\|/ {capture=0}
+          ' README.md | grep -vE '^$' > source-image-list.txt
           echo "===== source-image-list.txt 内容 ====="
           cat source-image-list.txt
       - name: 提取 README 镜像同步状态
         id: extract-readme-sync-status
         run: |
           awk -F '|' '
-          /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-          capture && /^\| [0-9]+/ {
-              # 提取 pull 镜像列（第3列）和同步状态列（第5列）
-              gsub(/^[ \t]+|[ \t]+$/, "", $3); # pull image
-              gsub(/`/, "", $3);
-              gsub(/^[ \t]+|[ \t]+$/, "", $5); # sync status
-              print $3 "|" $5
-          }
-          /^### 部分镜像 docker run 命令/ {capture=0}
+            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+            capture && /^\| *[0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull 镜像
+              gsub(/`/, "", $4);
+              gsub(/^[ \t]+|[ \t]+$/, "", $6); # 同步状态
+              print $4 "|" $6
+            }
+            capture && !/^\|/ {capture=0}
           ' README.md > readme-sync-status.txt
           echo "===== readme-sync-status.txt 内容 ====="
           cat readme-sync-status.txt
