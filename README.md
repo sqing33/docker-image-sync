@@ -79,4 +79,5 @@
 | 51  | pgvector/pgvector:0.8.0-pg17   | `ghcr.nju.edu.cn/sqing33/postgres`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml)          | ❌ |
 | 52  | ghcr.io/bitmagnet-io/bitmagnet | `ghcr.nju.edu.cn/sqing33/bitmagnet`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitmagnet.yaml)         | ✔️ |
 | 53  | siguremo/yutto                 | `ghcr.nju.edu.cn/sqing33/yutto-bilibili_downloads` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yutto-bilibili_downloads.yaml) | ✔️ |
+| 54  | chigusa/bililive-go            | `ghcr.nju.edu.cn/sqing33/bililive-go`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bililive-go.yaml)       | ✔️ |
 
