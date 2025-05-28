@@ -12,7 +12,7 @@ on:
         required: true
         default: ""
       ghcr_names:
-        description: "对应的同步后的镜像
+        description: "对应的同步后的镜像名称列表，格式为 '名称1,名称2,名称3'，如果某个镜像不需要指定名称，则用逗号填充，例如 ',,my-image' 表示第三个镜像同步后名称为 my-image，前两个自动提取"
         required: false
         default: ""
       change_tag_to_latest:
@@ -156,7 +156,7 @@ jobs:
             git push origin main
 
             # 更新 README.md 文件
-            # === 优化 README.md 镜像表格去重逻辑 ===
+            # === 优化 README.md 镜像表格去重逻辑（彻底去重，防止重复） ===
             # 1. 提取已有表格内容（不含表头），去除空行
             data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md | sed '/^$/d')
             # 2. 生成新条目内容（不带行号）
@@ -170,6 +170,7 @@ jobs:
             new_row_no_idx="| $display_image_name | $pull_cmd | $compose_file | $sync_status |"
             # 3. 合并已有条目和新条目，去重（以源镜像:标签为唯一键）
             all_rows=$(echo "$data_lines" | awk -F'|' '{gsub(/^ +| +$/, "", $2); print "|"$2"|"$3"|"$4"|"$5"|"}' ; echo "$new_row_no_idx")
+            # 去重（只保留唯一的源镜像:标签）
             unique_rows=$(echo "$all_rows" | awk -F'|' '!seen[$2]++')
             # 4. 重新生成带行号的表格内容
             final_rows=""
