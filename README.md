@@ -74,3 +74,4 @@
 | 46 | qdtoday/qd | `ghcr.nju.edu.cn/sqing33/qd` | [qd.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) |
 | 47 | whyour/qinglong | `ghcr.nju.edu.cn/sqing33/qinglong` | [qinglong.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) |
 | 48 | quay.io/coreos/etcd | `ghcr.nju.edu.cn/sqing33/etcd:v3.5.18` | [etcd.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml) |
+| 49 | minio/minio | `ghcr.nju.edu.cn/sqing33/minio:RELEASE.2023-03-20T20-16-18Z` | [minio.yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml) |
