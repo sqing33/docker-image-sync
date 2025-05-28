@@ -8,17 +8,21 @@ on:
   workflow_dispatch:
     inputs:
       images:
-        description: "要同步的 Docker 镜像列表，格式为 '镜像1,镜像2,镜像3'"
+        description: "要同步的 Docker 镜像列表，格式为 '镜像1:标签1,镜像2:标签2,镜像3:标签3'"
         required: true
-        default: ""
-      tags:
-        description: "对应的 Docker 镜像版本列表，格式为 '版本1,版本2,版本3'，如果某个镜像不需要指定版本，则用逗号填充，例如 ',,1.0' 表示第三个镜像使用 1.0 版本，前两个使用默认的 latest"
-        required: false
         default: ""
       ghcr_names:
         description: "对应的同步后的镜像名称列表，格式为 '名称1,名称2,名称3'，如果某个镜像不需要指定名称，则用逗号填充，例如 ',,my-image' 表示第三个镜像同步后名称为 my-image，前两个自动提取"
         required: false
         default: ""
+      change_tag_to_latest:
+        description: "同步后是否将镜像标签改为 latest (是/否)"
+        required: true
+        type: choice
+        options:
+          - '是'
+          - '否'
+        default: '是'
 
 jobs:
   docker-image-sync:
@@ -47,13 +51,27 @@ jobs:
       - name: 顺序同步所有镜像
         run: |
           IFS=',' read -r -a image_array <<< "${{ inputs.images }}"
-          IFS=',' read -r -a tag_array <<< "${{ inputs.tags }}"
           IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
 
           for i in "${!image_array[@]}"; do
-            current_image="${image_array[$i]}"
-            current_tag="${tag_array[$i]:-latest}"
+            full_image="${image_array[$i]}"
+            current_image=$(echo "$full_image" | cut -d':' -f1)
+            current_tag=$(echo "$full_image" | cut -s -d':' -f2)
             current_ghcr_name="${ghcr_name_array[$i]}"
+
+            # 根据 change_tag_to_latest 决定最终标签
+            target_tag="$current_tag"
+            if [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
+              target_tag="latest"
+              sync_status="❌"
+            else
+              if [ -z "$current_tag" ]; then
+                sync_status="✔️"
+                target_tag="latest"
+              else
+                sync_status="❌"
+              fi
+            fi
 
             if [ -z "$current_image" ]; then
               echo "警告：第 $((i+1)) 个镜像名称为空，已跳过。"
@@ -89,13 +107,13 @@ jobs:
             for arch in $ARCHS_STR; do
               echo "🔄 正在检查 $arch 架构支持..."
               if echo "$FULL_MANIFEST" | jq -e --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch)' >/dev/null 2>&1; then
-                echo "✅ 确认存在 $arch 架构镜像"
+                echo "✔️ 确认存在 $arch 架构镜像"
                 VALID_ARCHS+=("$arch")
                 echo "🚀 正在同步 $arch 架构..."
                 docker pull --platform "linux/$arch" "$current_image:$current_tag"
                 docker tag "$current_image:$current_tag" \
-                  "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag-$arch"
-                docker push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag-$arch"
+                  "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
+                docker push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch"
               else
                 echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
               fi
@@ -109,18 +127,18 @@ jobs:
             # 创建多架构 Manifest
             declare -a MANIFEST_ARGS=()
             for arch in ${VALID_ARCHS[@]}; do
-              MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag-$arch")
+              MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch")
             done
             echo "🛠️ 创建多架构清单..."
-            docker manifest create "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag" \
+            docker manifest create "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag" \
               "${MANIFEST_ARGS[@]}" --insecure
             echo "🚚 推送清单..."
-            docker manifest push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag"
+            docker manifest push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
 
             # 清理临时镜像
             docker image prune -a --force
             for arch in ${VALID_ARCHS[@]}; do
-              docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag-$arch" || true
+              docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" || true
             done
 
             # 创建 docker-compose.yaml 文件
@@ -145,17 +163,13 @@ jobs:
               echo "添加新镜像 $current_image 到 README"
               count=$(echo "$data_lines" | wc -l)
               new_count=$((count + 1))
-              if [ "$current_tag" = "latest" ]; then
-                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME"
-              else
-                pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$current_tag"
-              fi
+              pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
               compose_file="[$IMAGE_NAME.yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-              new_row="| $new_count | $current_image | \`$pull_cmd\` | $compose_file |"
+              new_row="| $new_count | $current_image | `$pull_cmd` | $compose_file | $sync_status |"
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
-                echo "|   | 源镜像 | pull 镜像 | docker-compose |"
+                echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
                 echo "| ---- | -------- | --------- | -------------- |"
                 echo "$data_lines"
                 echo "$new_row"

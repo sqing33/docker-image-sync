@@ -23,6 +23,9 @@ jobs:
         id: extract-target-images
         run: |
           awk -F '|' '
+          /^### 本仓库已同步的 Docker 镜像/ {print; getline; print; getline; print "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"; next}
+          /^\| ----/ {print; next}
+          {print}
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取 pull 镜像列（第3列）
@@ -41,6 +44,9 @@ jobs:
         id: extract-source-images
         run: |
           awk -F '|' '
+          /^### 本仓库已同步的 Docker 镜像/ {print; getline; print; getline; print "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"; next}
+          /^\| ----/ {print; next}
+          {print}
           /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
               # 提取源镜像列（第2列，在删除用途列后）
@@ -52,14 +58,30 @@ jobs:
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
           echo "===== source-image-list.txt 内容 ====="
           cat source-image-list.txt
-      - name: 合并镜像列表
+      - name: 提取 README 镜像同步状态
+        id: extract-readme-sync-status
+        run: |
+          awk -F '|' '
+          /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+          capture && /^\| [0-9]+/ {
+              # 提取 pull 镜像列（第3列）和同步状态列（第5列）
+              gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull image
+              gsub(/`/, "", $3);
+              gsub(/^[ \t]+|[ \t]+$/, "", $5); # sync status
+              print $3 "|" $5
+          }
+          /^### 部分镜像 docker run 命令/ {capture=0}
+          ' README.md > readme-sync-status.txt
+          echo "===== readme-sync-status.txt 内容 ====="
+          cat readme-sync-status.txt
+      - name: 合并镜像列表"}]}}}
         run: |
           # 检查文件是否存在且非空
           if [ ! -s source-image-list.txt ] || [ ! -s target-image-list.txt ]; then
             echo "错误：source-image-list.txt 或 target-image-list.txt 为空或不存在"
             exit 1
           fi
-          paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
+          paste -d '|' source-image-list.txt target-image-list.txt readme-sync-status.txt > combined-list.txt
           echo "===== combined-list.txt 内容 ====="
           cat combined-list.txt
       - name: 登录到 GitHub 容器注册表
@@ -96,8 +118,11 @@ jobs:
             done < deleted-images.txt
             # 重新编号并修复表格格式
             awk -F '|' '
+          /^### 本仓库已同步的 Docker 镜像/ {print; getline; print; getline; print "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"; next}
+          /^\| ----/ {print; next}
+          {print}
               BEGIN { count=0 }
-              /^### 本仓库已同步的 Docker 镜像/ { 
+              /^### 本仓库已同步的 Docker 镜像/ {
                 print
                 count=0
                 next
@@ -109,8 +134,14 @@ jobs:
                 spaces_after = match($2, / *$/) ? substr($2, RSTART) : ""
                 $2 = sprintf("%s%d%s", spaces_before, count, spaces_after)
                 printf "|%s", $2
-                for (i=3; i<=NF; i++) printf "|%s", $i
-                print ""
+                for (i=3; i<=NF; i++) {
+                  if (i == NF) { # 最后一列（同步列）
+                    printf "| ✔️ "
+                  } else {
+                    printf "|%s", $i
+                  }
+                }
+                print "|"
                 next
               }
               { print }
@@ -137,7 +168,11 @@ jobs:
           echo "===== 同步镜像列表 ====="
           cat combined-list.txt
           echo "===================="
-          while IFS='|' read -r source_image target_image; do
+          while IFS='|' read -r source_image target_image pull_image_from_readme sync_status_from_readme; do
+            if [ "$sync_status_from_readme" = "❌" ]; then
+              echo "镜像 $target_image 在 README 中标记为不同步 (❌)，跳过更新。"
+              continue
+            fi
             echo "处理镜像: $target_image (源镜像: $source_image)"
             source_image_full="docker://$source_image:latest"
             target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
@@ -206,6 +241,6 @@ jobs:
             done
             docker manifest create "$target_image_base:latest" "${amend_args[@]}" --insecure
             docker manifest push "$target_image_base:latest"
-            echo "✅ 同步完成: $target_image_base:latest"
+            echo "✔️ 同步完成: $target_image_base:latest"
             echo "────────────────────────────────────────"
           done < combined-list.txt
