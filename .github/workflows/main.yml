@@ -165,7 +165,11 @@ jobs:
               new_count=$((count + 1))
               pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
               compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
-              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$current_image" "\`$pull_cmd\`" "$compose_file" "$sync_status"
+              display_image_name="$current_image"
+              if [[ "$target_tag" == "latest" ]]; then
+                display_image_name="${current_image%:latest}"
+              fi
+              printf "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "`$pull_cmd`" "$compose_file" "$sync_status"
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
