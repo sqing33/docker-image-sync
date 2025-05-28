@@ -20,9 +20,9 @@ on:
         required: true
         type: choice
         options:
-          - '是'
-          - '否'
-        default: '是'
+          - "是"
+          - "否"
+        default: "是"
 
 jobs:
   docker-image-sync:
@@ -62,14 +62,14 @@ jobs:
                current_tag="latest"
              fi
              current_ghcr_name="${ghcr_name_array[$i]}"
- 
+
              target_tag="$current_tag"
              if [[ "$current_tag" =~ "alpine" ]]; then
                target_tag="alpine"
              elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
                target_tag="latest"
              fi
- 
+
              if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then
                sync_status="✔️"
              else
@@ -138,8 +138,7 @@ jobs:
             echo "🚚 推送清单..."
             docker manifest push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
 
-            # 清理临时镜像
-            docker image prune -a --force
+            # 清理临时镜像（只删除本次同步产生的 tag，不 prune 全部）
             for arch in ${VALID_ARCHS[@]}; do
               docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" || true
             done
@@ -195,5 +194,7 @@ jobs:
             fi
             echo "===== 同步完成: $current_image:$current_tag =====\n"
           done
+          # 所有镜像同步完后再做全局 prune（可选）
+          docker image prune -a --force
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
