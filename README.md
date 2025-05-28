@@ -48,7 +48,7 @@
 | 20  | jeessy/ddns-go                   | `ghcr.nju.edu.cn/sqing33/ddns-go`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                               | ✔️ |
 | 21  | cym1102/nginxwebui               | `ghcr.nju.edu.cn/sqing33/nginxwebui`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginxwebui.yaml)                         | ✔️ |
 | 22  | node                             | `ghcr.nju.edu.cn/sqing33/node`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                                     | ✔️ |
-| 52  | alpine                         | `ghcr.nju.edu.cn/sqing33/alpine`     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml)            | ✔️ |
+| 23  | alpine                         | `ghcr.nju.edu.cn/sqing33/alpine`     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alpine.yaml)            | ✔️ |
 | 24  | moby/buildkit                    | `ghcr.nju.edu.cn/sqing33/buildkit`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                             | ✔️ |
 | 25  | python                           | `ghcr.nju.edu.cn/sqing33/python`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/python.yaml)                                 | ✔️ |
 | 26  | syncthing/syncthing              | `ghcr.nju.edu.cn/sqing33/syncthing`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                           | ✔️ |
@@ -73,11 +73,8 @@
 | 45 | easychen/cookiecloud | `ghcr.nju.edu.cn/sqing33/cookiecloud` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml) | ✔️ |
 | 46 | qdtoday/qd | `ghcr.nju.edu.cn/sqing33/qd` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) | ✔️ |
 | 47 | whyour/qinglong | `ghcr.nju.edu.cn/sqing33/qinglong` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) | ✔️ |
-| 48 | quay.io/coreos/etcd | `ghcr.nju.edu.cn/sqing33/etcd:v3.5.18` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml) | ✔️ |
-| 49 | minio/minio | `ghcr.nju.edu.cn/sqing33/minio:RELEASE.2023-03-20T20-16-18Z` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml) | ✔️ |
-| 50 | milvusdb/milvus | `ghcr.nju.edu.cn/sqing33/milvus:v2.5.10` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml) | ✔️ |
-| 51  | node:alpine                    | `ghcr.nju.edu.cn/sqing33/node:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
-| 52  | node                           | `ghcr.nju.edu.cn/sqing33/node`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
-| 53  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
-| 54  | bash:devel                     | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
+| 48  | node:alpine                    | `ghcr.nju.edu.cn/sqing33/node:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
+| 49  | node                           | `ghcr.nju.edu.cn/sqing33/node`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)              | ✔️ |
+| 50  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
+| 51  | bash:devel                     | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
 
