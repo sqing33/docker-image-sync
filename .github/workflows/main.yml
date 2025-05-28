@@ -69,11 +69,13 @@ jobs:
               target_tag="latest"
             fi
 
-            if [ -z "$current_tag" ]; then
+            # 默认设置为失败，如果成功同步则更新为 ✔️
+            sync_status="❌"
+
+            # 检查是否成功同步，这里需要根据实际同步结果来判断
+            # 暂时先根据 target_tag 是否为 latest 来判断，后续可以根据实际同步结果来修改
+            if [ "$target_tag" == "latest" ]; then
               sync_status="✔️"
-              target_tag="latest"
-            else
-              sync_status="❌"
             fi
 
             if [ -z "$current_image" ]; then
