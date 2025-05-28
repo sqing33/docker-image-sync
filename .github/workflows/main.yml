@@ -70,7 +70,7 @@ jobs:
             fi
 
             # 根据 change_tag_to_latest 和源镜像标签决定同步状态
-            if [ "${{ inputs.change_tag_to_latest }}" == "是" ] || [ -z "$current_tag" ]; then
+            if [ -z "$current_tag" ]; then
               sync_status="✔️"
             else
               sync_status="❌"
