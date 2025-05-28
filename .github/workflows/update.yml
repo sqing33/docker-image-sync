@@ -145,7 +145,12 @@ jobs:
           echo "===================="
           while IFS='|' read -r source_image target_image; do
             echo "处理镜像: $target_image (源镜像: $source_image)"
-            source_image_full="docker://$source_image:latest"
+            # 判断源镜像是否已带 tag
+            if [[ "$source_image" == *:* ]]; then
+              source_image_full="docker://$source_image"
+            else
+              source_image_full="docker://$source_image:latest"
+            fi
             target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
             need_update=false
             # 获取源镜像清单列表
