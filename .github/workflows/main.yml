@@ -54,37 +54,59 @@ jobs:
           IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
 
           for i in "${!image_array[@]}"; do
-            full_image="${image_array[$i]}"
-            current_image=$(echo "$full_image" | cut -d':' -f1)
-            current_tag=$(echo "$full_image" | cut -s -d':' -f2)
-             # 如果标签为空，默认为 latest
-             if [ -z "$current_tag" ]; then
-               current_tag="latest"
-             fi
-             current_ghcr_name="${ghcr_name_array[$i]}"
+            full_image_raw="${image_array[$i]}"
+            # 清理 full_image_raw 前后的空格
+            full_image=$(echo "$full_image_raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
 
-             target_tag="$current_tag"
-             if [[ "$current_tag" =~ "alpine" ]]; then
-               target_tag="alpine"
-             elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
-               target_tag="latest"
-             fi
-
-             if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then
-               sync_status="✔️"
-             else
-               sync_status="❌"
-             fi
-
-            if [ -z "$current_image" ]; then
-              echo "警告：第 $((i+1)) 个镜像名称为空，已跳过。"
+            # 如果清理后 full_image 为空字符串 (例如输入是 ",," 或者只有逗号且没有有效字符)
+            if [ -z "$full_image" ]; then
+              echo "警告：第 $((i+1)) 个原始镜像条目 '${full_image_raw}' 在清理前后空格后为空，已跳过。"
               continue
             fi
 
-            echo "\n===== 开始同步第 $((i+1)) 个镜像: $current_image:$current_tag ====="
+            current_image=$(echo "$full_image" | cut -d':' -f1)
+            current_tag=$(echo "$full_image" | cut -s -d':' -f2)
 
-            # 自动获取所有可用架构
-            RAW_MANIFEST=$(skopeo inspect --raw "docker://$current_image:$current_tag")
+            # 如果 current_image 为空 (例如 full_image 是 ":tag" 或者清理后只剩冒号)
+            if [ -z "$current_image" ]; then
+              echo "警告：第 $((i+1)) 个镜像 '${full_image_raw}' 名称部分为空，已跳过。"
+              continue
+            fi
+
+            # 如果标签为空，默认为 latest，并更新 full_image 以包含此标签用于后续比较
+            if [ -z "$current_tag" ]; then
+              current_tag="latest"
+              # 只有当原始 full_image (清理空格后) 确实没有冒号，或者以冒号结尾时，才更新 full_image
+              if ! echo "$full_image" | grep -q ':' || [[ "$full_image" == *":" ]]; then
+                full_image="$current_image:$current_tag"
+              fi
+            fi
+            
+            current_ghcr_name="${ghcr_name_array[$i]}"
+
+            target_tag="$current_tag"
+            if [[ "$current_tag" =~ "alpine" ]]; then
+              target_tag="alpine" # 保留 alpine 标签
+            elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
+              target_tag="latest"
+            fi
+
+            # sync_status 的判断逻辑保持不变
+            if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then
+               sync_status="✔️"
+            else
+               sync_status="❌"
+            fi
+
+            # if [ -z "$current_image" ]; then # 这个检查已提前
+            #   echo "警告：第 $((i+1)) 个镜像名称为空，已跳过。"
+            #   continue
+            # fi
+
+            echo "\n===== 开始同步第 $((i+1)) 个镜像: $full_image (原始输入部分: $full_image_raw) ====="
+
+            # 自动获取所有可用架构 (此部分逻辑不变)
+            RAW_MANIFEST=$(skopeo inspect --raw "docker://$current_image:$current_tag") # 注意：这里用 current_image 和 current_tag (可能是原始的，也可能是默认的 latest)
             if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
               ARCHS=$(echo "$RAW_MANIFEST" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|arm|386|ppc64le|s390x|mips64le' | tr '\n' ',' | sed 's/,$//')
             else
@@ -98,7 +120,7 @@ jobs:
             ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')
             echo "有效架构: $ARCHS_STR"
 
-            # 设置 IMAGE_NAME
+            # 设置 IMAGE_NAME (此部分逻辑不变)
             if [ -z "$current_ghcr_name" ]; then
               IMAGE_NAME=$(basename "$current_image")
             else
@@ -106,6 +128,7 @@ jobs:
             fi
 
             declare -a VALID_ARCHS=()
+            # 使用 skopeo inspect 时，用 current_image 和 current_tag (同步前的原始tag或默认latest)
             FULL_MANIFEST=$(skopeo inspect --raw "docker://$current_image:$current_tag" | jq .)
             for arch in $ARCHS_STR; do
               echo "🔄 正在检查 $arch 架构支持..."
@@ -113,9 +136,10 @@ jobs:
                 echo "✔️ 确认存在 $arch 架构镜像"
                 VALID_ARCHS+=("$arch")
                 echo "🚀 正在同步 $arch 架构..."
-                # 每次 push 前都重新登录，防止 session 失效
                 echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+                # 拉取时用 current_image 和 current_tag
                 docker pull --platform "linux/$arch" "$current_image:$current_tag"
+                # 打标签时用 target_tag
                 docker tag "$current_image:$current_tag" \
                   "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
                 docker push "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
@@ -129,7 +153,7 @@ jobs:
               continue
             fi
 
-            # 创建多架构 Manifest
+            # 创建多架构 Manifest (使用 target_tag)
             declare -a MANIFEST_ARGS=()
             for arch in ${VALID_ARCHS[@]}; do
               MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch")
@@ -145,68 +169,114 @@ jobs:
               docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" || true
             done
 
-            # 创建 docker-compose.yaml 文件
+            # 创建 docker-compose.yaml 文件 (此部分逻辑不变)
             mkdir -p docker-compose
-            cp docker-compose/example.yaml docker-compose/$IMAGE_NAME.yaml
+            cp docker-compose/example.yaml docker-compose/$IMAGE_NAME.yaml # 使用 IMAGE_NAME (可能是 ghcr_name 或 basename)
             git config --global user.name "GitHub Actions"
             git config --global user.email "actions@github.com"
             git add docker-compose/$IMAGE_NAME.yaml
-            git commit -m "添加 $IMAGE_NAME.yaml 文件" || true
+            git commit -m "添加 $IMAGE_NAME.yaml 文件" || true # 使用 IMAGE_NAME
             git pull --rebase origin main
             git push origin main
 
             # 更新 README.md 文件
             # === 优化 README.md 镜像表格去重逻辑（同步前判断第二列是否已存在） ===
-            # 提取现有表格所有“源镜像”列（第二列，含标签，去除空格）
-            existing_sources=$(awk -F '|' '
-              /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-              capture && /^\|[[:space:]]*[0-9]+/ {
-                src=$2; gsub(/^ +| +$/, "", src); print src
-              }
-              /^[^|]/ {capture=0}
-            ' README.md | sed '/^$/d')
-            # 当前待添加的镜像名（含标签，去除空格）
-            current_source=$(echo "$full_image" | sed 's/^ *//;s/ *$//')
+            # 获取已存在的源镜像（第二列，含标签），这些源镜像是已经清理过空格的
+            # awk 提取时，确保字段处理的鲁棒性
+            existing_sources_from_readme=$(awk -F '|' '
+                /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+                capture && /^\| *[0-9]+ *\|/ { # 允许数字和管道符周围有空格
+                    # 提取第二个有效字段（即源镜像列）
+                    # 使用 match 来更精确地提取被管道符包围的列内容
+                    if (match($0, /^\|[^|]*\|([^|]*)\|/, col_array)) {
+                        source_img = col_array[1];
+                        gsub(/^[[:space:]]+|[[:space:]]+$/, "", source_img); # 清理提取出的列内容的前后空格
+                        if (source_img != "") print source_img; # 打印非空结果
+                    }
+                }
+                /^[^|]/ && capture {capture=0} # 表格结束
+            ' README.md | sed '/^$/d') # 再次用 sed 去除可能的空行
+
+            # 判断当前 full_image (已经清理过空格并确保有标签) 是否已存在于 existing_sources_from_readme
             already_exists=false
-            for src in $existing_sources; do
-              if [ "$src" = "$current_source" ]; then
-                already_exists=true
-                break
-              fi
-            done
+            if echo "${existing_sources_from_readme}" | grep -qxF "$full_image"; then
+              already_exists=true
+            fi
+
             if $already_exists; then
               echo "镜像 $full_image 已存在于 README 表格，跳过添加。"
             else
               echo "添加新镜像 $full_image 到 README"
-              count=$(echo "$existing_sources" | wc -l)
-              new_count=$((count + 1))
-              pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
-              if [[ "$target_tag" == "latest" ]]; then
-                pull_cmd="${pull_cmd%:latest}"
+              
+              # 获取现有的实际数据行 (不包括表头和分隔线)，用于重建表格和计算行号
+              data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^\| [0-9]/p }' README.md)
+
+              count=$(echo "$data_lines" | wc -l)
+              # 如果 data_lines 为空 (比如第一次添加，或 README 被意外修改)，wc -l 结果可能是1或0，取决于具体实现
+              # 更安全的做法是检查 data_lines 是否为空字符串
+              if [ -z "$data_lines" ]; then
+                count=0
               fi
-              pull_cmd="\`$pull_cmd\`"
-              compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
+              new_count=$((count + 1))
+
+              # pull_cmd 使用 target_tag
+              pull_cmd_val="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+              if [[ "$target_tag" == "latest" ]]; then
+                pull_cmd_val="${pull_cmd_val%:latest}" # 如果是latest，则移除标签后缀
+              fi
+              pull_cmd_markdown="\`$pull_cmd_val\`" # Markdown代码块格式
+
+              compose_file_markdown="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
+              
+              # display_image_name 应该是清理并标签化后的 full_image
               display_image_name="$full_image"
-              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd" "$compose_file" "$sync_status"
-              data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
+              
+              # 使用 printf 生成新行，确保格式一致
+              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd_markdown" "$compose_file_markdown" "$sync_status"
+              
+              # 使用原脚本的 awk 方法更新 README，这种方法是替换整个表格内容
+              # 它依赖于 new_table_content.txt 包含完整的表头、已存在的数据行（如果有）和新数据行
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
                 echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
                 echo "| ---- | -------- | --------- | -------------- | ---- |"
-                echo "$data_lines"
-                echo "$new_row"
+                if [ -n "$data_lines" ]; then # 只有当 data_lines 非空时才打印
+                    echo "$data_lines" # data_lines 本身包含换行符
+                fi
+                echo -n "$new_row" # new_row 由 printf 生成，末尾已有换行符，用 echo -n 避免额外换行
               } > new_table_content.txt
-              awk '/^### 本仓库已同步的 Docker 镜像/ {while ((getline line < "new_table_content.txt") > 0) {print line} close("new_table_content.txt"); while ((getline line) > 0) {if (line ~ /^[^|]/) {print line; break}}; next} { print }' README.md > README.tmp && mv README.tmp README.md
+
+              # 这个 awk 命令会找到标记行，然后用 new_table_content.txt 的内容替换掉 README 中从标记行开始到第一个非表格行之间的内容
+              awk '
+                /^### 本仓库已同步的 Docker 镜像/ {
+                  # 打印 new_table_content.txt 的所有行
+                  while ((getline line < "new_table_content.txt") > 0) {
+                    print line
+                  }
+                  close("new_table_content.txt")
+                  # 跳过 README.md 中旧的表格内容
+                  while ((getline) > 0) {
+                    if (line !~ /^\|/ && line !~ /^### 本仓库已同步的 Docker 镜像/) { # 找到第一个非表格行（且不是我们刚打印的标记行）
+                      print line # 打印这个非表格行
+                      break      # 停止消耗旧表格行
+                    }
+                  }
+                  next
+                }
+                { print } # 打印其他所有行
+              ' README.md > README.tmp && mv README.tmp README.md
+              
+              # git 操作 (此部分逻辑不变)
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
               git add README.md
-              git commit -m "更新README.md，添加新的镜像表格条目" || true
+              git commit -m "更新README.md，添加新的镜像表格条目: $display_image_name" || true
               git pull --rebase origin main
               git push origin main
             fi
-            echo "===== 同步完成: $current_image:$current_tag =====\n"
+            echo "===== 同步完成: $full_image (推送到 ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag) =====\n"
           done
           # 所有镜像同步完后再做全局 prune（可选）
           docker image prune -a --force
