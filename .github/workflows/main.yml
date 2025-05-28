@@ -169,7 +169,7 @@ jobs:
               if [[ "$target_tag" == "latest" ]]; then
                 display_image_name="${current_image%:latest}"
               fi
-              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "`$pull_cmd`" "$compose_file" "$sync_status"
+              printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name" "$pull_cmd" "$compose_file" "$sync_status"
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
