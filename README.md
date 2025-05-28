@@ -73,4 +73,5 @@
 | 45  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 | 46  | mysql                          | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ✔️ |
 | 47  | phpmyadmin                     | `ghcr.nju.edu.cn/sqing33/phpmyadmin`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)        | ✔️ |
+| 48  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 
