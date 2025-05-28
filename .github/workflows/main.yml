@@ -294,7 +294,7 @@ jobs:
               }
               # Print all other lines (before the table section, or after if EOF was hit in consume loop)
               { print }
-EOF_AWK
+              EOF_AWK
               awk -v new_content_filename="$new_table_content_file" -f "$awk_script_file" README.md > README.tmp && mv README.tmp README.md
               rm "$new_table_content_file" "$awk_script_file"
               
