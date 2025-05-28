@@ -157,12 +157,19 @@ jobs:
 
             # 更新 README.md 文件
             # === 优化 README.md 镜像表格去重逻辑（同步前判断第二列是否已存在） ===
-            # 获取已存在的源镜像（第二列，含标签）
-            existing_sources=$(awk -F '|' '/^### 本仓库已同步的 Docker 镜像/ {capture=1; next} capture && /^\| [0-9]+/ {gsub(/^ +| +$/, "", $2); print $2} /^[^|]/ {capture=0}' README.md | sed '/^$/d')
-            # 判断当前 full_image 是否已存在于 existing_sources
+            # 提取现有表格所有“源镜像”列（第二列，含标签，去除空格）
+            existing_sources=$(awk -F '|' '
+              /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
+              capture && /^\|[[:space:]]*[0-9]+/ {
+                src=$2; gsub(/^ +| +$/, "", src); print src
+              }
+              /^[^|]/ {capture=0}
+            ' README.md | sed '/^$/d')
+            # 当前待添加的镜像名（含标签，去除空格）
+            current_source=$(echo "$full_image" | sed 's/^ *//;s/ *$//')
             already_exists=false
             for src in $existing_sources; do
-              if [ "$src" = "$full_image" ]; then
+              if [ "$src" = "$current_source" ]; then
                 already_exists=true
                 break
               fi
