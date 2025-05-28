@@ -57,24 +57,24 @@ jobs:
             full_image="${image_array[$i]}"
             current_image=$(echo "$full_image" | cut -d':' -f1)
             current_tag=$(echo "$full_image" | cut -s -d':' -f2)
-            # 如果标签为空，默认为 latest
-            if [ -z "$current_tag" ]; then
-              current_tag="latest"
-            fi
-            current_ghcr_name="${ghcr_name_array[$i]}"
-
-            # 根据 change_tag_to_latest 决定最终标签
-            target_tag="$current_tag"
-            if [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
-              target_tag="latest"
-            fi
-
-            # 根据源镜像标签决定同步状态
-            if [ -z "$current_tag" ] || [ "$current_tag" == "latest" ]; then
-              sync_status="✔️"
-            else
-              sync_status="❌"
-            fi
+             # 如果标签为空，默认为 latest，但如果输入标签是 alpine，则保留
+             if [ -z "$current_tag" ]; then
+               current_tag="latest"
+             fi
+             current_ghcr_name="${ghcr_name_array[$i]}"
+ 
+             # 根据 change_tag_to_latest 和特定标签决定最终标签
+             target_tag="$current_tag"
+             if [ "${{ inputs.change_tag_to_latest }}" == "是" ] && [ "$current_tag" != "alpine" ]; then
+               target_tag="latest"
+             fi
+ 
+             # 根据 change_tag_to_latest 和最终标签决定同步状态
+             if [ "${{ inputs.change_tag_to_latest }}" == "是" ] || [ "$target_tag" == "latest" ]; then
+               sync_status="✔️"
+             else
+               sync_status="❌"
+             fi
 
             if [ -z "$current_image" ]; then
               echo "警告：第 $((i+1)) 个镜像名称为空，已跳过。"
