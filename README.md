@@ -82,4 +82,5 @@
 | 54  | chigusa/bililive-go            | `ghcr.nju.edu.cn/sqing33/bililive-go`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bililive-go.yaml)       | ✔️ |
 | 55  | ghcr.io/snailyp/gemini-balance | `ghcr.nju.edu.cn/sqing33/gemini-balance`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)    | ✔️ |
 | 56  | streamrec/stream-rec           | `ghcr.nju.edu.cn/sqing33/stream-rec`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec.yaml)        | ✔️ |
+| 57  | streamrec/stream-rec-front     | `ghcr.nju.edu.cn/sqing33/stream-rec-front`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec-front.yaml)  | ✔️ |
 
