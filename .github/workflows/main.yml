@@ -157,24 +157,22 @@ jobs:
             # 提取现有表格数据行
             data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^| [0-9]/p }' README.md)
 
-            # 提取现有镜像名称列表（与表格第二列一致，去除反引号和空格）
+            # 提取现有镜像名称列表（与表格第二列一致，去除反引号和所有空格，全部小写）
             existing_images=$(awk -F '|' '
             /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
             capture && /^\| [0-9]+/ {
-                gsub(/^[ \t]+|[ \t]+$/, "", $2);
-                gsub(/`/, "", $2);
-                print $2
+                img=tolower($2); gsub(/^[ \t]+|[ \t]+$/, "", img); gsub(/`/, "", img); gsub(/ /, "", img); print img
             }
             /^[^|]/ {capture=0}
             ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d')
 
-            # 获取当前镜像名称（与表格第二列保持一致，全部小写）
-            current_image_name_for_readme=$(echo "$full_image" | tr '[:upper:]' '[:lower:]')
+            # 获取当前镜像名称（与表格第二列保持一致，全部小写且去除空格）
+            current_image_name_for_readme=$(echo "$full_image" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
 
             echo "Existing images: $existing_images"
             echo "Current image for README: $current_image_name_for_readme"
 
-            # 检查镜像是否已存在
+            # 检查镜像是否已存在（严格以第二列唯一，全部小写且去除空格）
             if echo "$existing_images" | grep -qxF "$current_image_name_for_readme"; then
               echo "镜像 $full_image 已存在，跳过 README 更新"
             else
