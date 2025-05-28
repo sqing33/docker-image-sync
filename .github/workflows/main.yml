@@ -63,14 +63,13 @@ jobs:
             target_tag="$current_tag"
             if [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
               target_tag="latest"
-              sync_status="❌"
+            fi
+
+            if [ -z "$current_tag" ]; then
+              sync_status="✔️"
+              target_tag="latest"
             else
-              if [ -z "$current_tag" ]; then
-                sync_status="✔️"
-                target_tag="latest"
-              else
-                sync_status="❌"
-              fi
+              sync_status="❌"
             fi
 
             if [ -z "$current_image" ]; then
