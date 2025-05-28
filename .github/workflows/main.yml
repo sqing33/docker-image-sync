@@ -52,65 +52,43 @@ jobs:
         run: |
           IFS=',' read -r -a image_array <<< "${{ inputs.images }}"
           IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
-
           for i in "${!image_array[@]}"; do
             full_image_raw="${image_array[$i]}"
             full_image_cleaned=$(echo "$full_image_raw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-
             if [ -z "$full_image_cleaned" ]; then
               echo "警告：第 $((i+1)) 个原始镜像条目 '${full_image_raw}' 在清理前后空格后为空，已跳过。"
               continue
             fi
-
             current_image_from_input=$(echo "$full_image_cleaned" | cut -d':' -f1)
             current_tag_from_input=$(echo "$full_image_cleaned" | cut -s -d':' -f2)
-
             if [ -z "$current_image_from_input" ]; then
               echo "警告：第 $((i+1)) 个镜像 '${full_image_cleaned}' 名称部分为空，已跳过。"
               continue
             fi
-
-            # effective_input_tag 是用户输入或默认的标签，用于查重和决定 README 中源镜像的显示格式
             effective_input_tag="$current_tag_from_input"
             if [ -z "$effective_input_tag" ]; then
               effective_input_tag="latest"
             fi
             
-            # full_image_for_sync 是实际用于 skopeo 和 docker pull 的完整镜像名:标签
-            # 如果用户输入的是 "image" (没有标签)，同步时也按 "image:latest" 处理
             full_image_for_sync="$current_image_from_input:$effective_input_tag"
-
-            # key_for_readme_check 是用于和 README 中现有条目比较的键
-            # 如果标签是 latest, 则键不包含 :latest
             key_for_readme_check="$current_image_from_input"
             if [ "$effective_input_tag" != "latest" ]; then
               key_for_readme_check="$current_image_from_input:$effective_input_tag"
             fi
-
             current_ghcr_name="${ghcr_name_array[$i]}"
-
-            # target_tag 是最终推送到 ghcr.io 的标签
-            target_tag="$effective_input_tag" # 默认使用解析出的标签
-            if [[ "$effective_input_tag" =~ "alpine" ]]; then # 如果输入标签含 alpine
-               target_tag="alpine" # 目标标签固定为 alpine
-            elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then # 如果配置了强制 latest
+            target_tag="$effective_input_tag"
+            if [[ "$effective_input_tag" =~ "alpine" ]]; then
+               target_tag="alpine"
+            elif [ "${{ inputs.change_tag_to_latest }}" == "是" ]; then
                target_tag="latest"
             fi
-            # 如果输入本身就是 latest，且没有被 alpine 规则覆盖，change_tag_to_latest 是 "否"，则 target_tag 仍为 latest
-
-            sync_status="❌" # 默认为不同步
-            # 如果原始标签就是 latest，或者目标标签是 alpine (通常这类是明确版本)，则认为是有效同步
+            sync_status="❌"
             if [ "$effective_input_tag" == "latest" ] || [[ "$target_tag" == "alpine" ]]; then
                sync_status="✔️"
-            # 如果不是 alpine，但被强制改为 latest，也视为有效（因为用户选择了 change_tag_to_latest）
             elif [ "${{ inputs.change_tag_to_latest }}" == "是" ] && [ "$target_tag" == "latest" ]; then
                sync_status="✔️"
             fi
-
-
             echo "\n===== 开始同步第 $((i+1)) 个镜像: $full_image_for_sync (原始输入: '$full_image_raw', 用于查重键: '$key_for_readme_check', 目标GHCR标签: '$target_tag') ====="
-
-            # 自动获取所有可用架构 (使用 full_image_for_sync)
             RAW_MANIFEST=$(skopeo inspect --raw "docker://$full_image_for_sync")
             if echo "$RAW_MANIFEST" | jq -e '.manifests' > /dev/null 2>&1; then
               ARCHS=$(echo "$RAW_MANIFEST" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|arm|386|ppc64le|s390x|mips64le' | tr '\n' ',' | sed 's/,$//')
@@ -124,101 +102,118 @@ jobs:
             fi
             ARCHS_STR=$(echo "$ARCHS" | tr ',' ' ')
             echo "有效架构: $ARCHS_STR"
-
-            # 设置 IMAGE_NAME (ghcr 上的镜像名)
             if [ -z "$current_ghcr_name" ]; then
               IMAGE_NAME=$(basename "$current_image_from_input")
             else
               IMAGE_NAME="$current_ghcr_name"
             fi
-
             declare -a VALID_ARCHS=()
-            FULL_MANIFEST=$(skopeo inspect --raw "docker://$full_image_for_sync" | jq .)
+            # FULL_MANIFEST=$(skopeo inspect --raw "docker://$full_image_for_sync" | jq .) # Not strictly needed if skopeo can pull specific arch later
+            # For simplicity, let's try pulling directly for each arch. Skopeo copy is more efficient for multi-arch manifests if source supports it well.
+            # For now, sticking to docker pull --platform which is more common.
+
+            # Create a temporary manifest list to amend
+            TEMP_MANIFEST_LIST_NAME="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:${target_tag}-temp-manifest"
+
             for arch in $ARCHS_STR; do
-              echo "🔄 正在检查 $arch 架构支持..."
-              if echo "$FULL_MANIFEST" | jq -e --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch)' >/dev/null 2>&1; then
-                echo "✔️ 确认存在 $arch 架构镜像"
+              echo "🔄 正在检查和同步 $arch 架构..."
+              # Instead of pre-checking with jq, try to pull. If it fails, skopeo copy might also fail.
+              # Docker pull is a good validation.
+              echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin # Login per arch just in case of session timeouts
+              if docker pull --platform "linux/$arch" "$full_image_for_sync"; then
+                echo "✔️ $arch 架构拉取成功"
                 VALID_ARCHS+=("$arch")
-                echo "🚀 正在同步 $arch 架构..."
-                echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-                docker pull --platform "linux/$arch" "$full_image_for_sync"
                 docker tag "$full_image_for_sync" \
-                  "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch" # 使用 target_tag
+                  "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
                 docker push "ghcr.io/${GHCR_USER}/$IMAGE_NAME:$target_tag-$arch"
+                # Add to manifest args for later
+                if [ ${#VALID_ARCHS[@]} -eq 1 ]; then # First valid arch, create the manifest
+                    docker manifest create "$TEMP_MANIFEST_LIST_NAME" \
+                        "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --insecure
+                else # Subsequent valid archs, amend the manifest
+                    docker manifest annotate "$TEMP_MANIFEST_LIST_NAME" \
+                        "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --arch "$arch" # Annotate might be needed if create/amend doesn't pick it up
+                    docker manifest create "$TEMP_MANIFEST_LIST_NAME" \
+                        --amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" --insecure
+                fi
               else
-                echo "⚠️ 警告：找不到 $arch 架构镜像，已跳过"
+                echo "⚠️ 警告：拉取 $arch 架构镜像失败，已跳过"
               fi
+              docker rmi "$full_image_for_sync" >/dev/null 2>&1 || true # Clean up the specific arch image if it was pulled with that tag
               echo "----------------------------------------"
             done
+
             if [ ${#VALID_ARCHS[@]} -eq 0 ]; then
-              echo "❌ 所有指定架构均不存在，停止同步"
+              echo "❌ 所有指定架构均不存在或拉取失败，停止同步此镜像"
               continue
             fi
 
-            # 创建多架构 Manifest (使用 target_tag)
-            declare -a MANIFEST_ARGS=()
-            for arch in ${VALID_ARCHS[@]}; do
-              MANIFEST_ARGS+=(--amend "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch")
-            done
-            echo "🛠️ 创建多架构清单..."
-            docker manifest create "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag" \
-              "${MANIFEST_ARGS[@]}" --insecure
-            echo "🚚 推送清单..."
-            docker manifest push "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+            echo "🛠️ 创建并推送最终的多架构清单 (ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag)..."
+            docker manifest push "$TEMP_MANIFEST_LIST_NAME" --purge # Push the temp manifest
+            # Now tag this manifest to the final name
+            # Skopeo is better for retagging manifests without pulling
+             echo "Retagging manifest using skopeo..."
+             skopeo copy --all "docker://$TEMP_MANIFEST_LIST_NAME" "docker://ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
 
-            # 清理临时镜像
-            for arch in ${VALID_ARCHS[@]}; do
-              docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch" || true
-              # 也尝试清理原始拉取的带平台后缀的镜像（docker pull有时会这样命名）
-              docker rmi "$full_image_for_sync" || true 
+            # Clean up temporary images
+            for arch_cleanup in ${VALID_ARCHS[@]}; do
+              docker rmi "ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag-$arch_cleanup" >/dev/null 2>&1 || true
             done
+            docker manifest rm "$TEMP_MANIFEST_LIST_NAME" >/dev/null 2>&1 || true # Clean up temp manifest from local
 
-            # 创建 docker-compose.yaml 文件
+            # Create docker-compose.yaml file
             mkdir -p docker-compose
-            # 使用 IMAGE_NAME (即 ghcr 上的镜像名) 来命名 compose 文件
             compose_file_name="$IMAGE_NAME" 
-            cp docker-compose/example.yaml "docker-compose/$compose_file_name.yaml"
-            git config --global user.name "GitHub Actions"
-            git config --global user.email "actions@github.com"
-            git add "docker-compose/$compose_file_name.yaml"
-            git commit -m "添加 $compose_file_name.yaml 文件" || true
-            git pull --rebase origin main
-            git push origin main
-
-            # 更新 README.md 文件
-            # 获取已存在的源镜像键（第二列，如果标签是latest则省略）
+            # Check if example.yaml exists before copying
+            if [ -f "docker-compose/example.yaml" ]; then
+              cp docker-compose/example.yaml "docker-compose/$compose_file_name.yaml"
+              git config --global user.name "GitHub Actions"
+              git config --global user.email "actions@github.com"
+              git add "docker-compose/$compose_file_name.yaml"
+              # Commit only if there are changes to be committed for this file
+              if ! git diff --staged --quiet "docker-compose/$compose_file_name.yaml"; then
+                git commit -m "添加/更新 $compose_file_name.yaml 文件 (镜像: $IMAGE_NAME)" || echo "No changes to commit for compose file, or commit failed."
+                git pull --rebase origin main # It's better to pull before loop or after loop
+                git push origin main
+              else
+                echo "No changes detected for docker-compose/$compose_file_name.yaml"
+              fi
+            else
+              echo "警告: docker-compose/example.yaml 未找到，跳过创建 $compose_file_name.yaml"
+            fi
+            
+            # Update README.md file
+            # 1. Robustly get existing source image keys for duplicate checking
             temp_readme_keys_file=$(mktemp)
             awk -F '|' '
-                /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-                capture && /^\| *[0-9]+ *\|/ {
+                BEGIN { capture_block = 0 }
+                /^### 本仓库已同步的 Docker 镜像/ { capture_block = 1; next }
+                capture_block && /^\| *[0-9]+ *\|/ {
                     if (match($0, /^\|[^|]*\|([^|]*)\|/, col_array)) {
                         source_img_raw = col_array[1];
                         gsub(/^[[:space:]]+|[[:space:]]+$/, "", source_img_raw);
                         if (source_img_raw != "") {
-                            # 分离名称和标签
                             img_name_part = source_img_raw;
                             img_tag_part = "";
                             if (index(source_img_raw, ":")) {
                                 img_name_part = substr(source_img_raw, 1, index(source_img_raw, ":") - 1);
                                 img_tag_part = substr(source_img_raw, index(source_img_raw, ":") + 1);
                             }
-                            
                             if (img_tag_part == "latest" || img_tag_part == "") {
-                                print img_name_part; # 如果标签是latest或空，只打印名称部分
+                                print img_name_part;
                             } else {
-                                print source_img_raw; # 否则打印原始的 名称:标签
+                                print source_img_raw;
                             }
                         }
                     }
                 }
-                /^[^|]/ && capture {capture=0}
+                # Stop capturing if we are in the block and hit a line not starting with | or another H3 (end of table)
+                capture_block && (!/^\|/ && !/^[[:space:]]*$/ && !/^### 本仓库已同步的 Docker 镜像/) { capture_block = 0 }
             ' README.md > "$temp_readme_keys_file"
-
             existing_sources_keys=$(<"$temp_readme_keys_file")
             rm "$temp_readme_keys_file"
 
             already_exists=false
-            # 使用 grep -Fx 进行精确的整行匹配
             if echo "${existing_sources_keys}" | grep -qFx "$key_for_readme_check"; then
               already_exists=true
             fi
@@ -228,61 +223,92 @@ jobs:
             else
               echo "添加新镜像 '$key_for_readme_check' 到 README"
               
-              data_lines=$(sed -n '/^### 本仓库已同步的 Docker 镜像/,/^[^|]/ { /^\| [0-9]/p }' README.md)
+              # 2. Robustly get existing data lines from the *last* table instance
+              last_h3_linenum=$(grep -n "^### 本仓库已同步的 Docker 镜像" README.md | tail -n 1 | cut -d: -f1)
+              data_lines=""
+              if [ -n "$last_h3_linenum" ]; then
+                  # Extract lines that look like data rows from that point onwards
+                  # A data row is | number | source | pull | compose | status |
+                  data_lines=$(tail -n "+$last_h3_linenum" README.md | awk '/^\| *[0-9]+ *\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|/')
+              fi
+
               count=0
               if [ -n "$data_lines" ]; then
                 count=$(echo "$data_lines" | wc -l)
               fi
               new_count=$((count + 1))
-
-              # display_image_name 在 README 中显示的源镜像名称
-              # 如果 effective_input_tag 是 latest, 则只显示 current_image_from_input
+              
               display_image_name_for_readme="$current_image_from_input"
               if [ "$effective_input_tag" != "latest" ]; then
                 display_image_name_for_readme="$current_image_from_input:$effective_input_tag"
               fi
               
-              # pull_cmd_val 是 ghcr 的 pull 命令，如果 target_tag 是 latest 则省略
-              pull_cmd_val="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME" # IMAGE_NAME 是 ghcr 上的名称
+              pull_cmd_val="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME"
               if [ "$target_tag" != "latest" ]; then
                 pull_cmd_val="$pull_cmd_val:$target_tag"
               fi
               pull_cmd_markdown="\`$pull_cmd_val\`"
-
               compose_file_markdown="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$compose_file_name.yaml)"
               
               printf -v new_row "| %-3s | %-30s | %-48s | %-100s | %-3s |\n" "$new_count" "$display_image_name_for_readme" "$pull_cmd_markdown" "$compose_file_markdown" "$sync_status"
               
+              # 3. Construct new table content
+              new_table_content_file=$(mktemp)
               {
                 echo "### 本仓库已同步的 Docker 镜像"
                 echo ""
                 echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
                 echo "| ---- | -------- | --------- | -------------- | ---- |"
                 if [ -n "$data_lines" ]; then
-                    echo "$data_lines"
+                    echo "$data_lines" # These are the PREVIOUSLY existing data lines
                 fi
-                echo -n "$new_row" 
-              } > new_table_content.txt
-
-              awk '
-                /^### 本仓库已同步的 Docker 镜像/ {
-                  while ((getline line < "new_table_content.txt") > 0) { print line }
-                  close("new_table_content.txt")
-                  while ((getline) > 0) {
-                    if (line !~ /^\|/ && line !~ /^### 本仓库已同步的 Docker 镜像/) { print line; break }
+                echo -n "$new_row" # Append the new row
+              } > "$new_table_content_file"
+              
+              # 4. More robust awk for replacement (replaces the entire block from first H3)
+              awk_script_file=$(mktemp)
+              cat <<'EOF_AWK' > "$awk_script_file"
+              BEGIN { table_replaced = 0 }
+              /^### 本仓库已同步的 Docker 镜像/ {
+                  if (!table_replaced) {
+                      while ((getline line < new_content_filename) > 0) { print line }
+                      close(new_content_filename)
+                      table_replaced = 1
+                      # Consume the entire old table block from input README.md
+                      # This includes duplicated H3s, headers, blank lines within the block, and data rows.
+                      while (getline > 0) {
+                          # If it's NOT a table line (doesn't start with |)
+                          # AND NOT another H3 for this table
+                          # AND NOT a blank line (blank lines are consumed if they are part of the block)
+                          # then we consider it the end of the old block.
+                          if (line !~ /^\|/ && line !~ /^### 本仓库已同步的 Docker 镜像/ && line !~ /^[[:space:]]*$/) {
+                              print line # This is the first line AFTER the old table block
+                              break
+                          }
+                          # Else, it's part of the old block, consume it (do nothing)
+                      }
                   }
+                  # Whether we replaced or this is a subsequent H3 (already consumed if part of block),
+                  # we skip printing the current matched H3 line via `next`
                   next
-                }
-                { print }
-              ' README.md > README.tmp && mv README.tmp README.md
+              }
+              # Print all other lines (before the table section, or after if EOF was hit in consume loop)
+              { print }
+EOF_AWK
+              awk -v new_content_filename="$new_table_content_file" -f "$awk_script_file" README.md > README.tmp && mv README.tmp README.md
+              rm "$new_table_content_file" "$awk_script_file"
               
               git config --global user.name "GitHub Actions"
               git config --global user.email "actions@github.com"
               git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
               git add README.md
-              git commit -m "更新README.md，添加新的镜像表格条目: $display_image_name_for_readme" || true
-              git pull --rebase origin main
-              git push origin main
+              if ! git diff --staged --quiet README.md; then
+                  git commit -m "更新README.md，添加新的镜像表格条目: $display_image_name_for_readme" || echo "README commit failed or no changes."
+                  git pull --rebase origin main # Pull before push
+                  git push origin main
+              else
+                  echo "No changes detected for README.md"
+              fi
             fi
             echo "===== 同步完成: $full_image_for_sync (推送到 ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag) =====\n"
           done
