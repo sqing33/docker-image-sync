@@ -25,7 +25,7 @@
 ### 本仓库已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 |
-| ---- | -------- | --------- | -------------- |
+| ---- | -------- | --------- | -------------- | ------------- |
 | 1   | hello-world                      | `ghcr.nju.edu.cn/sqing33/hello-world`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/example.yaml)                               | ✔️ |
 | 2   | nginx                            | `ghcr.nju.edu.cn/sqing33/nginx`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                                   | ✔️ |
 | 3   | dpanel/dpanel                    | `ghcr.nju.edu.cn/sqing33/dpanel`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                                 | ✔️ |
