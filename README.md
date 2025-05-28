@@ -77,6 +77,6 @@
 | 49 | minio/minio | `ghcr.nju.edu.cn/sqing33/minio:RELEASE.2023-03-20T20-16-18Z` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml) | ✔️ |
 | 50 | milvusdb/milvus | `ghcr.nju.edu.cn/sqing33/milvus:v2.5.10` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml) | ✔️ |
 | 51 | node | `ghcr.nju.edu.cn/sqing33/node:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml) | ✔️ |
-
-
+| 52  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ❌ |
+| 53  | bash                           | `ghcr.nju.edu.cn/sqing33/bash`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
 
