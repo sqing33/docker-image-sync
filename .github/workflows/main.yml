@@ -171,6 +171,7 @@ jobs:
               if [[ "$target_tag" == "latest" ]]; then
                 pull_cmd="${pull_cmd%:latest}"
               fi
+              pull_cmd="\`docker pull $pull_cmd\`"
               compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
               # 源镜像显示完整镜像名（包含标签）
               display_image_name="$full_image"
