@@ -24,8 +24,8 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|     | 源镜像                                 | pull 镜像                                            | docker-compose                                                                                                | 同步 |
-| --- | -------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---- |
+|   | 源镜像 | pull 镜像 | docker-compose | 同步 |
+| ---- | -------- | --------- | -------------- | ---- |
 | 1   | nginx                                  | `ghcr.nju.edu.cn/sqing33/nginx`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                      | ✔️   |
 | 2   | dpanel/dpanel                          | `ghcr.nju.edu.cn/sqing33/dpanel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                     | ✔️   |
 | 3   | lscr.io/linuxserver/qbittorrent        | `ghcr.nju.edu.cn/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
@@ -70,3 +70,6 @@
 | 42  | gotify/server                          | `ghcr.nju.edu.cn/sqing33/gotify`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                     | ✔️   |
 | 43  | sqing33/douyin-live-recorder-webui:0.1 | `ghcr.nju.edu.cn/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
 | 44  | sqing33/docsify                        | `ghcr.nju.edu.cn/sqing33/docsify-sqing`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)              | ✔️   |
+| 2   | sqing33/douyin-live-recorder-webui:0.1 | `ghcr.nju.edu.cn/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌ |
+| 2   | sqing33/docsify                | `ghcr.nju.edu.cn/sqing33/docsify-sqing`          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)     | ✔️ |
+
