@@ -69,8 +69,8 @@ jobs:
               target_tag="latest"
             fi
 
-            # 根据 change_tag_to_latest 和源镜像标签决定同步状态
-            if [ -z "$current_tag" ]; then
+            # 根据源镜像标签决定同步状态
+            if [ -z "$current_tag" ] || [ "$target_tag" == "latest" ]; then
               sync_status="✔️"
             else
               sync_status="❌"
