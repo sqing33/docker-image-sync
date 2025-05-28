@@ -69,7 +69,6 @@
 | 41  | gotify/server                          | `ghcr.nju.edu.cn/sqing33/gotify`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                     | ✔️   |
 | 42  | sqing33/douyin-live-recorder-webui:0.1 | `ghcr.nju.edu.cn/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
 | 43  | sqing33/docsify                        | `ghcr.nju.edu.cn/sqing33/docsify-sqing`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)              | ✔️   |
-| 44  | sqing33/docsify:latest                 | `ghcr.nju.edu.cn/sqing33/docsify-sqing`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docsify-sqing.yaml)              | ✔️   |
-| 45  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
-| 46  | mysql:9.3.0                    | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ❌ |
+| 44  | bash:devel-alpine3.21          | `ghcr.nju.edu.cn/sqing33/bash:alpine`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bash.yaml)              | ✔️ |
+| 45  | mysql:9.3.0                    | `ghcr.nju.edu.cn/sqing33/mysql`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)             | ❌ |
 
