@@ -23,13 +23,14 @@ jobs:
         id: extract-target-images
         run: |
           awk -F '|' '
-            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-            capture && /^\| *[0-9]+/ {
-              gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull 镜像在第4列
+            /^### 本仓库已同步的 Docker 镜像/ {in_table=1; next}
+            in_table && /^\| *----/ {next}
+            in_table && /^\| *[0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $4);
               gsub(/`/, "", $4);
               print $4
             }
-            capture && !/^\|/ {capture=0}
+            in_table && !/^\|/ {in_table=0}
           ' README.md | grep -vE '^$' | \
           sed 's|^ghcr.nju.edu.cn/sqing33/||' | \
           sed 's/:[^:]*$//' > target-image-list.txt
@@ -39,28 +40,31 @@ jobs:
         id: extract-source-images
         run: |
           awk -F '|' '
-            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-            capture && /^\| *[0-9]+/ {
-              gsub(/^[ \t]+|[ \t]+$/, "", $3); # 源镜像在第3列
+            /^### 本仓库已同步的 Docker 镜像/ {in_table=1; next}
+            in_table && /^\| *----/ {next}
+            in_table && /^\| *[0-9]+/ {
+              gsub(/^[ \t]+|[ \t]+$/, "", $3);
               gsub(/`/, "", $3);
               print $3
             }
-            capture && !/^\|/ {capture=0}
+            in_table && !/^\|/ {in_table=0}
           ' README.md | grep -vE '^$' > source-image-list.txt
+          touch source-image-list.txt
           echo "===== source-image-list.txt 内容 ====="
-          cat source-image-list.txt
+          cat source-image-list.txt || true
       - name: 提取 README 镜像同步状态
         id: extract-readme-sync-status
         run: |
           awk -F '|' '
-            /^### 本仓库已同步的 Docker 镜像/ {capture=1; next}
-            capture && /^\| *[0-9]+/ {
+            /^### 本仓库已同步的 Docker 镜像/ {in_table=1; next}
+            in_table && /^\| *----/ {next}
+            in_table && /^\| *[0-9]+/ {
               gsub(/^[ \t]+|[ \t]+$/, "", $4); # pull 镜像
               gsub(/`/, "", $4);
               gsub(/^[ \t]+|[ \t]+$/, "", $6); # 同步状态
               print $4 "|" $6
             }
-            capture && !/^\|/ {capture=0}
+            in_table && !/^\|/ {in_table=0}
           ' README.md > readme-sync-status.txt
           echo "===== readme-sync-status.txt 内容 ====="
           cat readme-sync-status.txt
