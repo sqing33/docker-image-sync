@@ -167,11 +167,6 @@ jobs:
             # 获取当前镜像名称（与表格第二列保持一致，全部小写且去除空格）
             current_image_name_for_readme=$(echo "$full_image" | tr '[:upper:]' '[:lower:]' | tr -d ' ')
 
-            echo "现有镜像: $existing_images"
-            echo "README 的当前镜像: $current_image_name_for_readme"
-            echo "当前处理镜像: $current_image"
-            echo "awk 过滤出的现有镜像: $existing_images"
-
             # 检查镜像是否已存在（严格以第二列唯一，全部小写且去除空格）
             if echo "$existing_images" | grep -qxF "$current_image_name_for_readme"; then
               echo "镜像 $full_image 已存在，跳过 README 更新"
