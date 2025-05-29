@@ -24,8 +24,8 @@
 
 ### 本仓库已同步的 Docker 镜像
 
-|     | 源镜像                                   | pull 镜像                                    | docker-compose                                                                                                | 同步 |
-| --- | ---------------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---- |
+|   | 源镜像 | pull 镜像 | docker-compose | 同步 |
+| ---- | -------- | --------- | -------------- | ---- |
 | 1   | dpanel/dpanel                            | `ghcr.io/sqing33/dpanel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                     | ✔️   |
 | 2   | metacubex/mihomo                         | `ghcr.io/sqing33/mihomo`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                     | ✔️   |
 | 3   | mzz2017/v2raya                           | `ghcr.io/sqing33/v2raya`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                     | ✔️   |
@@ -83,3 +83,5 @@
 | 55  | ghcr.io/metacubex/metacubexd             | `ghcr.io/sqing33/metacubexd`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)                 | ✔️   |
 | 56  | sqing33/docsify                          | `ghcr.io/sqing33/docsify`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docify.yaml)                     | ❌   |
 | 57  | sqing33/douyin-live-recorder-webui       | `ghcr.io/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
+| 58  | metacubex/clash-meta           | `ghcr.io/sqing33/clash`                          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)             | ✔️ |
+
