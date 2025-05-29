@@ -84,4 +84,5 @@
 | 56  | sqing33/docsify                          | `ghcr.io/sqing33/docsify`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docify.yaml)                     | ❌   |
 | 57  | sqing33/douyin-live-recorder-webui       | `ghcr.io/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
 | 58  | metacubex/clash-meta           | `ghcr.io/sqing33/clash`                          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)             | ✔️ |
+| 59  | haproxy                        | `ghcr.io/sqing33/haproxy`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)           | ✔️ |
 
