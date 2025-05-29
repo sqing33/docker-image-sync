@@ -1,17 +1,11 @@
 services:
-  clash: 
-    image: ghcr.nju.edu.cn/sqing33/clash
-    container_name: clash
-    restart: always
+  helloworld: # 定义服务名称
+    image: ghcr.io/sqing33/hello-world # 镜像
+    container_name: portainer # 容器名称
+    restart: always # 重启策略
     ports:
-      - "7890:7890"
-      - "7891:7891"
-      - "9090:9090"
+      - "80:80" # 将主机的80端口映射到容器的80端口
     volumes:
-      - /vol3/1000/Docker/clash/config.yaml:/root/.config/clash/config.yaml
-  yacd:
-    image: haishanh/yacd
-    container_name: yacd
-    restart: always
-    ports:
-      - "9080:80"
+      - (宿主机路径):(容器路径) # 将宿主机路径挂载到容器
+    depends_on: # 标识依赖的服务，例如确保 db 启动后再启动h elloworld
+      - db
