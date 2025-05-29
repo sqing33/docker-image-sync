@@ -174,7 +174,7 @@ jobs:
               echo "添加新镜像 $current_image 到 README"
               count=$(echo "$data_lines" | wc -l)
               new_count=$((count + 1))
-              pull_cmd="ghcr.nju.edu.cn/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+              pull_cmd="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
               # 如果 target_tag 是 latest，则从 pull_cmd 中移除 :latest
               if [[ "$target_tag" == "latest" ]]; then
                 pull_cmd="${pull_cmd%:latest}"

@@ -36,7 +36,7 @@ jobs:
           /^### 部分镜像 docker run 命令/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | \
           # 提取镜像名称（去除域名和标签）
-          sed 's|^ghcr.nju.edu.cn/sqing33/||' | \
+          sed 's|^ghcr.io/sqing33/||' | \
           sed 's/:[^:]*$//' > target-image-list.txt
           echo "===== target-image-list.txt 内容 ====="
           cat target-image-list.txt
@@ -98,7 +98,7 @@ jobs:
             while IFS= read -r del_image; do
               # 转义特殊字符并匹配 pull 镜像列
               escaped_del_image=$(printf '%s' "$del_image" | sed 's/[][\\\^\$\.\*?+(){}|]/\\&/g')
-              sed -i "/|.*\`ghcr.nju.edu.cn\/$GHCR_USER\/$escaped_del_image\(:[^\`]*\)\?\`/d" README.md
+              sed -i "/|.*\`ghcr.io\/$GHCR_USER\/$escaped_del_image\(:[^\`]*\)\?\`/d" README.md
             done < deleted-images.txt
             # 重新编号并修复表格格式
             awk -F '|' '
