@@ -87,4 +87,5 @@
 | 59  | haproxy                        | `ghcr.io/sqing33/haproxy`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)           | ✔️ |
 | 60  | haishanh/yacd                  | `ghcr.io/sqing33/yacd`                           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)              | ✔️ |
 | 61  | idootop/mi-gpt                 | `ghcr.io/sqing33/mi-gpt`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mi-gpt.yaml)            | ✔️ |
+| 62  | klausmeyer/docker-registry-browser | `ghcr.io/sqing33/docker-registry-browser`        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-browser.yaml) | ✔️ |
 
