@@ -91,4 +91,5 @@
 | 63  | registry:2                     | `ghcr.io/sqing33/registry`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)          | ❌ |
 | 64  | joxit/docker-registry-ui       | `ghcr.io/sqing33/docker-registry-ui`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-ui.yaml) | ✔️ |
 | 65  | idootop/migpt-next             | `ghcr.io/sqing33/migpt-next`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)        | ✔️ |
+| 66  | sqing33/docker-image-sync-to-registry | `ghcr.io/sqing33/docker-image-sync-to-registry`  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-image-sync-to-registry.yaml) | ✔️ |
 
