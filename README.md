@@ -83,13 +83,14 @@
 | 55  | ghcr.io/metacubex/metacubexd             | `ghcr.io/sqing33/metacubexd`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)                 | ✔️   |
 | 56  | sqing33/docsify                          | `ghcr.io/sqing33/docsify`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docify.yaml)                     | ❌   |
 | 57  | sqing33/douyin-live-recorder-webui       | `ghcr.io/sqing33/douyin-live-recorder-webui` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder-webui.yaml) | ❌   |
-| 58  | metacubex/clash-meta           | `ghcr.io/sqing33/clash`                          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)             | ✔️ |
-| 59  | haproxy                        | `ghcr.io/sqing33/haproxy`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)           | ✔️ |
-| 60  | haishanh/yacd                  | `ghcr.io/sqing33/yacd`                           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)              | ✔️ |
-| 61  | idootop/mi-gpt                 | `ghcr.io/sqing33/mi-gpt`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mi-gpt.yaml)            | ✔️ |
-| 62  | klausmeyer/docker-registry-browser | `ghcr.io/sqing33/docker-registry-browser`        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-browser.yaml) | ✔️ |
-| 63  | registry:2                     | `ghcr.io/sqing33/registry`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)          | ❌ |
-| 64  | joxit/docker-registry-ui       | `ghcr.io/sqing33/docker-registry-ui`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-ui.yaml) | ✔️ |
-| 65  | idootop/migpt-next             | `ghcr.io/sqing33/migpt-next`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)        | ✔️ |
-| 66  | sqing33/docker-image-sync-to-registry | `ghcr.io/sqing33/docker-image-sync-to-registry`  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-image-sync-to-registry.yaml) | ✔️ |
+| 58  | sqing33/docker-image-sync-to-registry | `ghcr.io/sqing33/docker-image-sync-to-registry`  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-image-sync-to-registry.yaml) | ❌ |
+| 59  | metacubex/clash-meta           | `ghcr.io/sqing33/clash`                          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)             | ✔️ |
+| 60  | haproxy                        | `ghcr.io/sqing33/haproxy`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)           | ✔️ |
+| 61  | haishanh/yacd                  | `ghcr.io/sqing33/yacd`                           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)              | ✔️ |
+| 62  | idootop/mi-gpt                 | `ghcr.io/sqing33/mi-gpt`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mi-gpt.yaml)            | ✔️ |
+| 63  | klausmeyer/docker-registry-browser | `ghcr.io/sqing33/docker-registry-browser`        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-browser.yaml) | ✔️ |
+| 64  | registry:2                     | `ghcr.io/sqing33/registry`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)          | ❌ |
+| 65  | joxit/docker-registry-ui       | `ghcr.io/sqing33/docker-registry-ui`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-ui.yaml) | ✔️ |
+| 66  | idootop/migpt-next             | `ghcr.io/sqing33/migpt-next`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)        | ✔️ |
+
 
