@@ -89,4 +89,5 @@
 | 61  | idootop/mi-gpt                 | `ghcr.io/sqing33/mi-gpt`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mi-gpt.yaml)            | ✔️ |
 | 62  | klausmeyer/docker-registry-browser | `ghcr.io/sqing33/docker-registry-browser`        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-browser.yaml) | ✔️ |
 | 63  | registry:2                     | `ghcr.io/sqing33/registry`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)          | ❌ |
+| 64  | joxit/docker-registry-ui       | `ghcr.io/sqing33/docker-registry-ui`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-registry-ui.yaml) | ✔️ |
 
