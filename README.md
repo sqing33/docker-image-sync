@@ -51,8 +51,8 @@
 | 23  | adminer                                  | `ghcr.io/sqing33/adminer`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                    | ✔️   |
 | 24  | shmilyin/nas-tools:2.9.0                 | `ghcr.io/sqing33/nas-tools`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                  | ❌   |
 | 25  | lscr.io/linuxserver/emby                 | `ghcr.io/sqing33/emby`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                       | ✔️   |
-| 26  | xiaoyaliu/alist                          | `ghcr.io/sqing33/xiaoya-alist`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ✔️   |
-| 27  | xhofe/alist                              | `ghcr.io/sqing33/alist`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ✔️   |
+| 26  | xiaoyaliu/alist                          | `ghcr.io/sqing33/xiaoya-alist`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ❌   |
+| 27  | xhofe/alist                              | `ghcr.io/sqing33/alist`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ❌   |
 | 28  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                    | ✔️   |
 | 29  | henrygd/beszel                           | `ghcr.io/sqing33/beszel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                     | ✔️   |
 | 30  | lscr.io/linuxserver/qbittorrent          | `ghcr.io/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
