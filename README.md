@@ -55,7 +55,7 @@
 | 27  | xhofe/alist                              | `ghcr.io/sqing33/alist`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                      | ❌   |
 | 28  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                    | ✔️   |
 | 29  | henrygd/beszel                           | `ghcr.io/sqing33/beszel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                     | ✔️   |
-| 30  | lscr.io/linuxserver/qbittorrent          | `ghcr.io/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
+| 30  | ddsderek/qbittorrent_skip_patch          | `ghcr.io/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
 | 31  | p3terx/aria2-pro                         | `ghcr.io/sqing33/aria2`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2.yaml)                      | ✔️   |
 | 32  | p3terx/ariang                            | `ghcr.io/sqing33/aria2-webui`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2-webui.yaml)                | ✔️   |
 | 33  | lscr.io/linuxserver/transmission         | `ghcr.io/sqing33/transmission`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)               | ✔️   |
@@ -92,5 +92,4 @@
 | 64  | quiq/registry-ui               | `ghcr.io/sqing33/registry-ui`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml)       | ✔️ |
 | 65  | ghcr.io/lukegus/termix         | `ghcr.io/sqing33/termix`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)            | ✔️ |
 | 66  | hanxi/xiaomusic                | `ghcr.io/sqing33/xiaomusic`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)         | ✔️ |
-| 67  | ddsderek/qbittorrent_skip_patch | `ghcr.io/sqing33/qbittorrent`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)       | ✔️ |
 
