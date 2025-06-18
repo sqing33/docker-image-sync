@@ -1,27 +1,11 @@
 services:
-  qbittorrent:
-    image: ghcr.io/sqing33/qbittorrent:latest
-    container_name: qbittorrent
-    environment:
-      - TZ=Asia/Shanghai
-      - WEBUI_PORT=8080
-      - TORRENTING_PORT=6881
+  helloworld: # 定义服务名称
+    image: ghcr.io/sqing33/hello-world # 镜像
+    container_name: portainer # 容器名称
+    restart: always # 重启策略
     ports:
-      - "18080:8080"
-      - "6881:6881"
-      - "6881:6881/udp"
+      - "80:80" # 将主机的80端口映射到容器的80端口
     volumes:
-      - /root/data/qbittorrent:/config
-      - /nas/downloads:/downloads
-    restart: unless-stopped
-# 出现 Unauthorized
-# 打开配置文件 qBittorrent.conf
-# 在 [Preferences] 添加
-
-# WebUI\HostHeaderValidation=false
-# WebUI\CSRFProtection=false
-
-# 设置配置文件为只读
-# chmod a=r /vol1/1000/Docker/qbittorrent/qBittorrent/qBittorrent.conf
-
-# trackers 地址：https://github.com/XIU2/TrackersListCollection?tab=readme-ov-file
+      - (宿主机路径):(容器路径) # 将宿主机路径挂载到容器
+    depends_on: # 标识依赖的服务，例如确保 db 启动后再启动h elloworld
+      - db
