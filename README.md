@@ -92,4 +92,5 @@
 | 64  | quiq/registry-ui               | `ghcr.io/sqing33/registry-ui`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml)       | ✔️ |
 | 65  | ghcr.io/lukegus/termix         | `ghcr.io/sqing33/termix`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)            | ✔️ |
 | 66  | hanxi/xiaomusic                | `ghcr.io/sqing33/xiaomusic`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)         | ✔️ |
+| 67  | ddsderek/qbittorrent_skip_patch | `ghcr.io/sqing33/qbittorrent`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)       | ✔️ |
 
