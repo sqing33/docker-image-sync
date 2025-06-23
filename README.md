@@ -93,4 +93,5 @@
 | 65  | ghcr.io/lukegus/termix         | `ghcr.io/sqing33/termix`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)            | ✔️ |
 | 66  | hanxi/xiaomusic                | `ghcr.io/sqing33/xiaomusic`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)         | ✔️ |
 | 67  | iyuucn/iyuuplus                | `ghcr.io/sqing33/iyuuplus`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuuplus.yaml)          | ✔️ |
+| 68  | chisbread/transmission         | `ghcr.io/sqing33/transmission`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)      | ✔️ |
 
