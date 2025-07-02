@@ -96,5 +96,4 @@
 | 68  | chisbread/transmission         | `ghcr.io/sqing33/transmission`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)      | ✔️ |
 | 69  | sqing33/argb-fan-esp32         | `ghcr.io/sqing33/argb-fan-esp32`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)    | ✔️ |
 | 70  | jellyfin/jellyfin              | `ghcr.io/sqing33/jellyfin`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)          | ✔️ |
-| 71  | plexinc/pms-docker             | `ghcr.io/sqing33/plex`                           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/plex.yaml)              | ✔️ |
 
