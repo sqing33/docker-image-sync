@@ -97,6 +97,4 @@
 | 69  | sqing33/argb-fan-esp32         | `ghcr.io/sqing33/argb-fan-esp32`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)    | ✔️ |
 | 70  | jellyfin/jellyfin              | `ghcr.io/sqing33/jellyfin`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)          | ✔️ |
 | 71  | b3log/siyuan                   | `ghcr.io/sqing33/siyuan`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)            | ✔️ |
-| 72  | nriver/trilium-cn              | `ghcr.io/sqing33/trilium-cn`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/trilium-cn.yaml)        | ✔️ |
-| 73  | joplin/server                  | `ghcr.io/sqing33/server`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/server.yaml)            | ✔️ |
 
