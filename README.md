@@ -98,4 +98,5 @@
 | 70  | jellyfin/jellyfin              | `ghcr.io/sqing33/jellyfin`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)          | ✔️ |
 | 71  | b3log/siyuan                   | `ghcr.io/sqing33/siyuan`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)            | ✔️ |
 | 72  | openspeedtest/latest           | `ghcr.io/sqing33/openspeedtest`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)     | ✔️ |
+| 73  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 
