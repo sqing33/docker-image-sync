@@ -100,4 +100,5 @@
 | 72  | openspeedtest/latest           | `ghcr.io/sqing33/openspeedtest`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)     | ✔️ |
 | 73  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 | 74  | netdata/netdata                | `ghcr.io/sqing33/netdata`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/netdata.yaml)           | ✔️ |
+| 75  | linuxserver/transmission:4.0.5 | `ghcr.io/sqing33/transmission:4.0.5`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)      | ❌ |
 
