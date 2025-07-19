@@ -56,9 +56,9 @@
 | 28  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                    | ✔️   |
 | 29  | henrygd/beszel                           | `ghcr.io/sqing33/beszel`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                     | ✔️   |
 | 30  | ddsderek/qbittorrent_skip_patch          | `ghcr.io/sqing33/qbittorrent`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)                | ✔️   |
-| 31  | p3terx/aria2-pro                         | `ghcr.io/sqing33/aria2`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2.yaml)                      | ✔️   |
-| 32  | p3terx/ariang                            | `ghcr.io/sqing33/aria2-webui`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2-webui.yaml)                | ✔️   |
-| 33  | lscr.io/linuxserver/transmission         | `ghcr.io/sqing33/transmission`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)               | ✔️   |
+| 31  | linuxserver/transmission:4.0.5           | `ghcr.io/sqing33/transmission:4.0.5`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)               | ❌   |
+| 32  | p3terx/aria2-pro                         | `ghcr.io/sqing33/aria2`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2.yaml)                      | ✔️   |
+| 33  | p3terx/ariang                            | `ghcr.io/sqing33/aria2-webui`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2-webui.yaml)                | ✔️   |
 | 34  | lscr.io/linuxserver/duplicati            | `ghcr.io/sqing33/duplicati`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                  | ✔️   |
 | 35  | easychen/cookiecloud                     | `ghcr.io/sqing33/cookiecloud`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)                | ✔️   |
 | 36  | homeassistant/home-assistant             | `ghcr.io/sqing33/homeassistant`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)              | ✔️   |
@@ -100,5 +100,3 @@
 | 72  | openspeedtest/latest           | `ghcr.io/sqing33/openspeedtest`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)     | ✔️ |
 | 73  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 | 74  | netdata/netdata                | `ghcr.io/sqing33/netdata`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/netdata.yaml)           | ✔️ |
-| 75  | linuxserver/transmission:4.0.5 | `ghcr.io/sqing33/transmission:4.0.5`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml)      | ❌ |
-
