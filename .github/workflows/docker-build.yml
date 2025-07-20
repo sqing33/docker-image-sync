@@ -125,7 +125,7 @@ jobs:
 
           # --- 优化点 2: 添加构建时间 ---
           # 获取当前的 UTC 时间作为构建时间
-          BUILD_TIME=$(date -u '+%Y-%m-%d %H:%M:%S')
+          BUILD_TIME=$(date -u '+%Y-%m-%d')
 
           # 更新 printf 命令以匹配新的表格结构
           printf -v new_row "| %-3s | %s | %s | \`%s\` | %s |" \
