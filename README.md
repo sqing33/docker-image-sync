@@ -124,7 +124,7 @@
 | 10   | chigusa/bililive-go                      | `ghcr.io/sqing33/bililive-go`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bililive-go.yaml) | ✔️    |
 | 11   | ghcr.io/bitmagnet-io/bitmagnet           | `ghcr.io/sqing33/bitmagnet`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitmagnet.yaml) | ✔️    |
 | 12   | moby/buildkit                            | `ghcr.io/sqing33/buildkit`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml) | ✔️    |
-| 13   | busybox                                  | `ghcr.io/sqing33/busybox`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml) | ✔️    |
+| 13   | busybox2                                  | `ghcr.io/sqing33/busybox2`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml) | ✔️    |
 | 14   | metacubex/clash-meta                     | `ghcr.io/sqing33/clash`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml) | ❌    |
 | 15   | easychen/cookiecloud                     | `ghcr.io/sqing33/cookiecloud`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml) | ✔️    |
 | 16   | jeessy/ddns-go                           | `ghcr.io/sqing33/ddns-go`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml) | ✔️    |
