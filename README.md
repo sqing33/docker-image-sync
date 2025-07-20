@@ -105,8 +105,6 @@
 ### 已构建的 Docker 镜像
 
 <!-- BUILD_TABLE_START -->
-
 |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
 |---|---|---|---|---|
-
 <!-- BUILD_TABLE_END -->
