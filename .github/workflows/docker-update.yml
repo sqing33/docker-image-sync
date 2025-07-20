@@ -1,4 +1,4 @@
-name: 更新 Docker 镜像 - ghcr.io
+name: 更新 Docker 镜像 —— 定时更新 ghcr.io
 
 on:
   schedule:
