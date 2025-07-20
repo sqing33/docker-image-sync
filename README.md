@@ -102,9 +102,5 @@
 | 71  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 | 72  | busybox                        | `ghcr.io/sqing33/busybox`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ✔️ |
 
-### 已构建的 Docker 镜像
-
-|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
+|   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
 |---|---|---|---|---|
-| 1   | [sqing33/test](https://github.com/sqing33/te1st.git) | `ghcr.io/sqing33/my-a1pp` | `sqing33/my-a1pp` | `linux/amd64,linux/arm64,linux/arm/v7` |
-| 2   | [sqing33/test](https://github.com/sqing33/test.git) | `ghcr.io/sqing33/my-app` | `sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` |
