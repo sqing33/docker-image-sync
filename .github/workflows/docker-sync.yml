@@ -58,12 +58,8 @@ jobs:
           git pull --rebase
 
           # --- 1. 镜像同步与信息收集 ---
-          # 定义一个变量来收集所有新添加的行，使用一个安全的、不会冲突的分隔符
           NEW_ROWS_DATA=""
           UNIQUE_SEPARATOR="%%%"
-
-          # 提取 README 中已有的源镜像列表，用于查重
-          # 注意：这里的标题已经根据你的要求修改为“已同步的 Docker 镜像”
           TABLE_TITLE="### 已同步的 Docker 镜像"
           
           existing_source_images=$(awk '
@@ -81,49 +77,77 @@ jobs:
           IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
 
           for i in "${!image_array[@]}"; do
-            full_image=$(echo "${image_array[$i]}" | xargs) # xargs to trim whitespace
+            full_image=$(echo "${image_array[$i]}" | xargs)
             if [ -z "$full_image" ]; then continue; fi
 
-            # 查重
             if echo "$existing_source_images" | grep -qFx "$full_image"; then
               echo "镜像 $full_image 已存在于 README.md，跳过。"
               continue
             fi
             
-            # ... (镜像同步的核心逻辑，这里保持不变) ...
-            echo "\n===== 开始同步 $full_image ====="
+            echo "--------------------------------------------------"
+            echo "===== 开始处理 $full_image ====="
             current_image=$(echo "$full_image" | cut -d':' -f1)
             current_tag=$(echo "$full_image" | cut -s -d':' -f2); [ -z "$current_tag" ] && current_tag="latest"
             target_tag="$current_tag"; [[ "$current_tag" =~ "alpine" ]] && target_tag="alpine" || { [ "${{ inputs.change_tag_to_latest }}" == "是" ] && target_tag="latest"; }
-            if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then sync_status="✔️"; else sync_status="❌"; fi
-            current_ghcr_name="${ghcr_name_array[$i]}"; [ -z "$current_ghcr_name" ] && IMAGE_NAME=$(basename "$current_image") || IMAGE_NAME="$current_ghcr_name"
-            # ... 此处省略 skopeo 和 docker pull/push 等具体同步操作，它们是正确的 ...
-            echo "同步逻辑执行中... 镜像将被命名为 $IMAGE_NAME"
+            
+            if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then 
+              sync_status="✔️"
+            else 
+              sync_status="❌"
+            fi
+            
+            current_ghcr_name="${ghcr_name_array[$i]}"
+            if [ -z "$current_ghcr_name" ]; then 
+              IMAGE_NAME=$(basename "$current_image")
+            else 
+              IMAGE_NAME="$current_ghcr_name"
+            fi
+
+            SOURCE_IMAGE_URI="docker://$current_image:$current_tag"
+            TARGET_IMAGE_URI="docker://ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
+            
+            # --- 这是补充的完整同步逻辑 ---
+            echo "源镜像: $SOURCE_IMAGE_URI"
+            echo "目标镜像: $TARGET_IMAGE_URI"
+            
+            # 使用 skopeo copy 进行同步，--all 参数会自动处理多架构
+            # 增加错误处理，如果同步失败则打印错误并继续
+            if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
+              echo "✅ 镜像同步成功"
+            else
+              echo "❌ 镜像同步失败，请检查源镜像是否存在或网络连接。"
+              # 同步失败，可以选择跳过该镜像的后续处理
+              continue
+            fi
+            # --- 同步逻辑结束 ---
 
             # 创建 docker-compose.yaml 文件
             mkdir -p docker-compose
             cp docker-compose/example.yaml "docker-compose/$IMAGE_NAME.yaml"
 
-            # 准备新行的数据，但不立即写入文件
-            pull_cmd="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME"; [ "$target_tag" != "latest" ] && pull_cmd="$pull_cmd:$target_tag"
+            # 准备新行的数据
+            pull_cmd="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME"
+            if [ "$target_tag" != "latest" ]; then
+              pull_cmd="$pull_cmd:$target_tag"
+            fi
             pull_cmd="\`$pull_cmd\`"
             compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
             
-            # 将新行的数据用分隔符拼接成一个安全的字符串
             new_line_data="${full_image}${UNIQUE_SEPARATOR}${pull_cmd}${UNIQUE_SEPARATOR}${compose_file}${UNIQUE_SEPARATOR}${sync_status}"
             NEW_ROWS_DATA+="${new_line_data}\n"
           done
           
-          # 如果没有任何新行，则直接退出
           if [ -z "$NEW_ROWS_DATA" ]; then
+            echo "--------------------------------------------------"
             echo "没有新的镜像被添加，无需更新 README.md。"
             exit 0
           fi
 
           # --- 2. README 更新、排序与重写 ---
+          echo "--------------------------------------------------"
           echo "开始更新 README.md..."
           
-          # 提取已有的数据行
           existing_rows=$(awk '
             $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
             in_table {
@@ -132,20 +156,11 @@ jobs:
             }
           ' README.md)
 
-          # 合并新旧数据，并进行排序
-          # 1. 装饰（添加排序键）
-          # 2. 排序
-          # 3. 去掉装饰
-          # 4. 重新添加行号
           sorted_table_rows=$(
-            # 将新旧行都转换成统一格式
             {
-              # 旧行
               echo "$existing_rows" | sed 's/^| [0-9]\{1,\} *|/|/'
-              # 新行
               echo -e "$NEW_ROWS_DATA" | sed '/^$/d' | awk -F"${UNIQUE_SEPARATOR}" '{printf("| %s | %s | %s | %s |\n", $1, $2, $3, $4)}'
             } | awk -F'|' '
-              # 装饰：提取排序键（例如 dpanel）
               {
                 key = $3;
                 gsub(/`/, "", key);
@@ -156,7 +171,6 @@ jobs:
             ' | sort -f | sed 's/^.*@@@//' | awk 'BEGIN{count=1} {printf("| %-3s %s\n", count++, $0)}'
           )
 
-          # 创建包含最终完整表格内容的临时文件
           {
             echo "${TABLE_TITLE}"
             echo ""
@@ -165,7 +179,6 @@ jobs:
             echo "$sorted_table_rows"
           } > new_table.tmp
           
-          # 使用绝对可靠的 awk 脚本替换整个表格
           awk '
             BEGIN { replaced=0 }
             $0 == "'"${TABLE_TITLE}"'" && !replaced {
@@ -190,5 +203,3 @@ jobs:
             git commit -m "chore(sync): 同步新镜像并自动排序更新README"
             git push
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
