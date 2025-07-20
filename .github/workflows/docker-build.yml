@@ -1,87 +1,3 @@
-# .github/workflows/docker-build.yml
-
-name: 构建 Docker 镜像 → ghcr.io, DockerHub
-
-on:
-  workflow_dispatch:
-    inputs:
-      repo_url:
-        description: "要构建的 Git 仓库克隆链接 (例如: https://github.com/your-name/your-repo.git)"
-        required: true
-      repo_ref:
-        description: "要检出的分支、标签或提交SHA (例如: main)"
-        required: true
-        default: "main"
-      image_name:
-        description: "要设置的镜像名称 (例如: my-awesome-app)"
-        required: true
-        default: "my-app"
-      tags:
-        description: "要推送的标签, 逗号分隔 (例如: latest,v1.0)"
-        required: true
-        default: "latest"
-      platforms:
-        description: "要构建的平台, 逗号分隔"
-        required: true
-        default: "linux/amd64,linux/arm64,linux/arm/v7"
-
-jobs:
-  build_and_push:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      packages: write
-
-    steps:
-      - name: 1. 检出本项目仓库
-        uses: actions/checkout@v4
-        with:
-          # 使用 GITHUB_TOKEN 以便后续可以推送更改
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 2. 克隆指定的代码仓库
-        run: |
-          git clone ${{ github.event.inputs.repo_url }} app
-          cd app
-          git checkout ${{ github.event.inputs.repo_ref }}
-
-      - name: 3. 设置 QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: 4. 设置 Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: 5. 登录到 GitHub Container Registry (ghcr.io)
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 6. 登录到 Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-      - name: 7. 提取 Docker 元数据并生成标签
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
-          tags: ${{ github.event.inputs.tags }}
-
-      - name: 8. 构建并推送到多个镜像仓库
-        uses: docker/build-push-action@v6
-        with:
-          context: ./app
-          platforms: ${{ github.event.inputs.platforms }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
       - name: 9. 更新 README.md 中的“已构建的 Docker 镜像”表格
         run: |
           git config --global user.name "github-actions[bot]"
@@ -91,7 +7,6 @@ jobs:
           # 准备表格新条目所需的信息
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
-          # 清理 Git URL 以便在 README 中更好地显示
           SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||; s/\.git$//')
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
@@ -111,7 +26,7 @@ jobs:
           count=$(echo "$data_lines" | wc -l | xargs)
           new_count=$((count + 1))
 
-          # 格式化新行，注意移除了 printf 中的宽度填充，避免了多余的空格
+          # 格式化新行
           printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
@@ -119,14 +34,14 @@ jobs:
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-          # 将所有内容（表头、分隔线、旧行、新行）组合成新的完整表格
-          NEW_TABLE_CONTENT=$(cat <<EOF
-          |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
-          |---|---|---|---|---|
-          $(echo "$data_lines")
-          $new_row
-          EOF
-          )
+NEW_TABLE_CONTENT=$(cat <<EOF
+|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
+|---|---|---|---|---|
+$(echo "$data_lines")
+$new_row
+EOF
+)
+
           # 使用 awk 将 START 和 END 标记之间的旧内容替换为新的完整表格
           awk -v new_content="$NEW_TABLE_CONTENT" '
             BEGIN {p=1}
