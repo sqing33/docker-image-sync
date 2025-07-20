@@ -95,7 +95,6 @@ jobs:
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
           # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
-          # 我们现在检查整个文件，因为表格可能不存在
           if grep -qF "$GHCR_IMAGE_NAME" README.md; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
@@ -104,7 +103,7 @@ jobs:
           echo "添加新构建的镜像记录到 README.md"
 
           # 提取现有表格内容中的数据行
-          data_lines=$(awk '/^### 已构建的 Docker 镜像/,!/^\|/ && !/^$/ {if ($0 ~ /^\| [0-9]/) print}' README.md)
+          data_lines=$(awk '/^### 已构建的 Docker 镜像/,/^$/ {if ($0 ~ /^\| [0-9]/) print}' README.md)
 
           # --- 修复缺陷 1: 序号错误 ---
           # 只有在 data_lines 非空时才计算行数，否则为0
@@ -136,33 +135,21 @@ jobs:
             echo "$new_row"
           } > new_build_table_content.txt
 
-          # --- 修复缺陷 3: 重复错误 ---
-          # 使用一个简单而健壮的 awk 脚本来执行替换，而不是插入
+          # --- 修复缺陷 3: 结构错误 ---
+          # 使用更简单、更精确的 awk 脚本来执行替换
           awk '
-            # 默认情况下，我们在“非跳过”模式
-            BEGIN { skipping=0 }
-            # 当我们找到标题时...
+            # 默认不打印
+            BEGIN { printing=1 }
+            # 匹配到标题时，打印临时文件的内容，然后开始跳过旧内容
             /^### 已构建的 Docker 镜像/ {
-              # ...打印我们准备好的新表格...
               while ((getline line < "new_build_table_content.txt") > 0) { print line }
-              close("new_build_table_content.txt");
-              # ...然后立即进入“跳过”模式
-              skipping=1;
-              next
+              close("new_build_table_content.txt")
+              printing=0
             }
-            # 如果我们正处于“跳过”模式...
-            skipping==1 {
-              # ...并且遇到一个非表格行（不是|开头，也不是空行）...
-              if (!/^\|/ && !/^$/) {
-                # ...那么就停止跳过，并打印这一行
-                skipping=0;
-                print;
-              }
-              # 如果还是表格行，就什么也不做（即跳过）
-              next;
-            }
-            # 如果不在“跳过”模式，就正常打印
-            { print }
+            # 在跳过旧表格内容后，如果遇到一个非表格行（不以|开头也不是空行），则恢复打印
+            !printing && !/^\|/ && !/^$/ { printing=1 }
+            # 如果可以打印，则打印当前行
+            printing { print }
           ' README.md > README.tmp && mv README.tmp README.md
 
           # 提交并推送更改
