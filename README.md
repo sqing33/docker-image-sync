@@ -164,7 +164,7 @@
 | 48   | kuingsmile/piclist                       | `ghcr.io/sqing33/piclist`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/piclist.yaml) | ✔️    |
 | 49   | pgvector/pgvector:0.8.0-pg17             | `ghcr.io/sqing33/postgres`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml) | ❌    |
 | 50   | ddsderek/qbittorrent_skip_patch          | `ghcr.io/sqing33/qbittorrent`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) | ✔️    |
-| 51   | qd                                       | `ghcr.io/sqing33/qd`                            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) | ✔️    |
+| 51   | qdtoday/qd                               | `ghcr.io/sqing33/qd`                            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml) | ✔️    |
 | 52   | whyour/qinglong                          | `ghcr.io/sqing33/qinglong`                      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml) | ✔️    |
 | 53   | redis                                    | `ghcr.io/sqing33/redis`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) | ✔️    |
 | 54   | quiq/registry-ui                         | `ghcr.io/sqing33/registry-ui`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml) | ✔️    |
