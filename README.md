@@ -108,7 +108,6 @@
 | 1    | https://github.com/sqing33/docker-docsify                  | `ghcr.io/sqing33/docsify`<br>`sqing33/docsify`               | 2025-05-15 |
 | 2    | https://github.com/sqing33/docker-DouyinLiveRecorder-webui | `ghcr.io/sqing33/douyin-live-recorder-webui`<br>`sqing33/douyin-live-recorder-webui` | 2025-06-03 |
 | 3    | https://github.com/sqing33/docker-image-sync-to-registry   | `ghcr.io/sqing33/docker-image-sync-to-registry`<br>`sqing33/docker-image-sync-to-registry` | 2025-06-03 |
-| 4    | https://github.com/sqing33/test.git                        | `ghcr.io/sqing33/my-app44`<br>`sqing33/my-app44`             | 2025-07-20 |
 
 ### 已同步的 Docker 镜像
 
