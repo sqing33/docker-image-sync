@@ -95,20 +95,28 @@ jobs:
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
           # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
-          if grep -q "$GHCR_IMAGE_NAME" README.md; then
+          if grep -qF "$GHCR_IMAGE_NAME" README.md; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # 提取现有表格内容并计算新行号
+          # 提取现有表格内容中的数据行
           data_lines=$(awk '/^### 已构建的 Docker 镜像/,/^$/ {if ($0 ~ /^\| [0-9]/) print}' README.md)
-          count=$(echo "$data_lines" | wc -l | xargs)
+
+          # --- 修复缺陷 1: 序号错误 ---
+          # 只有在 data_lines 非空时才计算行数，否则为0
+          if [ -z "$data_lines" ]; then
+            count=0
+          else
+            count=$(echo "$data_lines" | wc -l)
+          fi
           new_count=$((count + 1))
 
-          # 格式化新行
-          printf -v new_row "| %-3s | %-35s | \`%-48s\` | \`%-45s\` | \`%-40s\` |" \
+          # --- 修复缺陷 2: 空格错误 ---
+          # 将所有 %-XXs 修改为 %s，移除不必要的空格填充
+          printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
             "$GHCR_IMAGE_NAME" \
@@ -127,19 +135,21 @@ jobs:
             echo "$new_row"
           } > new_build_table_content.txt
 
-          # 使用 awk 将 README.md 中的旧表格替换为新内容
+          # --- 修复缺陷 3: 结构错误 ---
+          # 使用更简单、更精确的 awk 脚本来执行替换
           awk '
-            BEGIN { replaced=0 }
+            # 默认不打印
+            BEGIN { printing=1 }
+            # 匹配到标题时，打印临时文件的内容，然后开始跳过旧内容
             /^### 已构建的 Docker 镜像/ {
               while ((getline line < "new_build_table_content.txt") > 0) { print line }
               close("new_build_table_content.txt")
-              # 跳过原文件中的旧表格内容
-              while ((getline > 0) && ($0 ~ /^\|/ || $0 == "")) {}
-              if (NR > 0) { print $0 } # 打印结束循环的那一行
-              replaced=1
-              next
+              printing=0
             }
-            { print }
+            # 在跳过旧表格内容后，如果遇到一个非表格行（不以|开头也不是空行），则恢复打印
+            !printing && !/^\|/ && !/^$/ { printing=1 }
+            # 如果可以打印，则打印当前行
+            printing { print }
           ' README.md > README.tmp && mv README.tmp README.md
 
           # 提交并推送更改
