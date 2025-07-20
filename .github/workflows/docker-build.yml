@@ -98,7 +98,7 @@ jobs:
           EXISTING_CONTENT=$(awk '/<!-- BUILD_TABLE_START -->/{flag=1; next} /<!-- BUILD_TABLE_END -->/{flag=0} flag' README.md)
 
           # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
-          if echo "$EXISTING_CONTENT" | grep -q "$GHCR_IMAGE_NAME"; then
+          if echo "$EXISTING_CONTENT" | grep -qF "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
@@ -118,25 +118,33 @@ jobs:
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-NEW_TABLE_CONTENT=$(cat <<EOF
-|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
-|---|---|---|---|---|
-$(echo "$data_lines")
-$new_row
-EOF
-)
+          # 1. 将新的完整表格内容写入一个临时文件
+          {
+            echo '|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |'
+            echo '|---|---|---|---|---|'
+            # 如果存在旧数据行，则打印它们
+            if [ -n "$data_lines" ]; then
+              echo "$data_lines"
+            fi
+            # 打印新添加的数据行
+            echo "$new_row"
+          } > new_table.tmp
 
-          # 使用 awk 将 START 和 END 标记之间的旧内容替换为新的完整表格
-          awk -v new_content="$NEW_TABLE_CONTENT" '
-            BEGIN {p=1}
+          # 2. 使用 awk 将 README 中标记之间的内容替换为临时文件的内容
+          awk '
+            # 匹配到结束标记时，恢复正常打印
+            /<!-- BUILD_TABLE_END -->/ { printing=1 }
+            # 当不在替换块内时，正常打印
+            printing { print }
+            # 匹配到开始标记时，打印开始标记，然后打印临时文件的内容，并开始跳过旧内容
             /<!-- BUILD_TABLE_START -->/ {
-              print;
-              print new_content;
-              p=0;
+              print
+              while ((getline line < "new_table.tmp") > 0) { print line }
+              close("new_table.tmp")
+              printing=0
             }
-            /<!-- BUILD_TABLE_END -->/ {p=1}
-            p {print}
           ' README.md > README.tmp && mv README.tmp README.md
+          rm new_table.tmp
 
           # 提交并推送更改
           git add README.md
