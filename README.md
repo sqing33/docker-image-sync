@@ -104,7 +104,9 @@
 
 ### 已构建的 Docker 镜像
 
+<!-- BUILD_TABLE_START -->
+
 |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
 |---|---|---|---|---|
-| 2   | [sqing33/docker-qb-pt-checker](https://github.com/sqing33/docker-qb-pt-checker.git) | `ghcr.io/sqing33/my-app                          ` | `sqing33/my-app                               ` | `linux/amd64,linux/arm64,linux/arm/v7    ` |
-|---|---|---|---|---|
+
+<!-- BUILD_TABLE_END -->
