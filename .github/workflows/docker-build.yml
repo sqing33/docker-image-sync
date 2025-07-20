@@ -88,22 +88,36 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
 
+          # --- 1. 定义标记并准备数据 ---
+          START_MARKER="<!-- BUILD_TABLE_START -->"
+          END_MARKER="<!-- BUILD_TABLE_END -->"
+
+          # 健壮性检查：如果标记丢失，立即以清晰的错误退出，防止破坏文件
+          if ! grep -qF "$START_MARKER" README.md || ! grep -qF "$END_MARKER" README.md; then
+            echo "::error:: README.md 文件缺少必需的表格标记。" >&2
+            echo "::error:: 请确保文件包含 <!-- BUILD_TABLE_START --> 和 <!-- BUILD_TABLE_END -->" >&2
+            exit 1
+          fi
+
           # 准备表格新条目所需的信息
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
           SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||' | sed 's/\.git$//')
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
-          # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
-          if grep -qF "$GHCR_IMAGE_NAME" README.md; then
+          # 安全地提取标记之间的旧内容
+          EXISTING_TABLE=$(awk "/$START_MARKER/{f=1;next} /$END_MARKER/{f=0} f" README.md)
+
+          # 检查镜像是否已存在于表格中
+          if echo "$EXISTING_TABLE" | grep -qF "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # 提取现有表格内容中的数据行
-          data_lines=$(awk '/^### 已构建的 Docker 镜像/,/^$/ {if ($0 ~ /^\| [0-9]/) print}' README.md)
+          # 从现有表格中提取数据行
+          data_lines=$(echo "$EXISTING_TABLE" | grep -E '^\| [0-9]+')
 
           # 修复了缺陷 1: 序号错误
           if [ -z "$data_lines" ]; then
@@ -113,7 +127,7 @@ jobs:
           fi
           new_count=$((count + 1))
 
-          # 修复了缺陷 2: 空格错误
+          # 修复了缺陷 2: 格式错误
           printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
@@ -121,49 +135,37 @@ jobs:
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-          # 创建包含新表格内容的临时文件
+          # 使用 echo 将新表格写入临时文件，这是最安全的方式
           {
-            echo "### 已构建的 Docker 镜像"
-            echo ""
-            echo "|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |"
-            echo "|---|---|---|---|---|"
+            echo '|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |'
+            echo '|---|---|---|---|---|'
             if [ -n "$data_lines" ]; then
               echo "$data_lines"
             fi
             echo "$new_row"
-          } > new_build_table_content.txt
+          } > new_table.tmp
 
-          # --- 修复了缺陷 3: 使用了最终正确的 awk 替换逻辑 ---
+          # --- 2. 使用绝对可靠的 awk 脚本进行替换 ---
           awk '
-            # Rule 1: 如果我们正处于跳过旧块的状态...
-            in_old_block {
-              # ...并且当前行不是表格行（即旧块已结束）...
-              if (!/^\|/ && !/^$/) {
-                # ...那么就打印新表格的全部内容...
-                while ((getline line < "new_build_table_content.txt") > 0) { print line }
-                close("new_build_table_content.txt");
-                # ...然后取消跳过状态。
-                in_old_block=0;
-              } else {
-                # 如果仍然是表格行，就什么也不做，直接跳到下一行
-                next;
-              }
+            # 默认情况下，打印当前行，除非我们处于“跳过”状态
+            !skipping { print }
+            # 当找到 START 标记时...
+            /<!-- BUILD_TABLE_START -->/ {
+              # ...注入我们的新表格内容...
+              while ((getline line < "new_table.tmp") > 0) { print line }
+              close("new_table.tmp");
+              # ...然后设置一个标志，开始跳过旧内容。
+              skipping = 1
             }
-
-            # Rule 2: 当我们找到标题行时...
-            /^### 已构建的 Docker 镜像/ {
-              # ...设置一个标志，表示我们开始进入要跳过的旧块...
-              in_old_block=1;
-              # ...然后直接跳到下一行，这样标题行和旧表格都不会被打印。
-              next;
+            # 当找到 END 标记时...
+            /<!-- BUILD_TABLE_END -->/ {
+              # ...取消跳过标志，这样从下一行开始就会恢复打印。
+              skipping = 0
             }
-
-            # Rule 3: 默认情况下，打印当前行。
-            # 这会打印标题之前和旧块之后的所有内容。
-            { print }
           ' README.md > README.tmp && mv README.tmp README.md
+          rm new_table.tmp
 
-          # 提交并推送更改
+          # --- 3. 提交更改 ---
           git add README.md
           if git diff --staged --quiet; then
             echo "README.md 没有变化，无需提交。"
