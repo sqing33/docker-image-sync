@@ -88,28 +88,42 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
 
+          # 定义关键的标记变量
+          START_MARKER="<!-- BUILD_TABLE_START -->"
+          END_MARKER="<!-- BUILD_TABLE_END -->"
+
           # 准备表格新条目所需的信息
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
           SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||; s/\.git$//')
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
-          # 从 README 中精确提取标记之间的旧表格内容
-          EXISTING_CONTENT=$(awk '/<!-- BUILD_TABLE_START -->/{flag=1; next} /<!-- BUILD_TABLE_END -->/{flag=0} flag' README.md)
+          # 读取整个文件内容，这是更安全的方式
+          README_CONTENT=$(cat README.md)
+          
+          # 健壮性检查：确保两个标记都存在，否则会以清晰的错误退出
+          if ! echo "$README_CONTENT" | grep -qF "$START_MARKER" || ! echo "$README_CONTENT" | grep -qF "$END_MARKER"; then
+            echo "::error::README.md is missing the required build table markers."
+            echo "Please ensure the file contains both <!-- BUILD_TABLE_START --> and <!-- BUILD_TABLE_END -->."
+            exit 1
+          fi
 
-          # 检查镜像是否已存在于表格中 (使用 -F for fixed string search, 确保安全)
-          if echo "$EXISTING_CONTENT" | grep -qF "$GHCR_IMAGE_NAME"; then
+          # 安全地提取标记之间的内容
+          INTERMEDIATE_CONTENT="${README_CONTENT#*"$START_MARKER"}"
+          EXISTING_TABLE="${INTERMEDIATE_CONTENT%%"$END_MARKER"*}"
+          
+          # 检查镜像是否已存在于表格中
+          if echo "$EXISTING_TABLE" | grep -qF "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # 从提取的内容中只获取数据行 (以 | 和数字开头)
-          data_lines=$(echo "$EXISTING_CONTENT" | grep -E '^\| [0-9]+')
+          # 从现有表格中提取数据行
+          data_lines=$(echo "$EXISTING_TABLE" | grep -E '^\| [0-9]+')
 
-          # --- 修复缺陷 1: 序号错误 ---
-          # 只有在 data_lines 非空时才计算行数，否则为0
+          # 修复序号错误：正确计算行数
           if [ -z "$data_lines" ]; then
             count=0
           else
@@ -117,8 +131,7 @@ jobs:
           fi
           new_count=$((count + 1))
 
-          # --- 修复缺陷 2: 格式错误 ---
-          # 使用 %s 而不是 %-48s 来移除多余的空格
+          # 修复格式错误：移除多余的空格
           printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
@@ -126,28 +139,19 @@ jobs:
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-          # --- 修复缺陷 3: 结构错误 ---
-          # 每次都重新构建完整的、干净的表格内容
-          {
-            echo '|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |'
-            echo '|---|---|---|---|---|'
-            if [ -n "$data_lines" ]; then
-              echo "$data_lines"
-            fi
-            echo "$new_row"
-          } > new_table.tmp
-
-          # 使用一个经过验证的、健壮的 awk 脚本来执行替换
-          awk '
-            /<!-- BUILD_TABLE_END -->/   { skip=0 }
-            !skip                        { print }
-            /<!-- BUILD_TABLE_START -->/ {
-              while ((getline line < "new_table.tmp") > 0) { print line }
-              close("new_table.tmp");
-              skip=1
-            }
-          ' README.md > README.tmp && mv README.tmp README.md
-          rm new_table.tmp
+          # 修复结构错误：每次都重新构建完整的、干净的表格
+          NEW_TABLE=$(cat <<EOF
+|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
+|---|---|---|---|---|
+$(echo "$data_lines")
+$new_row
+EOF
+)
+          # 使用 sed 进行安全、可靠的整块替换
+          # 注意：这个 sed 命令非常复杂，是为了处理多行替换的边缘情况
+          escaped_new_table=$(printf '%s\n' "$NEW_TABLE" | sed -e 's/[\/&]/\\&/g' | tr '\n' '\r')
+          sed -i -e "/$START_MARKER/,/$END_MARKER/{ /$START_MARKER/{p; r /dev/stdin" -e "}; /$END_MARKER/p; d }" README.md <<<"$escaped_new_table"
+          sed -i 's/\r/\n/g' README.md
 
           # 提交并推送更改
           git add README.md
@@ -158,4 +162,4 @@ jobs:
             git push
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}```
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
