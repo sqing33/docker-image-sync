@@ -1,3 +1,87 @@
+# .github/workflows/docker-build.yml
+
+name: 构建 Docker 镜像 → ghcr.io, DockerHub
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_url:
+        description: "要构建的 Git 仓库克隆链接 (例如: https://github.com/your-name/your-repo.git)"
+        required: true
+      repo_ref:
+        description: "要检出的分支、标签或提交SHA (例如: main)"
+        required: true
+        default: "main"
+      image_name:
+        description: "要设置的镜像名称 (例如: my-awesome-app)"
+        required: true
+        default: "my-app"
+      tags:
+        description: "要推送的标签, 逗号分隔 (例如: latest,v1.0)"
+        required: true
+        default: "latest"
+      platforms:
+        description: "要构建的平台, 逗号分隔"
+        required: true
+        default: "linux/amd64,linux/arm64,linux/arm/v7"
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: 1. 检出本项目仓库
+        uses: actions/checkout@v4
+        with:
+          # 使用 GITHUB_TOKEN 以便后续可以推送更改
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 2. 克隆指定的代码仓库
+        run: |
+          git clone ${{ github.event.inputs.repo_url }} app
+          cd app
+          git checkout ${{ github.event.inputs.repo_ref }}
+
+      - name: 3. 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 4. 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 5. 登录到 GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 6. 登录到 Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: 7. 提取 Docker 元数据并生成标签
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
+          tags: ${{ github.event.inputs.tags }}
+
+      - name: 8. 构建并推送到多个镜像仓库
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          platforms: ${{ github.event.inputs.platforms }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          
       - name: 9. 更新 README.md 中的“已构建的 Docker 镜像”表格
         run: |
           git config --global user.name "github-actions[bot]"
