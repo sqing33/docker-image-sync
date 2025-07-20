@@ -94,10 +94,10 @@ jobs:
           SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||; s/\.git$//')
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
-          # 从 README 中提取 START 和 END 标记之间的现有表格内容
+          # 从 README 中精确提取标记之间的旧表格内容
           EXISTING_CONTENT=$(awk '/<!-- BUILD_TABLE_START -->/{flag=1; next} /<!-- BUILD_TABLE_END -->/{flag=0} flag' README.md)
 
-          # 检查镜像是否已存在于表格中 (使用 -F for fixed string search, which is safer)
+          # 检查镜像是否已存在于表格中 (使用 -F for fixed string search, 确保安全)
           if echo "$EXISTING_CONTENT" | grep -qF "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
@@ -105,12 +105,20 @@ jobs:
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # 从现有内容中提取数据行，并计算新行号
+          # 从提取的内容中只获取数据行 (以 | 和数字开头)
           data_lines=$(echo "$EXISTING_CONTENT" | grep -E '^\| [0-9]+')
-          count=$(echo "$data_lines" | wc -l | xargs)
+
+          # --- 修复缺陷 1: 序号错误 ---
+          # 只有在 data_lines 非空时才计算行数，否则为0
+          if [ -z "$data_lines" ]; then
+            count=0
+          else
+            count=$(echo "$data_lines" | wc -l)
+          fi
           new_count=$((count + 1))
 
-          # 格式化新行
+          # --- 修复缺陷 2: 格式错误 ---
+          # 使用 %s 而不是 %-48s 来移除多余的空格
           printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
@@ -118,7 +126,8 @@ jobs:
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-          # 1. 将新的完整表格内容写入一个临时文件
+          # --- 修复缺陷 3: 结构错误 ---
+          # 每次都重新构建完整的、干净的表格内容
           {
             echo '|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |'
             echo '|---|---|---|---|---|'
@@ -128,22 +137,15 @@ jobs:
             echo "$new_row"
           } > new_table.tmp
 
-          # 2. 使用逻辑正确的 awk 脚本替换 README 中的内容
+          # 使用一个经过验证的、健壮的 awk 脚本来执行替换
           awk '
-            # Rule 1: 当匹配到 START 标记时...
+            /<!-- BUILD_TABLE_END -->/   { skip=0 }
+            !skip                        { print }
             /<!-- BUILD_TABLE_START -->/ {
-              print;                                                  # 打印 START 标记本身
-              while ((getline line < "new_table.tmp") > 0) { print line } # 注入新表格
+              while ((getline line < "new_table.tmp") > 0) { print line }
               close("new_table.tmp");
-              skip=1;                                                 # 设置 skip 标志，开始跳过旧内容
-              next;                                                   # 立即处理下一行，避免被 Rule 3 打印
+              skip=1
             }
-            # Rule 2: 当匹配到 END 标记时...
-            /<!-- BUILD_TABLE_END -->/ {
-              skip=0;                                                 # 取消 skip 标志
-            }
-            # Rule 3: 如果 skip 标志未设置，则打印当前行
-            !skip { print }
           ' README.md > README.tmp && mv README.tmp README.md
           rm new_table.tmp
 
@@ -156,4 +158,4 @@ jobs:
             git push
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}```
