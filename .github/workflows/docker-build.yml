@@ -141,12 +141,12 @@ jobs:
 
           # 修复结构错误：每次都重新构建完整的、干净的表格
           NEW_TABLE=$(cat <<EOF
-|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
-|---|---|---|---|---|
-$(echo "$data_lines")
-$new_row
-EOF
-)
+          |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
+          |---|---|---|---|---|
+          $(echo "$data_lines")
+          $new_row
+          EOF
+          )
           # 使用 sed 进行安全、可靠的整块替换
           # 注意：这个 sed 命令非常复杂，是为了处理多行替换的边缘情况
           escaped_new_table=$(printf '%s\n' "$NEW_TABLE" | sed -e 's/[\/&]/\\&/g' | tr '\n' '\r')
