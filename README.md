@@ -107,3 +107,4 @@
 |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
 |---|---|---|---|---|
 | 1   | [sqing33/test](https://github.com/sqing33/te1st.git) | `ghcr.io/sqing33/my-a1pp` | `sqing33/my-a1pp` | `linux/amd64,linux/arm64,linux/arm/v7` |
+| 2   | [sqing33/test](https://github.com/sqing33/test.git) | `ghcr.io/sqing33/my-app` | `sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` |
