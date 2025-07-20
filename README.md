@@ -25,6 +25,13 @@
 
    本仓库设置了自动更新机制，每天晚上 12 点会自动从源镜像获取最新版本，并更新 `ghcr.io` 上的对应镜像。**请注意：此自动更新功能仅对 `已同步的 Docker 镜像` 表格中标记为 `✔️` 的镜像有效。**
 
+### 已构建的 Docker 镜像
+
+|   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
+|---|---|---|---|---:|
+| 1   | [sqing33/t1st](https://github.com/sqing33/tes1t.git) | `ghcr.io/sqing33/my1-app`<br>`sqing33/my1-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:11:59 |
+| 2   | [sqing33/tes2t](https://github.com/sqing33/te2st.git) | `ghcr.io/sqing33/my-2app`<br>`sqing33/my-2app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:13:41 |
+
 ### 本仓库已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 |
@@ -102,9 +109,3 @@
 | 71  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 | 72  | busybox                        | `ghcr.io/sqing33/busybox`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ✔️ |
 
-### 已构建的 Docker 镜像
-
-|   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
-|---|---|---|---|---:|
-| 1   | [sqing33/t1st](https://github.com/sqing33/tes1t.git) | `ghcr.io/sqing33/my1-app`<br>`sqing33/my1-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:11:59 |
-| 2   | [sqing33/test](https://github.com/sqing33/test.git) | `ghcr.io/sqing33/my-app`<br>`sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:13:41 |
