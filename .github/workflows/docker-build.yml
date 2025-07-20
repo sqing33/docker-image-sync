@@ -97,7 +97,7 @@ jobs:
           # 从 README 中提取 START 和 END 标记之间的现有表格内容
           EXISTING_CONTENT=$(awk '/<!-- BUILD_TABLE_START -->/{flag=1; next} /<!-- BUILD_TABLE_END -->/{flag=0} flag' README.md)
 
-          # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
+          # 检查镜像是否已存在于表格中 (使用 -F for fixed string search, which is safer)
           if echo "$EXISTING_CONTENT" | grep -qF "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
@@ -122,27 +122,26 @@ jobs:
           {
             echo '|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |'
             echo '|---|---|---|---|---|'
-            # 如果存在旧数据行，则打印它们
             if [ -n "$data_lines" ]; then
               echo "$data_lines"
             fi
-            # 打印新添加的数据行
             echo "$new_row"
           } > new_table.tmp
 
-          # 2. 使用 awk 将 README 中标记之间的内容替换为临时文件的内容
+          # 2. 使用更健壮、更简单的 awk 脚本替换 README 中的内容
           awk '
-            # 匹配到结束标记时，恢复正常打印
-            /<!-- BUILD_TABLE_END -->/ { printing=1 }
-            # 当不在替换块内时，正常打印
-            printing { print }
-            # 匹配到开始标记时，打印开始标记，然后打印临时文件的内容，并开始跳过旧内容
+            # 如果 skip 标志为 0 (false), 则打印当前行
+            !skip { print }
+            # 匹配到 START 标记时
             /<!-- BUILD_TABLE_START -->/ {
-              print
+              # 打印临时文件的内容
               while ((getline line < "new_table.tmp") > 0) { print line }
               close("new_table.tmp")
-              printing=0
+              # 设置 skip 标志为 1 (true)，开始跳过旧内容
+              skip=1
             }
+            # 匹配到 END 标记时，将 skip 标志重置为 0，停止跳过
+            /<!-- BUILD_TABLE_END -->/ { skip=0 }
           ' README.md > README.tmp && mv README.tmp README.md
           rm new_table.tmp
 
