@@ -106,4 +106,4 @@
 
 |   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
 |---|---|---|---|---:|
-| 1   | [sqing33/test](https://github.com/sqing33/test.git) | `ghcr.io/sqing33/my-app`<br>`sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:11:59 |
+| 1   | [sqing33/t1st](https://github.com/sqing33/tes1t.git) | `ghcr.io/sqing33/my1-app`<br>`sqing33/my1-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:11:59 |
