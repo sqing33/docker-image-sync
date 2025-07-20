@@ -1,4 +1,4 @@
-name: 将 Docker 镜像同步到 ghcr.io
+name: 同步 Docker 镜像 → ghcr.io
 
 permissions:
   packages: write
