@@ -106,10 +106,4 @@
 
 |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
 |---|---|---|---|---|
-| 1   | [sqing33/test](https://github.com/sqing33/test.git) | `ghcr.io/sqing33/my-app` | `sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` |
-### 已构建的 Docker 镜像
-
-|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
-|---|---|---|---|---|
-| 1   | [sqing33/test](https://github.com/sqing33/tedst.git) | `ghcr.io/sqing33/my-adpp` | `sqing33/my-adpp` | `linux/amd64,linux/arm64,linux/arm/v7` |
 
