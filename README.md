@@ -107,4 +107,5 @@
 | 69  | b3log/siyuan                   | `ghcr.io/sqing33/siyuan`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)            | ✔️ |
 | 70  | openspeedtest/latest           | `ghcr.io/sqing33/openspeedtest`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)     | ✔️ |
 | 71  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
+| 72  | busybox                        | `ghcr.io/sqing33/busybox`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ✔️ |
 
