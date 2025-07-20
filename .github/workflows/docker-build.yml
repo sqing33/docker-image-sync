@@ -128,20 +128,22 @@ jobs:
             echo "$new_row"
           } > new_table.tmp
 
-          # 2. 使用更健壮、更简单的 awk 脚本替换 README 中的内容
+          # 2. 使用逻辑正确的 awk 脚本替换 README 中的内容
           awk '
-            # 如果 skip 标志为 0 (false), 则打印当前行
-            !skip { print }
-            # 匹配到 START 标记时
+            # Rule 1: 当匹配到 START 标记时...
             /<!-- BUILD_TABLE_START -->/ {
-              # 打印临时文件的内容
-              while ((getline line < "new_table.tmp") > 0) { print line }
-              close("new_table.tmp")
-              # 设置 skip 标志为 1 (true)，开始跳过旧内容
-              skip=1
+              print;                                                  # 打印 START 标记本身
+              while ((getline line < "new_table.tmp") > 0) { print line } # 注入新表格
+              close("new_table.tmp");
+              skip=1;                                                 # 设置 skip 标志，开始跳过旧内容
+              next;                                                   # 立即处理下一行，避免被 Rule 3 打印
             }
-            # 匹配到 END 标记时，将 skip 标志重置为 0，停止跳过
-            /<!-- BUILD_TABLE_END -->/ { skip=0 }
+            # Rule 2: 当匹配到 END 标记时...
+            /<!-- BUILD_TABLE_END -->/ {
+              skip=0;                                                 # 取消 skip 标志
+            }
+            # Rule 3: 如果 skip 标志未设置，则打印当前行
+            !skip { print }
           ' README.md > README.tmp && mv README.tmp README.md
           rm new_table.tmp
 
