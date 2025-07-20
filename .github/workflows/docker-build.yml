@@ -91,55 +91,52 @@ jobs:
           # 准备表格新条目所需的信息
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
-          SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||' | sed 's/\.git$//')
+          # 清理 Git URL 以便在 README 中更好地显示
+          SOURCE_REPO_PATH=$(echo "${{ github.event.inputs.repo_url }}" | sed -E 's|https?://github.com/||; s/\.git$//')
           SOURCE_REPO_URL="[${SOURCE_REPO_PATH}](${{ github.event.inputs.repo_url }})"
 
+          # 从 README 中提取 START 和 END 标记之间的现有表格内容
+          EXISTING_CONTENT=$(awk '/<!-- BUILD_TABLE_START -->/{flag=1; next} /<!-- BUILD_TABLE_END -->/{flag=0} flag' README.md)
+
           # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
-          if grep -q "$GHCR_IMAGE_NAME" README.md; then
+          if echo "$EXISTING_CONTENT" | grep -q "$GHCR_IMAGE_NAME"; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # 提取现有表格内容并计算新行号
-          data_lines=$(awk '/^### 已构建的 Docker 镜像/,/^$/ {if ($0 ~ /^\| [0-9]/) print}' README.md)
+          # 从现有内容中提取数据行，并计算新行号
+          data_lines=$(echo "$EXISTING_CONTENT" | grep -E '^\| [0-9]+')
           count=$(echo "$data_lines" | wc -l | xargs)
           new_count=$((count + 1))
 
-          # 格式化新行
-          printf -v new_row "| %-3s | %-35s | \`%-48s\` | \`%-45s\` | \`%-40s\` |" \
+          # 格式化新行，注意移除了 printf 中的宽度填充，避免了多余的空格
+          printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
             "$GHCR_IMAGE_NAME" \
             "$DOCKERHUB_IMAGE_NAME" \
             "${{ github.event.inputs.platforms }}"
 
-          # 创建包含新表格内容的临时文件
-          {
-            echo "### 已构建的 Docker 镜像"
-            echo ""
-            echo "|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |"
-            echo "|---|---|---|---|---|"
-            if [ -n "$data_lines" ]; then
-              echo "$data_lines"
-            fi
-            echo "$new_row"
-          } > new_build_table_content.txt
-
-          # 使用 awk 将 README.md 中的旧表格替换为新内容
-          awk '
-            BEGIN { replaced=0 }
-            /^### 已构建的 Docker 镜像/ {
-              while ((getline line < "new_build_table_content.txt") > 0) { print line }
-              close("new_build_table_content.txt")
-              # 跳过原文件中的旧表格内容
-              while ((getline > 0) && ($0 ~ /^\|/ || $0 == "")) {}
-              if (NR > 0) { print $0 } # 打印结束循环的那一行
-              replaced=1
-              next
+          # 将所有内容（表头、分隔线、旧行、新行）组合成新的完整表格
+          NEW_TABLE_CONTENT=$(cat <<EOF
+          |   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |
+          |---|---|---|---|---|
+          $(echo "$data_lines")
+          $new_row
+          EOF
+          )
+          # 使用 awk 将 START 和 END 标记之间的旧内容替换为新的完整表格
+          awk -v new_content="$NEW_TABLE_CONTENT" '
+            BEGIN {p=1}
+            /<!-- BUILD_TABLE_START -->/ {
+              print;
+              print new_content;
+              p=0;
             }
-            { print }
+            /<!-- BUILD_TABLE_END -->/ {p=1}
+            p {print}
           ' README.md > README.tmp && mv README.tmp README.md
 
           # 提交并推送更改
