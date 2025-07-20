@@ -30,7 +30,7 @@
 |   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
 |---|---|---|---|---:|
 | 1   | [github.com/sqing33/t1st](https://github.com/sqing33/tes1t.git) | `ghcr.io/sqing33/my1-app`<br>`sqing33/my1-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:11:59 |
-| 2   | [https://github.com/sqing33/te2st.git](https://github.com/sqing33/te2st.git) | `ghcr.io/sqing33/my-2app`<br>`sqing33/my-2app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:13:41 |
+| 2   | [https://github.com/sqing33/te2st-te2st-te2st.git](https://github.com/sqing33/te2st.git) | `ghcr.io/sqing33/my-2app`<br>`sqing33/my-2app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:13:41 |
 | 3   | https://github.com/sqing33/test.git | `ghcr.io/sqing33/my-app`<br>`sqing33/my-app` | `linux/amd64,linux/arm64,linux/arm/v7` | 2025-07-20 15:18:13 |
 ### 本仓库已同步的 Docker 镜像
 
