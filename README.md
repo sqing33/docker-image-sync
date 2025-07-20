@@ -102,5 +102,7 @@
 | 71  | grafana/grafana                | `ghcr.io/sqing33/grafana`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)           | ✔️ |
 | 72  | busybox                        | `ghcr.io/sqing33/busybox`                        | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/busybox.yaml)           | ✔️ |
 
+### 已构建的 Docker 镜像
+
 |   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |
 |---|---|---|---|---|
