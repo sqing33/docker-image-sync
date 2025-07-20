@@ -102,8 +102,7 @@ jobs:
 
           echo "添加新构建的镜像记录到 README.md"
 
-          # --- 这是唯一的、最终的修改 ---
-          # 使用一个更稳健的 awk 脚本来提取现有的数据行，解决了第二次构建时删除旧行的问题
+          # 使用稳健的 awk 脚本来提取现有的数据行
           data_lines=$(awk '
             /^### 已构建的 Docker 镜像/ { in_table=1; next }
             in_table {
@@ -112,9 +111,7 @@ jobs:
             }
           ' README.md)
 
-          # --- 下面的代码已经正确，无需改动 ---
-
-          # 修复了缺陷 1: 序号错误
+          # 计算正确的行号
           if [ -z "$data_lines" ]; then
             count=0
           else
@@ -122,27 +119,36 @@ jobs:
           fi
           new_count=$((count + 1))
 
-          # 修复了缺陷 2: 空格错误
-          printf -v new_row "| %-3s | %s | \`%s\` | \`%s\` | \`%s\` |" \
+          # --- 优化点 1: 合并镜像列并添加换行 ---
+          # 使用 <br> 标签来组合两个镜像名称，实现单元格内换行
+          COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
+
+          # --- 优化点 2: 添加构建时间 ---
+          # 获取当前的 UTC 时间作为构建时间
+          BUILD_TIME=$(date -u '+%Y-%m-%d %H:%M:%S')
+
+          # 更新 printf 命令以匹配新的表格结构
+          printf -v new_row "| %-3s | %s | %s | \`%s\` | %s |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
-            "$GHCR_IMAGE_NAME" \
-            "$DOCKERHUB_IMAGE_NAME" \
-            "${{ github.event.inputs.platforms }}"
+            "$COMBINED_IMAGE_NAMES" \
+            "${{ github.event.inputs.platforms }}" \
+            "$BUILD_TIME"
 
           # 创建包含新表格内容的临时文件
           {
+            # 更新表头以反映新的列结构
             echo "### 已构建的 Docker 镜像"
             echo ""
-            echo "|   | 源仓库 | pull 镜像 (ghcr.io) | pull 镜像 (Docker Hub) | 构建平台 |"
-            echo "|---|---|---|---|---|"
+            echo "|   | 源仓库 | 镜像名称 | 构建平台 | 构建时间 |"
+            echo "|---|---|---|---|---:|"
             if [ -n "$data_lines" ]; then
               echo "$data_lines"
             fi
             echo "$new_row"
           } > new_build_table_content.txt
           
-          # 修复了缺陷 3: 使用了正确的 awk 替换逻辑
+          # 使用已经验证过的、正确的 awk 替换逻辑
           awk '
             BEGIN { skipping=0 }
             /^### 已构建的 Docker 镜像/ {
