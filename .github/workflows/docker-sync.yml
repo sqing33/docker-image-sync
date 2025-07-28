@@ -61,7 +61,7 @@ jobs:
           NEW_ROWS_DATA=""
           UNIQUE_SEPARATOR="%%%"
           TABLE_TITLE="### 已同步的 Docker 镜像"
-          
+
           existing_source_images=$(awk '
             $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
             in_table {
@@ -134,10 +134,11 @@ jobs:
             pull_cmd="\`$pull_cmd\`"
             compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
             
-            new_line_data="${full_image}${UNIQUE_SEPARATOR}${pull_cmd}${UNIQUE_SEPARATOR}${compose_file}${UNIQUE_SEPARATOR}${sync_status}"
+            # 新增一列更新时间，默认空
+            new_line_data="${full_image}${UNIQUE_SEPARATOR}${pull_cmd}${UNIQUE_SEPARATOR}${compose_file}${UNIQUE_SEPARATOR}${sync_status}${UNIQUE_SEPARATOR}"
             NEW_ROWS_DATA+="${new_line_data}\n"
           done
-          
+
           if [ -z "$NEW_ROWS_DATA" ]; then
             echo "--------------------------------------------------"
             echo "没有新的镜像被添加，无需更新 README.md。"
@@ -147,7 +148,7 @@ jobs:
           # --- 2. README 更新、排序与重写 ---
           echo "--------------------------------------------------"
           echo "开始更新 README.md..."
-          
+
           existing_rows=$(awk '
             $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
             in_table {
@@ -159,7 +160,7 @@ jobs:
           sorted_table_rows=$(
             {
               echo "$existing_rows" | sed 's/^| [0-9]\{1,\} *|/|/'
-              echo -e "$NEW_ROWS_DATA" | sed '/^$/d' | awk -F"${UNIQUE_SEPARATOR}" '{printf("| %s | %s | %s | %s |\n", $1, $2, $3, $4)}'
+              echo -e "$NEW_ROWS_DATA" | sed '/^$/d' | awk -F"${UNIQUE_SEPARATOR}" '{printf("| %s | %s | %s | %s | %s |\n", $1, $2, $3, $4, $5)}'
             } | awk -F'|' '
               {
                 key = $3;
@@ -174,11 +175,11 @@ jobs:
           {
             echo "${TABLE_TITLE}"
             echo ""
-            echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 |"
-            echo "| ---- | -------- | --------- | -------------- | ---- |"
+            echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |"
+            echo "| ---- | -------- | --------- | -------------- | ---- | -------- |"
             echo "$sorted_table_rows"
           } > new_table.tmp
-          
+
           awk '
             BEGIN { replaced=0 }
             $0 == "'"${TABLE_TITLE}"'" && !replaced {
