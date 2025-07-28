@@ -218,5 +218,18 @@ jobs:
             docker manifest create "$target_image_base:latest" "${amend_args[@]}" --insecure
             docker manifest push "$target_image_base:latest"
             echo "✅ 同步完成: $target_image_base:latest"
+            # === 新增：更新 README.md 的更新时间列 ===
+            today=$(date +'%Y-%m-%d')
+            # 只更新同步列为✔️且pull镜像列为当前镜像的行
+            awk -F'|' -v img="$target_image_base" -v date="$today" '
+              BEGIN{OFS=FS}
+              /^\|/ && $4 ~ "`"img"`" && $5 ~ /✔️/ { $6=" "date" "; print; next }
+              {print}
+            ' README.md > README.tmp && mv README.tmp README.md
+            git config --global user.name "GitHub Actions"
+            git config --global user.email "actions@github.com"
+            git add README.md
+            git commit -m "自动更新镜像 $target_image_base 的更新时间为 $today" || echo "无变更可提交"
+            git push origin main
             echo "────────────────────────────────────────"
           done < combined-list.txt
