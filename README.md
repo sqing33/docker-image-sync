@@ -155,7 +155,7 @@
 | 40  | minio/minio:RELEASE.2023-03-20T20-16-18Z | `ghcr.io/sqing33/minio`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml) | ❌    |
 | 41  | mongodb/mongodb-community-server         | `ghcr.io/sqing33/mongodb`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml) | ✔️    |
 | 42  | mysql:9.3.0                              | `ghcr.io/sqing33/mysql`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml) | ❌    |
-| 43  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml) | ❌    |
+| 43  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml) | ✔️    |
 | 44  | tiangolo/nginx-rtmp                      | `ghcr.io/sqing33/nginx-rtmp`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml) | ✔️    |
 | 45  | nginx                                    | `ghcr.io/sqing33/nginx`                         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️    |
 | 46  | prom/node-exporter | `ghcr.io/sqing33/node-exporter` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml) | ✔️ |
