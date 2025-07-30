@@ -72,7 +72,7 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
           tags: |
-            type=list,pattern=${{ github.event.inputs.tags }},delimiter=,
+            type=raw,value=${{ github.event.inputs.tags }}
 
       - name: 8. 构建并推送到多个镜像仓库
         uses: docker/build-push-action@v6
