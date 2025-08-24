@@ -64,20 +64,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: 7.a. 转换逗号分隔的标签为多行规则
-        id: prep_tags
-        run: |
-          # 将逗号分隔的输入转换为换行符分隔, 然后为每个标签生成一个 "type=raw,value=..." 格式的规则
-          echo "tags=$(echo "${{ github.event.inputs.tags }}" | sed 's/,/\n/g' | awk '{printf "type=raw,value=%s\n", $1}')" >> $GITHUB_OUTPUT
-
-      - name: 7.b. 提取 Docker 元数据并生成标签
+      - name: 7. 提取 Docker 元数据并生成标签
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
-          tags: ${{ steps.prep_tags.outputs.tags }}
+          tags: |
+            type=csv,value=${{ github.event.inputs.tags }}
 
       - name: 8. 构建并推送到多个镜像仓库
         uses: docker/build-push-action@v6
