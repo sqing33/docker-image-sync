@@ -36,7 +36,6 @@ jobs:
       - name: 1. 检出本项目仓库
         uses: actions/checkout@v4
         with:
-          # 使用 GITHUB_TOKEN 以便后续可以推送更改
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 2. 克隆指定的代码仓库
@@ -64,15 +63,23 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: 7. 提取 Docker 元数据并生成标签
+      - name: 7.a. 转换逗号分隔的标签为多行规则 (已修正)
+        id: prep_tags
+        run: |
+          {
+            echo 'tags<<EOF'
+            echo "${{ github.event.inputs.tags }}" | sed 's/,/\n/g' | awk '{printf "type=raw,value=%s\n", $1}'
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 7.b. 提取 Docker 元数据并生成标签
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
-          tags: |
-            type=csv,value=${{ github.event.inputs.tags }}
+          tags: ${{ steps.prep_tags.outputs.tags }}
 
       - name: 8. 构建并推送到多个镜像仓库
         uses: docker/build-push-action@v6
@@ -85,24 +92,18 @@ jobs:
 
       - name: 9. 更新 README.md 中的“已构建的 Docker 镜像”表格
         run: |
+          # ... (后续步骤保持不变) ...
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
-
-          # 准备表格新条目所需的信息
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
           SOURCE_REPO_URL="${{ github.event.inputs.repo_url }}"
-
-          # 检查镜像是否已存在于表格中 (基于ghcr.io的镜像名)
           if grep -qF "$GHCR_IMAGE_NAME" README.md; then
             echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
             exit 0
           fi
-
           echo "添加新构建的镜像记录到 README.md"
-
-          # 使用稳健的 awk 脚本来提取现有的数据行
           data_lines=$(awk '
             /^### 已构建的 Docker 镜像/ { in_table=1; next }
             in_table {
@@ -110,28 +111,19 @@ jobs:
               if (!/^\|/ && !/^$/) { in_table=0 }
             }
           ' README.md)
-
-          # 计算正确的行号
           if [ -z "$data_lines" ]; then
             count=0
           else
             count=$(echo "$data_lines" | wc -l)
           fi
           new_count=$((count + 1))
-
-          # 合并镜像列并添加换行
           COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
-
-          # 获取当前的 UTC 日期作为构建日期
           BUILD_TIME=$(date -u '+%Y-%m-%d')
-
           printf -v new_row "| %-3s | %s | %s | %s |" \
             "$new_count" \
             "$SOURCE_REPO_URL" \
             "$COMBINED_IMAGE_NAMES" \
             "$BUILD_TIME"
-
-          # 创建包含新表格内容的临时文件
           {
             echo "### 已构建的 Docker 镜像"
             echo ""
@@ -142,8 +134,6 @@ jobs:
             fi
             echo "$new_row"
           } > new_build_table_content.txt
-          
-          # 使用已经验证过的、正确的 awk 替换逻辑
           awk '
             BEGIN { skipping=0 }
             /^### 已构建的 Docker 镜像/ {
@@ -161,8 +151,6 @@ jobs:
             }
             { print }
           ' README.md > README.tmp && mv README.tmp README.md
-
-          # 提交并推送更改
           git add README.md
           if git diff --staged --quiet; then
             echo "README.md 没有变化，无需提交。"
