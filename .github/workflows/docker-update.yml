@@ -29,18 +29,14 @@ jobs:
           awk -F '|' '
           /^### 已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
-              # 只处理同步列为✔️的行
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
-              # 提取 pull 镜像列
               gsub(/^[ \t]+|[ \t]+$/, "", $4);
               gsub(/`/, "", $4);
               print $4
           }
-          # 遇到下一个标题时停止
           /^### / && capture && !/已同步/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | \
-          # 提取镜像名称（去除域名和标签）
           sed "s|^ghcr.io/$owner_lowercase/||" | \
           sed 's/:[^:]*$//' > target-image-list.txt
           echo "===== 将要检查的目标镜像列表 ====="
@@ -52,15 +48,12 @@ jobs:
           awk -F '|' '
           /^### 已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
-              # 只处理同步列为✔️的行
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
-              # 提取源镜像列
               gsub(/^[ \t]+|[ \t]+$/, "", $3);
               gsub(/`/, "", $3);
               print $3
           }
-          # 遇到下一个标题时停止
           /^### / && capture && !/已同步/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
           echo "===== 对应的源镜像列表 ====="
@@ -76,11 +69,22 @@ jobs:
           echo "===== 合并后的镜像检查列表 ====="
           cat combined-list.txt
 
-      - name: 6. 登录到 Docker Hub
-        # ---
-        # 核心修正：将 if 条件用 ${{...}} 包裹
-        # ---
-        if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+      # ---
+      # 核心修正：将 'if' 判断分解为两个步骤，以规避 YAML 解析问题
+      # ---
+      - name: 6a. 检查 Docker Hub 凭证是否存在
+        id: check_dockerhub_creds
+        run: |
+          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Docker Hub 凭证已设置，将执行登录。"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "未设置 Docker Hub 凭证，将跳过登录。"
+          fi
+
+      - name: 6b. 登录到 Docker Hub (如果凭证存在)
+        if: steps.check_dockerhub_creds.outputs.present == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -100,12 +104,9 @@ jobs:
           owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
           while IFS= read -r target_image; do
             target_image_base="ghcr.io/$owner_lowercase/$target_image"
-            # 检查远端镜像是否存在
             if ! skopeo inspect "docker://$target_image_base:latest" --no-tags >/dev/null 2>&1; then
               echo "镜像 $target_image_base 不存在于 ghcr.io，标记为删除。"
-              # 使用 grep 和 sed 查找并删除包含该镜像名称的行
               escaped_name=$(printf '%s\n' "$target_image_base" | sed 's:[][\\/.^$*]:\\&:g')
-              # 直接操作，找到则删除
               if grep -q "$escaped_name" README.md; then
                   sed -i "/$escaped_name/d" README.md
                   echo "$target_image" >> deleted-images.txt
@@ -115,27 +116,28 @@ jobs:
 
           if [ -f deleted-images.txt ]; then
             echo "已清理失效条目，正在重新编号并提交..."
-            # 重新编号表格
+            # 重新编号表格 (注意: 此 awk 脚本较为简单，复杂表格可能需要调整)
             awk 'BEGIN { FS=OFS="|"; in_table=0; count=0 }
-              /^### 已同步的 Docker 镜像/ { in_table=1 }
+              /^### 已同步的 Docker 镜像/ { in_table=1; print; next }
               !in_table { print; next }
+              /^\| *---/ { print; next }
               in_table && /^\| *[0-9]+/ {
                 count++;
-                $2 = " " count " "; # 重新编号
+                $2 = " " count " ";
                 print;
                 next
               }
-              in_table && !/^\| *[0-9]+/ {
-                 # 检查是否离开表格区域
-                 if ($0 !~ /^\|/) { in_table=0 }
-              }
-              { print }' README.md > README.tmp && mv README.tmp README.md
-
+              { if (in_table) { print } }' README.md > README.tmp && mv README.tmp README.md
+            
             git config --global user.name "github-actions[bot]"
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add README.md
-            git commit -m "chore: 自动清理 README.md 中已失效的镜像记录" || echo "无变更可提交"
-            git push
+            if ! git diff --staged --quiet; then
+              git commit -m "chore: 自动清理 README.md 中已失效的镜像记录"
+              git push
+            else
+              echo "清理后 README.md 无变更。"
+            fi
           else
             echo "没有在 README.md 中找到失效的镜像条目。"
           fi
@@ -144,9 +146,7 @@ jobs:
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
-          # 确保任何命令失败都会立刻终止脚本
           set -eo pipefail
-
           echo "===== 开始同步镜像 ====="
           
           while IFS='|' read -r source_image target_image; do
@@ -181,45 +181,36 @@ jobs:
               continue
             fi
 
-            # 只有在需要更新时，才获取原始清单用于解析架构
             source_manifest=$(skopeo inspect --raw "$source_image_full")
             
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
-              # 多架构清单
               ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
             else
-              # 单架构清单
               ARCH=$(echo "$source_manifest" | jq -r '.architecture')
               ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
             fi
             
             if [ -z "$ARCHS" ]; then
               echo "⚠️ 未找到有效架构，将作为单架构镜像处理。"
-              ARCHS="default" # 使用一个特殊值来标记单架构
+              ARCHS="default"
             fi
 
             echo "开始同步架构: $ARCHS"
-            amend_args=() # 用于构建 manifest 的参数
+            amend_args=()
 
             for arch in $ARCHS; do
               source_image_name=$(echo "$source_image_full" | sed 's|docker://||')
               
               if [[ "$arch" == "default" ]]; then
-                 # 单架构情况
                  arch_digest=$source_digest
-                 target_tag="$target_image_base:latest-amd64" # 假设默认为amd64
+                 target_tag="$target_image_base:latest-amd64"
                  amend_args+=(--amend "$target_tag")
               else
-                 # 多架构情况
                  echo "▸ 处理架构: $arch"
                  target_tag="$target_image_base:latest-$arch"
-                 arch_digest=$(echo "$source_manifest" | jq -r \
-                    --arg arch "$arch" \
-                    '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
+                 arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
                  if [ -z "$arch_digest" ]; then
-                    arch_digest=$(echo "$source_manifest" | jq -r \
-                      --arg arch "$arch" \
-                      '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
+                    arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
                  fi
                  amend_args+=(--amend "$target_tag")
               fi
@@ -242,15 +233,11 @@ jobs:
             
             echo "✅ 同步完成: $target_image_base:latest"
             
-            # 更新 README.md 的更新时间
             today=$(date +'%Y-%m-%d')
-            # 假设表格结构为：| 序号 | 源镜像 | Pull 命令 | 用途 | 同步 | 更新时间 |
-            # 列号:            $1  $2     $3       $4        $5    $6      $7
             awk -F'|' -v img_name="$target_image" -v date="$today" '
               BEGIN{OFS=FS}
-              # 匹配包含 `ghcr.io/.../镜像名` 的行，并且同步列(第6列)为 ✔️
               $4 ~ "`ghcr.io/.*/" img_name "(:[^`]+)?`" && $6 ~ /✔️/ {
-                  $7 = " " date " "; # 更新第7列
+                  $7 = " " date " ";
                   print;
                   next
               }
