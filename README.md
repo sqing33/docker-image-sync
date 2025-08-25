@@ -144,7 +144,7 @@
 | 25  | ghcr.io/snailyp/gemini-balance           | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️   | 2025-08-25 |
 | 26  | gitea/gitea                              | `ghcr.io/sqing33/gitea`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea.yaml)                    | ✔️   | 2025-08-25 |
 | 27  | gotify/server                            | `ghcr.io/sqing33/gotify`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                   | ✔️   | 2025-08-25 |
-| 28  | grafana/grafana                          | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   |          |
+| 28  | grafana/grafana                          | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   | 2025-08-25 |
 | 29  | haproxy                                  | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   |          |
 | 30  | homeassistant/home-assistant             | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   |          |
 | 31  | ghcr.io/gethomepage/homepage | `ghcr.io/sqing33/homepage` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml) | ✔️ |  |
