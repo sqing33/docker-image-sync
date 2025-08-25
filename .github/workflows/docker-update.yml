@@ -2,6 +2,7 @@ name: 更新 Docker 镜像 → 定时更新 ghcr.io
 
 on:
   schedule:
+    # 每天的 UTC 时间 16:00 (北京时间 00:00) 运行
     - cron: "0 16 * * *"
   workflow_dispatch:
 
@@ -13,157 +14,239 @@ jobs:
   check-and-update:
     runs-on: ubuntu-latest
     steps:
-      - name: 检出仓库
+      - name: 1. 检出仓库
         uses: actions/checkout@v4
+        with:
+          # 使用 GITHUB_TOKEN 以便后续可以推送更改
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 安装依赖
-        run: sudo apt-get install -y jq skopeo
+      - name: 2. 安装依赖
+        run: sudo apt-get update && sudo apt-get install -y jq skopeo
 
-      # 步骤保持不变
-      - name: 提取目标镜像名称（从 pull 命令列）
+      - name: 3. 提取目标镜像名称 (从 Pull 命令列)
         id: extract-target-images
         run: |
-          # ... (此部分代码不变) ...
+          owner_lowercase=$(echo "${{ github.repository_owner }}" | tr 'A-Z' 'a-z')
           awk -F '|' '
           /^### 已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
+              # 只处理同步列为✔️的行
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
+              # 提取 pull 镜像列
               gsub(/^[ \t]+|[ \t]+$/, "", $4);
               gsub(/`/, "", $4);
               print $4
           }
-          /^### 部分镜像 docker run 命令/ {capture=0}
+          # 遇到下一个标题时停止
+          /^### / && capture && !/已同步/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' | \
-          sed 's|^ghcr.io/sqing33/||' | \
+          # 提取镜像名称（去除域名和标签）
+          sed "s|^ghcr.io/$owner_lowercase/||" | \
           sed 's/:[^:]*$//' > target-image-list.txt
-          echo "===== target-image-list.txt 内容 ====="
+          echo "===== 将要检查的目标镜像列表 ====="
           cat target-image-list.txt
 
-      # 步骤保持不变
-      - name: 提取源镜像名称（从源镜像列）
+      - name: 4. 提取源镜像名称 (从源镜像列)
         id: extract-source-images
         run: |
-          # ... (此部分代码不变) ...
           awk -F '|' '
           /^### 已同步的 Docker 镜像/ {capture=1; next}
           capture && /^\| [0-9]+/ {
+              # 只处理同步列为✔️的行
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
+              # 提取源镜像列
               gsub(/^[ \t]+|[ \t]+$/, "", $3);
               gsub(/`/, "", $3);
               print $3
           }
-          /^### 部分镜像 docker run 命令/ {capture=0}
+          # 遇到下一个标题时停止
+          /^### / && capture && !/已同步/ {capture=0}
           ' README.md | grep -vE '^源镜像$|^-+$' | sed '/^$/d' > source-image-list.txt
-          echo "===== source-image-list.txt 内容 ====="
+          echo "===== 对应的源镜像列表 ====="
           cat source-image-list.txt
 
-      # 步骤保持不变
-      - name: 合并镜像列表
+      - name: 5. 合并镜像列表
         run: |
-          # ... (此部分代码不变) ...
           if [ ! -s source-image-list.txt ] || [ ! -s target-image-list.txt ]; then
-            echo "错误：source-image-list.txt 或 target-image-list.txt 为空或不存在"
+            echo "错误：源或目标镜像列表为空，请检查 README.md 表格格式。"
             exit 1
           fi
           paste -d '|' source-image-list.txt target-image-list.txt > combined-list.txt
-          echo "===== combined-list.txt 内容 ====="
+          echo "===== 合并后的镜像检查列表 ====="
           cat combined-list.txt
 
-      # 清理步骤保持不变
-      - name: 清理已删除的镜像条目
-        # ... (此部分代码不变) ...
-        env:
-          GHCR_USER: ${{ github.repository_owner }}
-        run: |
-          # ...
-
-      # --- 新增：登录到 Docker Hub ---
-      - name: 登录到 Docker Hub
+      - name: 6. 登录到 Docker Hub
+        if: secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != ''
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }} # 需要在仓库Secrets中设置DOCKERHUB_USERNAME
-          password: ${{ secrets.DOCKERHUB_TOKEN }}    # 需要在仓库Secrets中设置DOCKERHUB_TOKEN
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 登录到 GitHub 容器注册表
+      - name: 7. 登录到 GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 同步所有架构镜像更新
+      # 您原来的清理逻辑，如果不需要可以删除此步骤
+      - name: 8. 清理 README.md 中已失效的镜像条目
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
-          # --- 新增：使脚本更健壮 ---
+          owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
+          while IFS= read -r target_image; do
+            target_image_base="ghcr.io/$owner_lowercase/$target_image"
+            # 检查远端镜像是否存在
+            if ! skopeo inspect "docker://$target_image_base:latest" --no-tags >/dev/null 2>&1; then
+              echo "镜像 $target_image_base 不存在于 ghcr.io，标记为删除。"
+              # 使用 grep 和 sed 查找并删除包含该镜像名称的行
+              escaped_name=$(printf '%s\n' "$target_image_base" | sed 's:[][\\/.^$*]:\\&:g')
+              # 直接操作，找到则删除
+              if grep -q "$escaped_name" README.md; then
+                  sed -i "/$escaped_name/d" README.md
+                  echo "$target_image" >> deleted-images.txt
+              fi
+            fi
+          done < target-image-list.txt
+
+          if [ -f deleted-images.txt ]; then
+            echo "已清理失效条目，正在重新编号并提交..."
+            # 重新编号表格
+            awk 'BEGIN { FS=OFS="|"; in_table=0; count=0 }
+              /^### 已同步的 Docker 镜像/ { in_table=1 }
+              !in_table { print; next }
+              in_table && /^\| *[0-9]+/ {
+                count++;
+                $2 = " " count " "; # 重新编号
+                print;
+                next
+              }
+              in_table && !/^\| *[0-9]+/ {
+                 # 检查是否离开表格区域
+                 if ($0 !~ /^\|/) { in_table=0 }
+              }
+              { print }' README.md > README.tmp && mv README.tmp README.md
+
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "chore: 自动清理 README.md 中已失效的镜像记录" || echo "无变更可提交"
+            git push
+          else
+            echo "没有在 README.md 中找到失效的镜像条目。"
+          fi
+
+
+      - name: 9. 同步所有架构镜像更新
+        env:
+          GHCR_USER: ${{ github.repository_owner }}
+        run: |
+          # 确保任何命令失败都会立刻终止脚本
           set -eo pipefail
 
-          echo "===== 同步镜像列表 ====="
-          cat combined-list.txt
-          echo "===================="
+          echo "===== 开始同步镜像 ====="
           
           while IFS='|' read -r source_image target_image; do
             echo "────────────────────────────────────────"
             echo "处理镜像: $target_image (源镜像: $source_image)"
             
-            # 判断源镜像是否已带 tag
             if [[ "$source_image" == *:* ]]; then
               source_image_full="docker://$source_image"
             else
               source_image_full="docker://$source_image:latest"
             fi
-            target_image_base="ghcr.io/$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')/$target_image"
+            owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
+            target_image_base="ghcr.io/$owner_lowercase/$target_image"
             
-            # --- 修改：增加详细日志 ---
+            # --- 核心修正：使用 skopeo inspect (不带 --raw) 获取顶层 Digest ---
             echo "正在检查源镜像: $source_image_full"
-            source_manifest=$(skopeo inspect --raw "$source_image_full")
-            source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
+            source_digest=$(skopeo inspect "$source_image_full" 2>/dev/null | jq -r '.Digest // empty')
             echo "源镜像 Digest: $source_digest"
 
             echo "正在检查目标镜像: docker://$target_image_base:latest"
-            if target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null); then
-              target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
-            else
-              target_digest=""
-            fi
+            target_digest=$(skopeo inspect "docker://$target_image_base:latest" 2>/dev/null | jq -r '.Digest // empty')
             echo "目标镜像 Digest: $target_digest"
 
             if [ -z "$source_digest" ]; then
-              echo "❌ 错误：无法获取源镜像的 digest，跳过。"
+              echo "❌ 错误：无法获取源镜像的 digest，可能镜像不存在或网络问题，已跳过。"
               continue
             fi
 
             if [ "$source_digest" != "$target_digest" ]; then
-              echo "✅ 检测到清单更新，开始全架构同步..."
+              echo "✅ 检测到清单更新 ($source_digest != $target_digest)，开始全架构同步..."
             else
               echo "清单未更新，跳过同步。"
               continue
             fi
 
-            # --- (同步逻辑保持不变) ---
+            # 只有在需要更新时，才获取原始清单用于解析架构
+            source_manifest=$(skopeo inspect --raw "$source_image_full")
+            
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
+              # 多架构清单
               ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
             else
+              # 单架构清单
               ARCH=$(echo "$source_manifest" | jq -r '.architecture')
               ARCHS=$( [[ "$ARCH" =~ ^(amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le)$ ]] && echo "$ARCH" || echo "")
             fi
             
             if [ -z "$ARCHS" ]; then
-              echo "⚠️ 未找到有效架构，尝试使用 'amd64' 作为默认值。"
-              ARCHS="amd64"
+              echo "⚠️ 未找到有效架构，将作为单架构镜像处理。"
+              ARCHS="default" # 使用一个特殊值来标记单架构
             fi
+
+            echo "开始同步架构: $ARCHS"
+            amend_args=() # 用于构建 manifest 的参数
+
+            for arch in $ARCHS; do
+              source_image_name=$(echo "$source_image_full" | sed 's|docker://||')
+              target_tag="$target_image_base:latest-$arch"
+
+              if [[ "$arch" == "default" ]]; then
+                 # 单架构情况
+                 arch_digest=$source_digest
+                 target_tag="$target_image_base:latest-amd64" # 假设默认为amd64
+                 amend_args+=(--amend "$target_tag")
+              else
+                 # 多架构情况
+                 echo "▸ 处理架构: $arch"
+                 arch_digest=$(echo "$source_manifest" | jq -r \
+                    --arg arch "$arch" \
+                    '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
+                 if [ -z "$arch_digest" ]; then
+                    arch_digest=$(echo "$source_manifest" | jq -r \
+                      --arg arch "$arch" \
+                      '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
+                 fi
+                 amend_args+=(--amend "$target_tag")
+              fi
+
+              if [ -z "$arch_digest" ]; then
+                 echo "⚠️ 警告：无法定位架构 $arch 的 digest，已跳过"
+                 continue
+              fi
+
+              echo "拉取: $source_image_name@$arch_digest"
+              docker pull "$source_image_name@$arch_digest"
+              docker tag "$source_image_name@$arch_digest" "$target_tag"
+              docker push "$target_tag"
+            done
             
-            # ... (docker pull, tag, push, manifest create, push 等逻辑不变) ...
+            echo "🔄 重建多架构 manifest 列表..."
+            docker manifest rm "$target_image_base:latest" 2>/dev/null || true
+            docker manifest create "$target_image_base:latest" "${amend_args[@]}"
+            docker manifest push "$target_image_base:latest"
             
             echo "✅ 同步完成: $target_image_base:latest"
-
-            # --- 修正：更新 README.md 的 awk 脚本 ---
+            
+            # 更新 README.md 的更新时间
             today=$(date +'%Y-%m-%d')
-            # 修正了列索引的匹配逻辑，确保正确匹配并更新
             # 假设表格结构为：| 序号 | 源镜像 | Pull 命令 | 用途 | 同步 | 更新时间 |
-            # 那么 FS='|' 分割后，$1为空，$2=序号, $3=源镜像, $4=Pull命令, $5=用途, $6=同步, $7=更新时间
+            # 列号:            $1  $2     $3       $4        $5    $6      $7
             awk -F'|' -v img_name="$target_image" -v date="$today" '
               BEGIN{OFS=FS}
               # 匹配包含 `ghcr.io/.../镜像名` 的行，并且同步列(第6列)为 ✔️
@@ -178,12 +261,10 @@ jobs:
             git config --global user.name "github-actions[bot]"
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add README.md
-            # 提交前检查是否有变更
             if ! git diff --staged --quiet; then
-              git commit -m "chore(sync): 更新镜像 [${target_image}] 的同步时间"
+              git commit -m "chore(sync): 更新镜像 [$target_image] 的同步时间"
               git push
             else
               echo "README.md 无变更，无需提交。"
             fi
-            
           done < combined-list.txt
