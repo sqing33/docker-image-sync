@@ -22,6 +22,7 @@ jobs:
       - name: 2. 安装依赖
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
 
+      # 步骤 3-7 保持不变，它们是正确的
       - name: 3. 提取目标镜像名称
         id: extract-target-images
         run: |
@@ -90,7 +91,8 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 8. 清理、检查并同步镜像
+      # --- 步骤 8 已被重构成最终版本 ---
+      - name: 8. 检查并同步镜像
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
@@ -103,11 +105,16 @@ jobs:
             if [ -z "$manifest_content" ]; then echo ""; return; fi
             
             if echo "$manifest_content" | jq -e '.manifests' > /dev/null 2>&1; then
+              # 精确匹配架构，并处理 arm/v7 和 arm64/v8 变体
               echo "$manifest_content" | jq -r --arg arch "$arch_name" '
                 .manifests[] | 
-                select(.platform.architecture == $arch) | 
-                .digest' | head -n 1
+                select(
+                  (.platform.architecture == $arch and .platform.variant? == null) or
+                  ($arch == "arm" and .platform.architecture == "arm" and .platform.variant? == "v7") or
+                  ($arch == "arm64" and .platform.architecture == "arm64" and .platform.variant? == "v8")
+                ) | .digest' | head -n 1
             else
+              # 单架构镜像
               echo "$manifest_content" | jq -r '.digest // empty'
             fi
           }
@@ -130,7 +137,6 @@ jobs:
             SOURCE_IMAGE_URI="docker://$source_image_name_tag"
             TARGET_IMAGE_URI="docker://$target_image_name_tag"
 
-            # 获取清单
             source_manifest=$(skopeo inspect --raw "$SOURCE_IMAGE_URI" 2>/dev/null)
             if [ -z "$source_manifest" ]; then
               echo "❌ 错误：无法获取源镜像清单 '$SOURCE_IMAGE_URI'，已跳过。"
@@ -139,19 +145,36 @@ jobs:
             
             target_manifest=$(skopeo inspect --raw "$TARGET_IMAGE_URI" 2>/dev/null || echo "")
             
-            # 比较清单的顶层摘要
-            source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
-            target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
+            # 确定要检查的架构列表
+            ARCHS_TO_CHECK="amd64 arm64 arm" # 我们只关心这几个主流架构
+            
+            need_update=false
+            if [ -z "$target_manifest" ]; then
+              need_update=true
+              echo "目标镜像不存在，判定需要同步。"
+            else
+              for arch in $ARCHS_TO_CHECK; do
+                source_digest_for_arch=$(get_digest_for_arch "$source_manifest" "$arch")
+                # 如果源镜像压根不支持这个架构，我们就没必要比较了
+                if [ -z "$source_digest_for_arch" ]; then continue; fi
 
-            echo "源镜像顶层摘要: $source_digest"
-            echo "目标镜像顶层摘要: $target_digest"
-
-            if [ -n "$source_digest" ] && [ "$source_digest" == "$target_digest" ]; then
-               echo "✅ 顶层摘要匹配，清单未更新，跳过同步。"
-               continue
+                target_digest_for_arch=$(get_digest_for_arch "$target_manifest" "$arch")
+                echo "检查架构 '$arch': 源[${source_digest_for_arch:0:12}] <=> 目标[${target_digest_for_arch:0:12}]"
+                
+                if [ "$source_digest_for_arch" != "$target_digest_for_arch" ]; then
+                  need_update=true
+                  echo "发现不匹配的摘要，判定需要同步。"
+                  break
+                fi
+              done
             fi
 
-            echo "检测到摘要不匹配或目标不存在，开始使用 skopeo copy 同步..."
+            if [ "$need_update" = "false" ]; then
+              echo "✅ 所有已检查架构的摘要均匹配，跳过同步。"
+              continue
+            fi
+
+            echo "开始使用 skopeo copy 同步..."
 
             if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
               echo "✅ 镜像同步成功: $target_image_name_tag"
