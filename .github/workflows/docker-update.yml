@@ -22,7 +22,7 @@ jobs:
       - name: 2. 安装依赖
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
 
-      # 步骤 3-7 保持不变，它们是正确的
+      # 步骤 3-5 (提取镜像列表) 保持不变
       - name: 3. 提取目标镜像名称
         id: extract-target-images
         run: |
@@ -68,6 +68,7 @@ jobs:
           echo "===== 合并后的镜像检查列表 ====="
           cat combined-list.txt
 
+      # 步骤 6a, 6b, 7 (登录) 保持不变
       - name: 6a. 检查 Docker Hub 凭证是否存在
         id: check_dockerhub_creds
         run: |
@@ -90,81 +91,90 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      # --- 步骤 8 已被重构成最终版本 ---
+      
+      # --- 这是最终优化的同步步骤 ---
       - name: 8. 检查并同步镜像
         env:
           GHCR_USER: ${{ github.repository_owner }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           set -eo pipefail
 
-          # 函数：从 manifest 内容中为指定架构提取唯一的 digest
+          # --- 函数定义区 ---
+          skopeo_inspect_with_retry() {
+            local __resultvar=$1
+            local image_uri=$2
+            local creds_flag=$3
+            local creds_value=$4
+            local manifest_output=""
+            for i in {1..3}; do
+              echo "Attempt $i to inspect $image_uri..."
+              manifest_output=$(skopeo inspect --raw "$creds_flag" "$creds_value" "$image_uri" 2>/dev/null || echo "")
+              if [ -n "$manifest_output" ]; then
+                eval $__resultvar="'$manifest_output'"
+                return 0
+              fi
+              if [ $i -lt 3 ]; then
+                echo "Inspect failed. Retrying in 5 seconds..."
+                sleep 5
+              fi
+            done
+            echo "❌ Failed to inspect $image_uri after 3 attempts."
+            eval $__resultvar=""
+            return 1
+          }
+
           get_digest_for_arch() {
-            local manifest_content=$1
-            local arch_name=$2
+            local manifest_content=$1; local arch_name=$2
             if [ -z "$manifest_content" ]; then echo ""; return; fi
-            
             if echo "$manifest_content" | jq -e '.manifests' > /dev/null 2>&1; then
-              # 精确匹配架构，并处理 arm/v7 和 arm64/v8 变体
-              echo "$manifest_content" | jq -r --arg arch "$arch_name" '
-                .manifests[] | 
-                select(
-                  (.platform.architecture == $arch and .platform.variant? == null) or
-                  ($arch == "arm" and .platform.architecture == "arm" and .platform.variant? == "v7") or
-                  ($arch == "arm64" and .platform.architecture == "arm64" and .platform.variant? == "v8")
-                ) | .digest' | head -n 1
+              echo "$manifest_content" | jq -r --arg arch "$arch_name" '.manifests[] | select(.platform.architecture == $arch) | .digest' | head -n 1
             else
-              # 单架构镜像
               echo "$manifest_content" | jq -r '.digest // empty'
             fi
           }
-
+          
           echo "===== 开始同步镜像 ====="
           
           while IFS='|' read -r source_image target_image; do
             echo "────────────────────────────────────────"
             echo "处理镜像: $target_image (源镜像: $source_image)"
             
-            # 准备源和目标URI
-            if [[ "$source_image" == *:* ]]; then
-              source_image_name_tag="$source_image"
-            else
-              source_image_name_tag="$source_image:latest"
-            fi
+            if [[ "$source_image" == *:* ]]; then source_image_name_tag="$source_image"; else source_image_name_tag="$source_image:latest"; fi
             owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
             target_image_name_tag="ghcr.io/$owner_lowercase/$target_image:latest"
             
             SOURCE_IMAGE_URI="docker://$source_image_name_tag"
             TARGET_IMAGE_URI="docker://$target_image_name_tag"
 
-            source_manifest=$(skopeo inspect --raw "$SOURCE_IMAGE_URI" 2>/dev/null)
-            if [ -z "$source_manifest" ]; then
-              echo "❌ 错误：无法获取源镜像清单 '$SOURCE_IMAGE_URI'，已跳过。"
-              continue
+            # 准备认证信息
+            DOCKERHUB_CREDS="$DOCKERHUB_USERNAME:$DOCKERHUB_TOKEN"
+            GHCR_CREDS="$GHCR_USER:${{ secrets.GITHUB_TOKEN }}"
+            
+            source_creds_flag=""; source_creds_value=""
+            if [[ "$source_image_name_tag" != ghcr.io* ]] && [ -n "$DOCKERHUB_USERNAME" ]; then
+              source_creds_flag="--src-creds"; source_creds_value="$DOCKERHUB_CREDS"
+            elif [[ "$source_image_name_tag" == ghcr.io* ]]; then
+              source_creds_flag="--src-creds"; source_creds_value="$GHCR_CREDS"
             fi
             
-            target_manifest=$(skopeo inspect --raw "$TARGET_IMAGE_URI" 2>/dev/null || echo "")
-            
-            # 确定要检查的架构列表
-            ARCHS_TO_CHECK="amd64 arm64 arm" # 我们只关心这几个主流架构
-            
-            need_update=false
+            source_manifest=""; target_manifest=""
+            skopeo_inspect_with_retry source_manifest "$SOURCE_IMAGE_URI" "$source_creds_flag" "$source_creds_value" || continue
+            if [ -z "$source_manifest" ]; then continue; fi
+            skopeo_inspect_with_retry target_manifest "$TARGET_IMAGE_URI" "--dest-creds" "$GHCR_CREDS"
+
+            ARCHS_TO_CHECK="amd64 arm64 arm"; need_update=false
             if [ -z "$target_manifest" ]; then
-              need_update=true
-              echo "目标镜像不存在，判定需要同步。"
+              need_update=true; echo "目标镜像不存在，判定需要同步。"
             else
               for arch in $ARCHS_TO_CHECK; do
                 source_digest_for_arch=$(get_digest_for_arch "$source_manifest" "$arch")
-                # 如果源镜像压根不支持这个架构，我们就没必要比较了
                 if [ -z "$source_digest_for_arch" ]; then continue; fi
-
                 target_digest_for_arch=$(get_digest_for_arch "$target_manifest" "$arch")
                 echo "检查架构 '$arch': 源[${source_digest_for_arch:0:12}] <=> 目标[${target_digest_for_arch:0:12}]"
-                
                 if [ "$source_digest_for_arch" != "$target_digest_for_arch" ]; then
-                  need_update=true
-                  echo "发现不匹配的摘要，判定需要同步。"
-                  break
+                  need_update=true; echo "发现不匹配的摘要，判定需要同步。"; break
                 fi
               done
             fi
@@ -175,21 +185,14 @@ jobs:
             fi
 
             echo "开始使用 skopeo copy 同步..."
-
-            if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
+            if skopeo copy --all "$source_creds_flag" "$source_creds_value" --dest-creds "$GHCR_CREDS" "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
               echo "✅ 镜像同步成功: $target_image_name_tag"
             else
-              echo "❌ 镜像同步失败，请检查源镜像是否存在或网络连接。"
-              continue
+              echo "❌ 镜像同步失败。"; continue
             fi
 
-            # 更新 README.md
             today=$(date +'%Y-%m-%d')
-            awk -F'|' -v img_name="$target_image" -v date="$today" '
-              BEGIN{OFS=FS}
-              $4 ~ "`ghcr.io/.*/" img_name "(:[^`]+)?`" && $6 ~ /✔️/ { $7 = " " date " "; print; next }
-              {print}
-            ' README.md > README.tmp && mv README.tmp README.md
+            awk -F'|' -v img_name="$target_image" -v date="$today" 'BEGIN{OFS=FS} $4 ~ "`ghcr.io/.*/" img_name "(:[^`]+)?`" && $6 ~ /✔️/ { $7 = " " date " "; print; next } {print}' README.md > README.tmp && mv README.tmp README.md
             
             git config --global user.name "github-actions[bot]"
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
