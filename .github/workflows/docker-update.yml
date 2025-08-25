@@ -17,7 +17,6 @@ jobs:
       - name: 1. 检出仓库
         uses: actions/checkout@v4
         with:
-          # 使用 GITHUB_TOKEN 以便后续可以推送更改
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 2. 安装依赖
@@ -78,7 +77,10 @@ jobs:
           cat combined-list.txt
 
       - name: 6. 登录到 Docker Hub
-        if: secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != ''
+        # ---
+        # 核心修正：将 if 条件用 ${{...}} 包裹
+        # ---
+        if: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -91,7 +93,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 您原来的清理逻辑，如果不需要可以删除此步骤
       - name: 8. 清理 README.md 中已失效的镜像条目
         env:
           GHCR_USER: ${{ github.repository_owner }}
@@ -139,7 +140,6 @@ jobs:
             echo "没有在 README.md 中找到失效的镜像条目。"
           fi
 
-
       - name: 9. 同步所有架构镜像更新
         env:
           GHCR_USER: ${{ github.repository_owner }}
@@ -161,7 +161,6 @@ jobs:
             owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
             target_image_base="ghcr.io/$owner_lowercase/$target_image"
             
-            # --- 核心修正：使用 skopeo inspect (不带 --raw) 获取顶层 Digest ---
             echo "正在检查源镜像: $source_image_full"
             source_digest=$(skopeo inspect "$source_image_full" 2>/dev/null | jq -r '.Digest // empty')
             echo "源镜像 Digest: $source_digest"
@@ -204,8 +203,7 @@ jobs:
 
             for arch in $ARCHS; do
               source_image_name=$(echo "$source_image_full" | sed 's|docker://||')
-              target_tag="$target_image_base:latest-$arch"
-
+              
               if [[ "$arch" == "default" ]]; then
                  # 单架构情况
                  arch_digest=$source_digest
@@ -214,6 +212,7 @@ jobs:
               else
                  # 多架构情况
                  echo "▸ 处理架构: $arch"
+                 target_tag="$target_image_base:latest-$arch"
                  arch_digest=$(echo "$source_manifest" | jq -r \
                     --arg arch "$arch" \
                     '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
