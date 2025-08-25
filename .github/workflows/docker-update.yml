@@ -76,7 +76,7 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: 6b. 登录到 Docker Hub
+      - name: 6b. 登录到 Docker Hub (如果凭证存在)
         if: steps.check_dockerhub_creds.outputs.present == 'true'
         uses: docker/login-action@v3
         with:
@@ -96,23 +96,18 @@ jobs:
         run: |
           set -eo pipefail
 
+          # 函数：从 manifest 内容中为指定架构提取唯一的 digest
           get_digest_for_arch() {
             local manifest_content=$1
             local arch_name=$2
-            
             if [ -z "$manifest_content" ]; then echo ""; return; fi
-
+            
             if echo "$manifest_content" | jq -e '.manifests' > /dev/null 2>&1; then
-              # 优先匹配 arm/v7 (for arm) and arm/v8 (for arm64), 然后是通用架构名
               echo "$manifest_content" | jq -r --arg arch "$arch_name" '
                 .manifests[] | 
-                select(
-                  (.platform.architecture == $arch) or 
-                  ($arch == "arm" and .platform.architecture == "arm" and .platform.variant? == "v7") or
-                  ($arch == "arm64" and .platform.architecture == "arm64" and .platform.variant? == "v8")
-                ) | .digest' | head -n 1
+                select(.platform.architecture == $arch) | 
+                .digest' | head -n 1
             else
-              # 单架构镜像
               echo "$manifest_content" | jq -r '.digest // empty'
             fi
           }
@@ -123,81 +118,49 @@ jobs:
             echo "────────────────────────────────────────"
             echo "处理镜像: $target_image (源镜像: $source_image)"
             
+            # 准备源和目标URI
             if [[ "$source_image" == *:* ]]; then
-              source_image_full="docker://$source_image"
+              source_image_name_tag="$source_image"
             else
-              source_image_full="docker://$source_image:latest"
+              source_image_name_tag="$source_image:latest"
             fi
             owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
-            target_image_base="ghcr.io/$owner_lowercase/$target_image"
+            target_image_name_tag="ghcr.io/$owner_lowercase/$target_image:latest"
             
-            # --- 检查和比较逻辑重构 ---
-            source_manifest=$(skopeo inspect --raw "$source_image_full" 2>/dev/null)
+            SOURCE_IMAGE_URI="docker://$source_image_name_tag"
+            TARGET_IMAGE_URI="docker://$target_image_name_tag"
+
+            # 获取清单
+            source_manifest=$(skopeo inspect --raw "$SOURCE_IMAGE_URI" 2>/dev/null)
             if [ -z "$source_manifest" ]; then
-              echo "❌ 错误：无法获取源镜像清单，已跳过。"
-              continue
-            fi
-
-            # 确定要同步的架构列表
-            if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
-              ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x')
-            else
-              ARCHS=$(echo "$source_manifest" | jq -r '.architecture' | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x' || echo "amd64")
-            fi
-            
-            target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null || echo "")
-            
-            need_update=false
-            if [ -z "$target_manifest" ]; then
-              need_update=true
-              echo "目标镜像不存在，需要同步。"
-            else
-              for arch in $ARCHS; do
-                source_digest_for_arch=$(get_digest_for_arch "$source_manifest" "$arch")
-                target_digest_for_arch=$(get_digest_for_arch "$target_manifest" "$arch")
-                echo "检查架构 '$arch': 源 digest [$source_digest_for_arch] <=> 目标 digest [$target_digest_for_arch]"
-                if [ "$source_digest_for_arch" != "$target_digest_for_arch" ]; then
-                  need_update=true
-                  echo "发现不匹配的摘要，需要同步。"
-                  break
-                fi
-              done
-            fi
-
-            if [ "$need_update" = "false" ]; then
-              echo "✅ 所有已检查架构的摘要均匹配，跳过同步。"
+              echo "❌ 错误：无法获取源镜像清单 '$SOURCE_IMAGE_URI'，已跳过。"
               continue
             fi
             
-            echo "检测到更新，开始全架构同步..."
+            target_manifest=$(skopeo inspect --raw "$TARGET_IMAGE_URI" 2>/dev/null || echo "")
             
-            # --- 同步逻辑 ---
-            amend_args=()
-            for arch in $ARCHS; do
-              source_image_name=$(echo "$source_image_full" | sed 's|docker://||')
-              target_tag="$target_image_base:latest-$arch"
-              arch_digest=$(get_digest_for_arch "$source_manifest" "$arch")
+            # 比较清单的顶层摘要
+            source_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
+            target_digest=$(echo "$target_manifest" | jq -r '.digest // empty')
 
-              if [ -z "$arch_digest" ]; then
-                 echo "⚠️ 警告：无法定位架构 $arch 的 digest，已跳过"
-                 continue
-              fi
-              
-              echo "▸ 拉取架构 '$arch': $source_image_name@$arch_digest"
-              docker pull "$source_image_name@$arch_digest"
-              docker tag "$source_image_name@$arch_digest" "$target_tag"
-              docker push "$target_tag"
-              amend_args+=(--amend "$target_tag")
-            done
-            
-            echo "🔄 重建多架构 manifest 列表..."
-            docker manifest rm "$target_image_base:latest" 2>/dev/null || true
-            docker manifest create "$target_image_base:latest" "${amend_args[@]}"
-            docker manifest push "$target_image_base:latest"
-            
-            echo "✅ 同步完成: $target_image_base:latest"
-            
-            # --- 更新 README.md ---
+            echo "源镜像顶层摘要: $source_digest"
+            echo "目标镜像顶层摘要: $target_digest"
+
+            if [ -n "$source_digest" ] && [ "$source_digest" == "$target_digest" ]; then
+               echo "✅ 顶层摘要匹配，清单未更新，跳过同步。"
+               continue
+            fi
+
+            echo "检测到摘要不匹配或目标不存在，开始使用 skopeo copy 同步..."
+
+            if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
+              echo "✅ 镜像同步成功: $target_image_name_tag"
+            else
+              echo "❌ 镜像同步失败，请检查源镜像是否存在或网络连接。"
+              continue
+            fi
+
+            # 更新 README.md
             today=$(date +'%Y-%m-%d')
             awk -F'|' -v img_name="$target_image" -v date="$today" '
               BEGIN{OFS=FS}
