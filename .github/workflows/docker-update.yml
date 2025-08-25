@@ -22,7 +22,7 @@ jobs:
       - name: 2. 安装依赖
         run: sudo apt-get update && sudo apt-get install -y jq skopeo
 
-      - name: 3. 提取目标镜像名称 (从 Pull 命令列)
+      - name: 3. 提取目标镜像名称
         id: extract-target-images
         run: |
           owner_lowercase=$(echo "${{ github.repository_owner }}" | tr 'A-Z' 'a-z')
@@ -31,8 +31,7 @@ jobs:
           capture && /^\| [0-9]+/ {
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
-              gsub(/^[ \t]+|[ \t]+$/, "", $4);
-              gsub(/`/, "", $4);
+              gsub(/^[ \t]+|[ \t]+$/, "", $4); gsub(/`/, "", $4);
               print $4
           }
           /^### / && capture && !/已同步/ {capture=0}
@@ -42,7 +41,7 @@ jobs:
           echo "===== 将要检查的目标镜像列表 ====="
           cat target-image-list.txt
 
-      - name: 4. 提取源镜像名称 (从源镜像列)
+      - name: 4. 提取源镜像名称
         id: extract-source-images
         run: |
           awk -F '|' '
@@ -50,8 +49,7 @@ jobs:
           capture && /^\| [0-9]+/ {
               sync_col=$6; gsub(/^[ \t]+|[ \t]+$/, "", sync_col);
               if (sync_col != "✔️") next;
-              gsub(/^[ \t]+|[ \t]+$/, "", $3);
-              gsub(/`/, "", $3);
+              gsub(/^[ \t]+|[ \t]+$/, "", $3); gsub(/`/, "", $3);
               print $3
           }
           /^### / && capture && !/已同步/ {capture=0}
@@ -69,18 +67,13 @@ jobs:
           echo "===== 合并后的镜像检查列表 ====="
           cat combined-list.txt
 
-      # ---
-      # 核心修正：将 'if' 判断分解为两个步骤，以规避 YAML 解析问题
-      # ---
       - name: 6a. 检查 Docker Hub 凭证是否存在
         id: check_dockerhub_creds
         run: |
           if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
             echo "present=true" >> "$GITHUB_OUTPUT"
-            echo "Docker Hub 凭证已设置，将执行登录。"
           else
             echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "未设置 Docker Hub 凭证，将跳过登录。"
           fi
 
       - name: 6b. 登录到 Docker Hub (如果凭证存在)
@@ -113,22 +106,9 @@ jobs:
               fi
             fi
           done < target-image-list.txt
-
           if [ -f deleted-images.txt ]; then
             echo "已清理失效条目，正在重新编号并提交..."
-            # 重新编号表格 (注意: 此 awk 脚本较为简单，复杂表格可能需要调整)
-            awk 'BEGIN { FS=OFS="|"; in_table=0; count=0 }
-              /^### 已同步的 Docker 镜像/ { in_table=1; print; next }
-              !in_table { print; next }
-              /^\| *---/ { print; next }
-              in_table && /^\| *[0-9]+/ {
-                count++;
-                $2 = " " count " ";
-                print;
-                next
-              }
-              { if (in_table) { print } }' README.md > README.tmp && mv README.tmp README.md
-            
+            awk 'BEGIN { FS=OFS="|"; in_table=0; count=0 } /^### 已同步的 Docker 镜像/ { in_table=1; print; next } !in_table { print; next } /^\| *---/ { print; next } in_table && /^\| *[0-9]+/ { count++; $2 = " " count " "; print; next } { if (in_table) { print } }' README.md > README.tmp && mv README.tmp README.md
             git config --global user.name "github-actions[bot]"
             git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add README.md
@@ -170,17 +150,15 @@ jobs:
             echo "目标镜像 Digest: $target_digest"
 
             if [ -z "$source_digest" ]; then
-              echo "❌ 错误：无法获取源镜像的 digest，可能镜像不存在或网络问题，已跳过。"
+              echo "❌ 错误：无法获取源镜像的 digest，已跳过。"
               continue
             fi
-
-            if [ "$source_digest" != "$target_digest" ]; then
-              echo "✅ 检测到清单更新 ($source_digest != $target_digest)，开始全架构同步..."
-            else
+            if [ "$source_digest" == "$target_digest" ]; then
               echo "清单未更新，跳过同步。"
               continue
             fi
 
+            echo "✅ 检测到清单更新 ($source_digest != $target_digest)，开始全架构同步..."
             source_manifest=$(skopeo inspect --raw "$source_image_full")
             
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
@@ -195,7 +173,7 @@ jobs:
               ARCHS="default"
             fi
 
-            echo "开始同步架构: $ARCHS"
+            echo "开始同步架构:" && echo "$ARCHS"
             amend_args=()
 
             for arch in $ARCHS; do
@@ -208,9 +186,12 @@ jobs:
               else
                  echo "▸ 处理架构: $arch"
                  target_tag="$target_image_base:latest-$arch"
-                 arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest')
+                 # ---
+                 # 核心修正：在 jq 命令后添加 `| head -n 1` 确保只返回一个摘要
+                 # ---
+                 arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest' | head -n 1)
                  if [ -z "$arch_digest" ]; then
-                    arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest')
+                    arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest' | head -n 1)
                  fi
                  amend_args+=(--amend "$target_tag")
               fi
@@ -236,11 +217,7 @@ jobs:
             today=$(date +'%Y-%m-%d')
             awk -F'|' -v img_name="$target_image" -v date="$today" '
               BEGIN{OFS=FS}
-              $4 ~ "`ghcr.io/.*/" img_name "(:[^`]+)?`" && $6 ~ /✔️/ {
-                  $7 = " " date " ";
-                  print;
-                  next
-              }
+              $4 ~ "`ghcr.io/.*/" img_name "(:[^`]+)?`" && $6 ~ /✔️/ { $7 = " " date " "; print; next }
               {print}
             ' README.md > README.tmp && mv README.tmp README.md
             
