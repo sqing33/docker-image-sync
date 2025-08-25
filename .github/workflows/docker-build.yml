@@ -33,7 +33,6 @@ jobs:
       packages: write
 
     steps:
-      # ... (步骤 1 到 6 保持不变) ...
       - name: 1. 检出本项目仓库
         uses: actions/checkout@v4
         with:
@@ -64,17 +63,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: 7. 提取 Docker 元数据并生成标签
+      - name: 7. 准备多行标签
+        id: prep_tags
+        run: |
+          # 将逗号分隔的输入转换为换行符分隔的输出，并将其设置为步骤输出
+          echo "tags=$(echo "${{ github.event.inputs.tags }}" | tr ',' '\n')" >> $GITHUB_OUTPUT
+
+      - name: 8. 提取 Docker 元数据并生成标签
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
-          tags: |
-            type=csv,value="${{ github.event.inputs.tags }}"
+          tags: ${{ steps.prep_tags.outputs.tags }}
 
-      - name: 8. 构建并推送到多个镜像仓库
+      - name: 9. 构建并推送到多个镜像仓库
         uses: docker/build-push-action@v6
         with:
           context: ./app
@@ -83,7 +87,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: 9. 更新或新增 README.md 中的构建记录
+      - name: 10. 更新或新增 README.md 中的构建记录
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
