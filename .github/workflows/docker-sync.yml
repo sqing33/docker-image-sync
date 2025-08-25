@@ -1,206 +1,210 @@
-name: 同步 Docker 镜像 → ghcr.io
+# .github/workflows/docker-build.yml
 
-permissions:
-  packages: write
-  contents: write
+name: 构建 Docker 镜像 → ghcr.io, DockerHub
 
 on:
   workflow_dispatch:
     inputs:
-      images:
-        description: "要同步的 Docker 镜像列表，格式为 '镜像1:标签1,镜像2:标签2,镜像3:标签3'"
+      repo_url:
+        description: "要构建的 Git 仓库克隆链接 (例如: https://github.com/your-name/your-repo.git)"
         required: true
-        default: ""
-      ghcr_names:
-        description: "对应的同步后的镜像名称列表，格式为 '名称1,名称2,名称3'，如果某个镜像不需要指定名称，则用逗号填充，例如 ',,my-image' 表示第三个镜像同步后名称为 my-image，前两个自动提取"
-        required: false
-        default: ""
-      change_tag_to_latest:
-        description: "同步后是否将镜像标签改为 latest (是/否)"
+      repo_ref:
+        description: "要检出的分支、标签或提交SHA (例如: main)"
         required: true
-        type: choice
-        options:
-          - "是"
-          - "否"
-        default: "是"
+        default: "main"
+      image_name:
+        description: "要设置的镜像名称 (例如: my-awesome-app)"
+        required: true
+        default: "my-app"
+      tags:
+        description: "要推送的标签, 逗号分隔 (例如: latest, v1.0)"
+        required: true
+        default: "latest"
+      platforms:
+        description: "要构建的平台, 逗号分隔"
+        required: true
+        default: "linux/amd64,linux/arm64,linux/arm/v7"
 
 jobs:
-  docker-image-sync:
+  build_and_push:
     runs-on: ubuntu-latest
-    steps:
-      - name: 安装依赖工具
-        run: sudo apt-get update && sudo apt-get install -y jq skopeo
+    permissions:
+      contents: write
+      packages: write
 
-      - name: 检出仓库
+    steps:
+      - name: 1. 检出本项目仓库
         uses: actions/checkout@v4
         with:
-          # 使用 token 以便后续可以推送更改
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 设置 GHCR_USER 环境变量
-        id: set_ghcr_user
-        run: echo "GHCR_USER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      - name: 2. 克隆指定的代码仓库
+        run: |
+          git clone ${{ github.event.inputs.repo_url }} app
+          cd app
+          git checkout ${{ github.event.inputs.repo_ref }}
 
-      - name: 登录到 GitHub 容器注册表
+      - name: 3. 设置 QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: 4. 设置 Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 5. 登录到 GitHub Container Registry (ghcr.io)
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ env.GHCR_USER }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 设置 Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: 6. 登录到 Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: 7. 准备多行标签
+        id: prep_tags
+        run: |
+          # 初始化一个空字符串，用于存储最终的多行标签
+          TAGS_FOR_OUTPUT=""
+          
+          # 使用 IFS 和 read 将逗号分隔的输入字符串解析到数组 tag_array 中
+          IFS=',' read -r -a tag_array <<< "${{ github.event.inputs.tags }}"
+          
+          # 遍历数组中的每一个标签
+          for tag in "${tag_array[@]}"; do
+            # 使用 xargs 清理标签前后可能存在的空格，并检查是否为空
+            cleaned_tag=$(echo "$tag" | xargs)
+            if [[ -n "$cleaned_tag" ]]; then
+              # 将清理后的标签和换行符追加到最终的字符串中
+              TAGS_FOR_OUTPUT+="${cleaned_tag}"$'\n'
+            fi
+          done
+          
+          # 使用 GitHub Actions 的标准语法来设置多行输出
+          {
+            echo 'tags<<EOF'
+            echo "${TAGS_FOR_OUTPUT}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
-      - name: 同步镜像并更新 README
+      - name: 8. 提取 Docker 元数据并生成标签
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
+          tags: ${{ steps.prep_tags.outputs.tags }}
+
+      - name: 9. 构建并推送到多个镜像仓库
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          platforms: ${{ github.event.inputs.platforms }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: 10. 更新或新增 README.md 中的构建记录
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
 
-          # --- 1. 镜像同步与信息收集 ---
-          NEW_ROWS_DATA=""
-          UNIQUE_SEPARATOR="%%%"
-          TABLE_TITLE="### 已同步的 Docker 镜像"
+          GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
+          DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
+          SOURCE_REPO_URL="${{ github.event.inputs.repo_url }}"
+          BUILD_TIME=$(date -u '+%Y-%m-%d')
+          README_FILE="README.md"
+          TEMP_README="README.tmp"
 
-          existing_source_images=$(awk '
-            $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
-            in_table {
-              if (/^\| [0-9]/) { 
-                match($0, /\| *[^|]+ *\| *([^|]+) *\|/);
-                if (RSTART) { print substr($0, RSTART, RLENGTH) }
-              }
-              if (!/^\|/ && !/^$/) { in_table=0 }
+          # 检查记录是否存在
+          if grep -qF "$GHCR_IMAGE_NAME" "$README_FILE"; then
+            echo "记录已存在，正在更新构建时间: $GHCR_IMAGE_NAME"
+            # 使用 awk 更新指定行的构建时间
+            awk -v name_to_find="$GHCR_IMAGE_NAME" -v new_date="$BUILD_TIME" '
+            BEGIN {
+                FS = "\\s*\\|\\s*";
             }
-          ' README.md | sed -e 's/|//g' -e 's/^[ \t]*//;s/[ \t]*$//')
-
-          IFS=',' read -r -a image_array <<< "${{ inputs.images }}"
-          IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
-
-          for i in "${!image_array[@]}"; do
-            full_image=$(echo "${image_array[$i]}" | xargs)
-            if [ -z "$full_image" ]; then continue; fi
-
-            if echo "$existing_source_images" | grep -qFx "$full_image"; then
-              echo "镜像 $full_image 已存在于 README.md，跳过。"
-              continue
-            fi
+            # 匹配包含镜像名称的表格行
+            $4 ~ name_to_find {
+                # $1=empty, $2=序号, $3=源仓库, $4=镜像名称, $5=构建时间
+                # 重新格式化并打印整行以保持对齐
+                printf "| %-3s | %s | %s | %s |", $2, $3, $4, new_date
+                print "" # printf 不会自动换行，因此加一个 print
+                next
+            }
+            # 对于不匹配的行，直接打印
+            {
+                print $0
+            }
+            ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
+          else
+            echo "记录不存在，正在添加新行到 README.md"
+            # 提取表格现有数据行
+            data_lines=$(awk '
+              /^### 已构建的 Docker 镜像/,!/^\|/ {
+                  if (/^\| [0-9]/) { print }
+              }
+            ' "$README_FILE")
             
-            echo "--------------------------------------------------"
-            echo "===== 开始处理 $full_image ====="
-            current_image=$(echo "$full_image" | cut -d':' -f1)
-            current_tag=$(echo "$full_image" | cut -s -d':' -f2); [ -z "$current_tag" ] && current_tag="latest"
-            target_tag="$current_tag"; [[ "$current_tag" =~ "alpine" ]] && target_tag="alpine" || { [ "${{ inputs.change_tag_to_latest }}" == "是" ] && target_tag="latest"; }
-            
-            if [ "$current_tag" == "latest" ] || [ "$target_tag" == "alpine" ]; then 
-              sync_status="✔️"
-            else 
-              sync_status="❌"
-            fi
-            
-            current_ghcr_name="${ghcr_name_array[$i]}"
-            if [ -z "$current_ghcr_name" ]; then 
-              IMAGE_NAME=$(basename "$current_image")
-            else 
-              IMAGE_NAME="$current_ghcr_name"
-            fi
-
-            SOURCE_IMAGE_URI="docker://$current_image:$current_tag"
-            TARGET_IMAGE_URI="docker://ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME:$target_tag"
-            
-            # --- 这是补充的完整同步逻辑 ---
-            echo "源镜像: $SOURCE_IMAGE_URI"
-            echo "目标镜像: $TARGET_IMAGE_URI"
-            
-            # 使用 skopeo copy 进行同步，--all 参数会自动处理多架构
-            # 增加错误处理，如果同步失败则打印错误并继续
-            if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
-              echo "✅ 镜像同步成功"
+            # 计算新行号
+            if [ -z "$data_lines" ]; then
+              count=0
             else
-              echo "❌ 镜像同步失败，请检查源镜像是否存在或网络连接。"
-              # 同步失败，可以选择跳过该镜像的后续处理
-              continue
+              count=$(echo "$data_lines" | wc -l)
             fi
-            # --- 同步逻辑结束 ---
-
-            # 创建 docker-compose.yaml 文件
-            mkdir -p docker-compose
-            cp docker-compose/example.yaml "docker-compose/$IMAGE_NAME.yaml"
-
-            # 准备新行的数据
-            pull_cmd="ghcr.io/${{ env.GHCR_USER }}/$IMAGE_NAME"
-            if [ "$target_tag" != "latest" ]; then
-              pull_cmd="$pull_cmd:$target_tag"
-            fi
-            pull_cmd="\`$pull_cmd\`"
-            compose_file="[yaml](https://github.com/${{ github.repository }}/blob/main/docker-compose/$IMAGE_NAME.yaml)"
+            new_count=$((count + 1))
             
-            # 新增一列更新时间，默认空
-            new_line_data="${full_image}${UNIQUE_SEPARATOR}${pull_cmd}${UNIQUE_SEPARATOR}${compose_file}${UNIQUE_SEPARATOR}${sync_status}${UNIQUE_SEPARATOR}"
-            NEW_ROWS_DATA+="${new_line_data}\n"
-          done
+            # 准备新行内容
+            COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
+            printf -v new_row "| %-3s | %s | %s | %s |" \
+              "$new_count" \
+              "$SOURCE_REPO_URL" \
+              "$COMBINED_IMAGE_NAMES" \
+              "$BUILD_TIME"
+            
+            # 准备新的完整表格
+            {
+              echo "### 已构建的 Docker 镜像"
+              echo ""
+              echo "|   | 源仓库 | 镜像名称 | 构建时间 |"
+              echo "|---|---|---|---:|"
+              if [ -n "$data_lines" ]; then
+                echo "$data_lines"
+              fi
+              echo "$new_row"
+            } > new_build_table_content.txt
 
-          if [ -z "$NEW_ROWS_DATA" ]; then
-            echo "--------------------------------------------------"
-            echo "没有新的镜像被添加，无需更新 README.md。"
-            exit 0
+            # 使用 awk 将旧表格替换为新表格
+            awk '
+              BEGIN { skipping=0 }
+              /^### 已构建的 Docker 镜像/ {
+                while ((getline line < "new_build_table_content.txt") > 0) { print line }
+                close("new_build_table_content.txt");
+                skipping=1;
+                next
+              }
+              skipping==1 {
+                if (!/^\|/ && !/^$/) {
+                  skipping=0;
+                  print;
+                }
+                next;
+              }
+              { print }
+            ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
           fi
 
-          # --- 2. README 更新、排序与重写 ---
-          echo "--------------------------------------------------"
-          echo "开始更新 README.md..."
-
-          existing_rows=$(awk '
-            $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
-            in_table {
-              if (/^\| [0-9]/) { print }
-              if (!/^\|/ && !/^$/) { in_table=0 }
-            }
-          ' README.md)
-
-          sorted_table_rows=$(
-            {
-              echo "$existing_rows" | sed 's/^| [0-9]\{1,\} *|/|/'
-              echo -e "$NEW_ROWS_DATA" | sed '/^$/d' | awk -F"${UNIQUE_SEPARATOR}" '{printf("| %s | %s | %s | %s | %s |\n", $1, $2, $3, $4, $5)}'
-            } | awk -F'|' '
-              {
-                key = $3;
-                gsub(/`/, "", key);
-                gsub(/^[[:space:]]+|[[:space:]]+$/, "", key);
-                sub(/.*\/|:[^:]*$/, "", key);
-                print key "@@@" $0;
-              }
-            ' | sort -f | sed 's/^.*@@@//' | awk 'BEGIN{count=1} {printf("| %-3s %s\n", count++, $0)}'
-          )
-
-          {
-            echo "${TABLE_TITLE}"
-            echo ""
-            echo "|   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |"
-            echo "| ---- | -------- | --------- | -------------- | ---- | -------- |"
-            echo "$sorted_table_rows"
-          } > new_table.tmp
-
-          awk '
-            BEGIN { replaced=0 }
-            $0 == "'"${TABLE_TITLE}"'" && !replaced {
-              while ((getline line < "new_table.tmp") > 0) { print line }
-              close("new_table.tmp");
-              replaced=1;
-              skipping=1;
-              next;
-            }
-            skipping {
-              if (!/^\|/ && !/^$/) { skipping=0 } else { next }
-            }
-            { print }
-          ' README.md > README.tmp && mv README.tmp README.md
-          rm new_table.tmp
-
-          # 提交更改
-          git add README.md docker-compose/
+          # 提交并推送变更
+          git add "$README_FILE"
           if git diff --staged --quiet; then
-            echo "没有新的镜像或文件变更可提交。"
+            echo "README.md 没有变化，无需提交。"
           else
-            git commit -m "chore(sync): 同步新镜像并自动排序更新README"
+            git commit -m "docs: 更新或新增构建镜像 ${{ github.event.inputs.image_name }} 的记录"
             git push
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
