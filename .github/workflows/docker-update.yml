@@ -91,10 +91,11 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # --- 步骤 8 已被重构成最终版本 ---
       - name: 8. 检查并同步镜像
         env:
           GHCR_USER: ${{ github.repository_owner }}
+          # 将 Docker 配置文件路径也设为环境变量，方便 skopeo 调用
+          DOCKER_CONFIG: /home/runner/.docker
         run: |
           set -eo pipefail
 
@@ -137,13 +138,19 @@ jobs:
             SOURCE_IMAGE_URI="docker://$source_image_name_tag"
             TARGET_IMAGE_URI="docker://$target_image_name_tag"
 
-            source_manifest=$(skopeo inspect --raw "$SOURCE_IMAGE_URI" 2>/dev/null)
-            if [ -z "$source_manifest" ]; then
-              echo "❌ 错误：无法获取源镜像清单 '$SOURCE_IMAGE_URI'，已跳过。"
+            # 【修改点 1】增强 skopeo inspect 的错误处理，并添加 --authfile 参数
+            if ! source_manifest=$(skopeo inspect --authfile ${DOCKER_CONFIG}/config.json --raw "$SOURCE_IMAGE_URI" 2>/dev/null); then
+              echo "❌ 错误：执行 'skopeo inspect' 失败 (可能是网络问题或镜像不存在)，已跳过 '$SOURCE_IMAGE_URI'。"
               continue
             fi
             
-            target_manifest=$(skopeo inspect --raw "$TARGET_IMAGE_URI" 2>/dev/null || echo "")
+            if [ -z "$source_manifest" ]; then
+              echo "❌ 错误：无法获取源镜像清单 (清单为空)，已跳过 '$SOURCE_IMAGE_URI'。"
+              continue
+            fi
+            
+            # 【修改点 2】为目标镜像的 inspect 也添加认证参数，并优化逻辑
+            target_manifest=$(skopeo inspect --authfile ${DOCKER_CONFIG}/config.json --raw "$TARGET_IMAGE_URI" 2>/dev/null || echo "")
             
             # 确定要检查的架构列表
             ARCHS_TO_CHECK="amd64 arm64 arm" # 我们只关心这几个主流架构
@@ -176,7 +183,8 @@ jobs:
 
             echo "开始使用 skopeo copy 同步..."
 
-            if skopeo copy --all "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
+            # 【修改点 3】为 skopeo copy 添加 --all 和 --authfile 参数
+            if skopeo copy --all --authfile ${DOCKER_CONFIG}/config.json "$SOURCE_IMAGE_URI" "$TARGET_IMAGE_URI"; then
               echo "✅ 镜像同步成功: $target_image_name_tag"
             else
               echo "❌ 镜像同步失败，请检查源镜像是否存在或网络连接。"
@@ -199,5 +207,7 @@ jobs:
               git push
             else
               echo "README.md 无变更，无需提交。"
+            fi
+          done < combined-list.txt
             fi
           done < combined-list.txt
