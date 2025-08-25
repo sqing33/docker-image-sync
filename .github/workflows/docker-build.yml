@@ -17,7 +17,7 @@ on:
         required: true
         default: "my-app"
       tags:
-        description: "要推送的标签, 逗号分隔 (例如: latest,v1.0)"
+        description: "要推送的标签, 逗号分隔 (例如: latest, v1.0)"
         required: true
         default: "latest"
       platforms:
@@ -66,8 +66,29 @@ jobs:
       - name: 7. 准备多行标签
         id: prep_tags
         run: |
-          # 将逗号分隔的输入转换为换行符分隔的输出，并将其设置为步骤输出
-          echo "tags=$(echo "${{ github.event.inputs.tags }}" | tr ',' '\n')" >> $GITHUB_OUTPUT
+          # 初始化一个空字符串，用于存储最终的多行标签
+          TAGS_FOR_OUTPUT=""
+          
+          # 使用 IFS 和 read 将逗号分隔的输入字符串解析到数组 tag_array 中
+          IFS=',' read -r -a tag_array <<< "${{ github.event.inputs.tags }}"
+          
+          # 遍历数组中的每一个标签
+          for tag in "${tag_array[@]}"; do
+            # 使用 xargs 清理标签前后可能存在的空格，并检查是否为空
+            cleaned_tag=$(echo "$tag" | xargs)
+            if [[ -n "$cleaned_tag" ]]; then
+              # 将清理后的标签和换行符追加到最终的字符串中
+              TAGS_FOR_OUTPUT+="${cleaned_tag}"$'\n'
+            fi
+          done
+          
+          # 使用 GitHub Actions 的标准语法来设置多行输出
+          {
+            echo 'tags<<EOF'
+            # 去除最后一个多余的换行符，虽然影响不大，但更规范
+            echo -n "${TAGS_FOR_OUTPUT}"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
       - name: 8. 提取 Docker 元数据并生成标签
         id: meta
