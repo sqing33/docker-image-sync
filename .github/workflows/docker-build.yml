@@ -33,6 +33,7 @@ jobs:
       packages: write
 
     steps:
+      # ... (步骤 1 到 6 保持不变) ...
       - name: 1. 检出本项目仓库
         uses: actions/checkout@v4
         with:
@@ -63,23 +64,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: 7.a. 转换逗号分隔的标签为多行规则 (已修正)
-        id: prep_tags
-        run: |
-          {
-            echo 'tags<<EOF'
-            echo "${{ github.event.inputs.tags }}" | sed 's/,/\n/g' | awk '{printf "type=raw,value=%s\n", $1}'
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
-      - name: 7.b. 提取 Docker 元数据并生成标签
+      - name: 7. 提取 Docker 元数据并生成标签
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}
-          tags: ${{ steps.prep_tags.outputs.tags }}
+          tags: |
+            type=csv,value=${{ github.event.inputs.tags }}
 
       - name: 8. 构建并推送到多个镜像仓库
         uses: docker/build-push-action@v6
@@ -90,72 +83,103 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: 9. 更新 README.md 中的“已构建的 Docker 镜像”表格
+      - name: 9. 更新或新增 README.md 中的构建记录
         run: |
-          # ... (后续步骤保持不变) ...
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
+
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
           SOURCE_REPO_URL="${{ github.event.inputs.repo_url }}"
-          if grep -qF "$GHCR_IMAGE_NAME" README.md; then
-            echo "镜像 $GHCR_IMAGE_NAME 的记录已存在于 README.md，跳过更新。"
-            exit 0
-          fi
-          echo "添加新构建的镜像记录到 README.md"
-          data_lines=$(awk '
-            /^### 已构建的 Docker 镜像/ { in_table=1; next }
-            in_table {
-              if (/^\| [0-9]/) { print }
-              if (!/^\|/ && !/^$/) { in_table=0 }
-            }
-          ' README.md)
-          if [ -z "$data_lines" ]; then
-            count=0
-          else
-            count=$(echo "$data_lines" | wc -l)
-          fi
-          new_count=$((count + 1))
-          COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
           BUILD_TIME=$(date -u '+%Y-%m-%d')
-          printf -v new_row "| %-3s | %s | %s | %s |" \
-            "$new_count" \
-            "$SOURCE_REPO_URL" \
-            "$COMBINED_IMAGE_NAMES" \
-            "$BUILD_TIME"
-          {
-            echo "### 已构建的 Docker 镜像"
-            echo ""
-            echo "|   | 源仓库 | 镜像名称 | 构建时间 |"
-            echo "|---|---|---|---:|"
-            if [ -n "$data_lines" ]; then
-              echo "$data_lines"
-            fi
-            echo "$new_row"
-          } > new_build_table_content.txt
-          awk '
-            BEGIN { skipping=0 }
-            /^### 已构建的 Docker 镜像/ {
-              while ((getline line < "new_build_table_content.txt") > 0) { print line }
-              close("new_build_table_content.txt");
-              skipping=1;
-              next
+          README_FILE="README.md"
+          TEMP_README="README.tmp"
+
+          # 检查记录是否存在
+          if grep -qF "$GHCR_IMAGE_NAME" "$README_FILE"; then
+            echo "记录已存在，正在更新构建时间: $GHCR_IMAGE_NAME"
+            # 使用 awk 更新指定行的构建时间
+            awk -v name_to_find="$GHCR_IMAGE_NAME" -v new_date="$BUILD_TIME" '
+            BEGIN {
+                FS = "\\s*\\|\\s*";
             }
-            skipping==1 {
-              if (!/^\|/ && !/^$/) {
-                skipping=0;
-                print;
+            # 匹配包含镜像名称的表格行
+            $4 ~ name_to_find {
+                # $1=empty, $2=序号, $3=源仓库, $4=镜像名称, $5=构建时间
+                # 重新格式化并打印整行以保持对齐
+                printf "| %-3s | %s | %s | %s |", $2, $3, $4, new_date
+                print "" # printf 不会自动换行，因此加一个 print
+                next
+            }
+            # 对于不匹配的行，直接打印
+            {
+                print $0
+            }
+            ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
+          else
+            echo "记录不存在，正在添加新行到 README.md"
+            # 提取表格现有数据行
+            data_lines=$(awk '
+              /^### 已构建的 Docker 镜像/,!/^\|/ {
+                  if (/^\| [0-9]/) { print }
               }
-              next;
-            }
-            { print }
-          ' README.md > README.tmp && mv README.tmp README.md
-          git add README.md
+            ' "$README_FILE")
+            
+            # 计算新行号
+            if [ -z "$data_lines" ]; then
+              count=0
+            else
+              count=$(echo "$data_lines" | wc -l)
+            fi
+            new_count=$((count + 1))
+            
+            # 准备新行内容
+            COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
+            printf -v new_row "| %-3s | %s | %s | %s |" \
+              "$new_count" \
+              "$SOURCE_REPO_URL" \
+              "$COMBINED_IMAGE_NAMES" \
+              "$BUILD_TIME"
+            
+            # 准备新的完整表格
+            {
+              echo "### 已构建的 Docker 镜像"
+              echo ""
+              echo "|   | 源仓库 | 镜像名称 | 构建时间 |"
+              echo "|---|---|---|---:|"
+              if [ -n "$data_lines" ]; then
+                echo "$data_lines"
+              fi
+              echo "$new_row"
+            } > new_build_table_content.txt
+
+            # 使用 awk 将旧表格替换为新表格
+            awk '
+              BEGIN { skipping=0 }
+              /^### 已构建的 Docker 镜像/ {
+                while ((getline line < "new_build_table_content.txt") > 0) { print line }
+                close("new_build_table_content.txt");
+                skipping=1;
+                next
+              }
+              skipping==1 {
+                if (!/^\|/ && !/^$/) {
+                  skipping=0;
+                  print;
+                }
+                next;
+              }
+              { print }
+            ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
+          fi
+
+          # 提交并推送变更
+          git add "$README_FILE"
           if git diff --staged --quiet; then
             echo "README.md 没有变化，无需提交。"
           else
-            git commit -m "docs: 新增构建镜像 ${{ github.event.inputs.image_name }} 的记录"
+            git commit -m "docs: 更新或新增构建镜像 ${{ github.event.inputs.image_name }} 的记录"
             git push
           fi
         env:
