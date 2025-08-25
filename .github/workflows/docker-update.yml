@@ -76,7 +76,7 @@ jobs:
             echo "present=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: 6b. 登录到 Docker Hub (如果凭证存在)
+      - name: 6b. 登录到 Docker Hub
         if: steps.check_dockerhub_creds.outputs.present == 'true'
         uses: docker/login-action@v3
         with:
@@ -90,43 +90,28 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 8. 清理 README.md 中已失效的镜像条目
-        env:
-          GHCR_USER: ${{ github.repository_owner }}
-        run: |
-          owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
-          while IFS= read -r target_image; do
-            target_image_base="ghcr.io/$owner_lowercase/$target_image"
-            if ! skopeo inspect "docker://$target_image_base:latest" --no-tags >/dev/null 2>&1; then
-              echo "镜像 $target_image_base 不存在于 ghcr.io，标记为删除。"
-              escaped_name=$(printf '%s\n' "$target_image_base" | sed 's:[][\\/.^$*]:\\&:g')
-              if grep -q "$escaped_name" README.md; then
-                  sed -i "/$escaped_name/d" README.md
-                  echo "$target_image" >> deleted-images.txt
-              fi
-            fi
-          done < target-image-list.txt
-          if [ -f deleted-images.txt ]; then
-            echo "已清理失效条目，正在重新编号并提交..."
-            awk 'BEGIN { FS=OFS="|"; in_table=0; count=0 } /^### 已同步的 Docker 镜像/ { in_table=1; print; next } !in_table { print; next } /^\| *---/ { print; next } in_table && /^\| *[0-9]+/ { count++; $2 = " " count " "; print; next } { if (in_table) { print } }' README.md > README.tmp && mv README.tmp README.md
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add README.md
-            if ! git diff --staged --quiet; then
-              git commit -m "chore: 自动清理 README.md 中已失效的镜像记录"
-              git push
-            else
-              echo "清理后 README.md 无变更。"
-            fi
-          else
-            echo "没有在 README.md 中找到失效的镜像条目。"
-          fi
-
-      - name: 9. 同步所有架构镜像更新
+      - name: 8. 同步所有架构镜像更新
         env:
           GHCR_USER: ${{ github.repository_owner }}
         run: |
           set -eo pipefail
+
+          get_arch_digests() {
+            local manifest_content=$1
+            if [ -z "$manifest_content" ]; then
+              echo ""
+              return
+            fi
+            # 检查是多架构清单还是单架构镜像
+            if echo "$manifest_content" | jq -e '.manifests' > /dev/null 2>&1; then
+              # 多架构：提取所有架构的 digest 并排序
+              echo "$manifest_content" | jq -r '.manifests[].digest' | sort
+            else
+              # 单架构：直接使用顶层 digest
+              echo "$manifest_content" | jq -r '.digest // empty'
+            fi
+          }
+
           echo "===== 开始同步镜像 ====="
           
           while IFS='|' read -r source_image target_image; do
@@ -141,25 +126,27 @@ jobs:
             owner_lowercase=$(echo "$GHCR_USER" | tr 'A-Z' 'a-z')
             target_image_base="ghcr.io/$owner_lowercase/$target_image"
             
-            echo "正在检查源镜像: $source_image_full"
-            source_digest=$(skopeo inspect "$source_image_full" 2>/dev/null | jq -r '.Digest // empty')
-            echo "源镜像 Digest: $source_digest"
+            # 获取源和目标的原始清单
+            source_manifest=$(skopeo inspect --raw "$source_image_full" 2>/dev/null)
+            target_manifest=$(skopeo inspect --raw "docker://$target_image_base:latest" 2>/dev/null || echo "")
 
-            echo "正在检查目标镜像: docker://$target_image_base:latest"
-            target_digest=$(skopeo inspect "docker://$target_image_base:latest" 2>/dev/null | jq -r '.Digest // empty')
-            echo "目标镜像 Digest: $target_digest"
+            # 使用新函数获取并比较架构摘要列表
+            source_digests=$(get_arch_digests "$source_manifest")
+            target_digests=$(get_arch_digests "$target_manifest")
 
-            if [ -z "$source_digest" ]; then
-              echo "❌ 错误：无法获取源镜像的 digest，已跳过。"
+            echo "源架构摘要列表:" && (echo "$source_digests" | sed 's/^/  /' || echo "  (空)")
+            echo "目标架构摘要列表:" && (echo "$target_digests" | sed 's/^/  /' || echo "  (空)")
+
+            if [ -z "$source_digests" ]; then
+              echo "❌ 错误：无法获取源镜像的架构摘要，已跳过。"
               continue
             fi
-            if [ "$source_digest" == "$target_digest" ]; then
-              echo "清单未更新，跳过同步。"
+            if [ "$source_digests" == "$target_digests" ]; then
+              echo "✅ 所有架构的摘要均匹配，清单未更新，跳过同步。"
               continue
             fi
 
-            echo "✅ 检测到清单更新 ($source_digest != $target_digest)，开始全架构同步..."
-            source_manifest=$(skopeo inspect --raw "$source_image_full")
+            echo "检测到架构摘要不匹配，开始全架构同步..."
             
             if echo "$source_manifest" | jq -e '.manifests' > /dev/null 2>&1; then
               ARCHS=$(echo "$source_manifest" | jq -r '.manifests[].platform.architecture' | sort -u | grep -E 'amd64|arm64|armv7|arm|386|ppc64le|s390x|mips64le')
@@ -180,18 +167,15 @@ jobs:
               source_image_name=$(echo "$source_image_full" | sed 's|docker://||')
               
               if [[ "$arch" == "default" ]]; then
-                 arch_digest=$source_digest
-                 target_tag="$target_image_base:latest-amd64"
+                 arch_digest=$(echo "$source_manifest" | jq -r '.digest // empty')
+                 target_tag="$target_image_base:latest-amd64" # 假设默认为amd64
                  amend_args+=(--amend "$target_tag")
               else
                  echo "▸ 处理架构: $arch"
                  target_tag="$target_image_base:latest-$arch"
-                 # ---
-                 # 核心修正：在 jq 命令后添加 `| head -n 1` 确保只返回一个摘要
-                 # ---
-                 arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "armv7" and $arch == "arm")).digest' | head -n 1)
+                 arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == $arch or (.platform.architecture == "arm" and .platform.variant == "v7")).digest' | head -n 1)
                  if [ -z "$arch_digest" ]; then
-                    arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.variant? == "v7" and $arch == "arm").digest' | head -n 1)
+                    arch_digest=$(echo "$source_manifest" | jq -r --arg arch "$arch" '.manifests[] | select(.platform.architecture == "armv7" and $arch == "arm").digest' | head -n 1)
                  fi
                  amend_args+=(--amend "$target_tag")
               fi
