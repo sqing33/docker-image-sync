@@ -106,13 +106,7 @@
 
 |   | 源仓库 | 镜像名称 | 构建时间 |
 |---|---|---|---:|
-| 1   | https://github.com/sqing33/docker-docsify                  | `ghcr.io/sqing33/docsify`<br>`sqing33/docsify`                                             | 2025-05-15 |
-| 2   | https://github.com/sqing33/docker-DouyinLiveRecorder-webui | `ghcr.io/sqing33/douyin-live-recorder-webui`<br>`sqing33/douyin-live-recorder-webui`       | 2025-06-03 |
-| 3   | https://github.com/sqing33/docker-image-sync-to-registry   | `ghcr.io/sqing33/docker-image-sync-to-registry`<br>`sqing33/docker-image-sync-to-registry` | 2025-06-03 |
-| 4   | https://github.com/sqing33/docker-qb-pt-checker.git        | `ghcr.io/sqing33/qb-pt-checker`<br>`sqing33/qb-pt-checker`                                 | 2025-07-20 |
-| 5   | https://github.com/sqing33/Docker.homepage-web-editor.git | `ghcr.io/sqing33/homepage-web-editor`<br>`sqing33/homepage-web-editor` | 2025-07-30 |
-| 6   | https://github.com/sqing33/Docker.conda_node_codeserver.git | `ghcr.io/sqing33/conda_node_codeserver`<br>`sqing33/conda_node_codeserver` | 2025-08-13 |
-| 7   | https://github.com/sqing33/Docker.pt-nexus.git | `ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus` | 2025-08-25 |
+| 1   | https://github.com/sqing33/Docker.Codeserver-dev-env | `ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env` | 2025-08-30 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
