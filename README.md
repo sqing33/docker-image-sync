@@ -106,7 +106,7 @@
 
 |   | 源仓库 | 镜像名称 | 构建时间 |
 |---|---|---|---:|
-| 1   | https://github.com/sqing33/Docker.Codeserver-dev-env | `ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env` | 2025-08-30 |
+| 1   | https://github.com/sqing33/Docker.Codeserver-dev-env | `ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env` | 2025-08-31 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
