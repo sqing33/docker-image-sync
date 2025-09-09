@@ -106,7 +106,7 @@
 
 |   | 源仓库 | 镜像名称 | 构建时间 |
 |---|---|---|---:|
-| 1   | https://github.com/sqing33/Docker.pt-nexus.git | `ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus` | 2025-09-08 |
+| 1   | https://github.com/sqing33/Docker.sun-panel-icon-adder.git | `ghcr.io/sqing33/sun-panel-icon-adder`<br>`sqing33/sun-panel-icon-adder` | 2025-09-09 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
