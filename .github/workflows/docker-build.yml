@@ -1,5 +1,3 @@
-# .github/workflows/docker-build.yml
-
 name: 构建 Docker 镜像 → ghcr.io, DockerHub
 
 on:
@@ -66,26 +64,16 @@ jobs:
       - name: 7. 准备多行标签
         id: prep_tags
         run: |
-          # 初始化一个空字符串，用于存储最终的多行标签
           TAGS_FOR_OUTPUT=""
-          
-          # 使用 IFS 和 read 将逗号分隔的输入字符串解析到数组 tag_array 中
           IFS=',' read -r -a tag_array <<< "${{ github.event.inputs.tags }}"
-          
-          # 遍历数组中的每一个标签
           for tag in "${tag_array[@]}"; do
-            # 使用 xargs 清理标签前后可能存在的空格，并检查是否为空
             cleaned_tag=$(echo "$tag" | xargs)
             if [[ -n "$cleaned_tag" ]]; then
-              # 将清理后的标签和换行符追加到最终的字符串中
               TAGS_FOR_OUTPUT+="${cleaned_tag}"$'\n'
             fi
           done
-          
-          # 使用 GitHub Actions 的标准语法来设置多行输出
           {
             echo 'tags<<EOF'
-            # 去除最后一个多余的换行符，虽然影响不大，但更规范
             echo -n "${TAGS_FOR_OUTPUT}"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
@@ -110,10 +98,12 @@ jobs:
 
       - name: 10. 更新或新增 README.md 中的构建记录
         run: |
+          # 配置 Git 用户信息
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase
 
+          # 定义变量
           GHCR_IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/${{ github.event.inputs.image_name }}"
           DOCKERHUB_IMAGE_NAME="${{ secrets.DOCKERHUB_USERNAME }}/${{ github.event.inputs.image_name }}"
           SOURCE_REPO_URL="${{ github.event.inputs.repo_url }}"
@@ -121,82 +111,54 @@ jobs:
           README_FILE="README.md"
           TEMP_README="README.tmp"
 
-          # 检查记录是否存在
+          # 检查记录是否已存在
           if grep -qF "$GHCR_IMAGE_NAME" "$README_FILE"; then
             echo "记录已存在，正在更新构建时间: $GHCR_IMAGE_NAME"
-            # 使用 awk 更新指定行的构建时间
-            awk -v name_to_find="$GHCR_IMAGE_NAME" -v new_date="$BUILD_TIME" '
+            # 使用 awk 精确更新。通过设置一个标志位(in_build_table)，确保只在“已构建的 Docker 镜像”表格内进行操作。
+            awk -v image_name="$GHCR_IMAGE_NAME" -v new_date="$BUILD_TIME" '
             BEGIN {
                 FS = "\\s*\\|\\s*";
+                in_build_table = 0;
             }
-            # 匹配包含镜像名称的表格行
-            $4 ~ name_to_find {
-                # $1=empty, $2=序号, $3=源仓库, $4=镜像名称, $5=构建时间
-                # 重新格式化并打印整行以保持对齐
+            # 当遇到标题时，开启标志位
+            /^### 已构建的 Docker 镜像/ { in_build_table = 1 }
+            # 当遇到下一个部分的标题时，关闭标志位
+            /^### 已同步的 Docker 镜像/ { in_build_table = 0 }
+
+            # 如果在正确的表格内，并且第四列内容匹配镜像名称
+            in_build_table && $4 ~ image_name {
+                # 使用 printf 保持格式不变，只更新日期（第五列）
                 printf "| %-3s | %s | %s | %s |", $2, $3, $4, new_date
-                print "" # printf 不会自动换行，因此加一个 print
+                print "" # printf 不会自动添加换行符
                 next
             }
-            # 对于不匹配的行，直接打印
-            {
-                print $0
-            }
+            # 其他所有行直接打印
+            { print $0 }
             ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
           else
             echo "记录不存在，正在添加新行到 README.md"
-            # 提取表格现有数据行
-            data_lines=$(awk '
-              /^### 已构建的 Docker 镜像/,!/^\|/ {
-                  if (/^\| [0-9]/) { print }
-              }
+            # 使用 awk 安全地计算出新行号，只统计第一个表格中的行
+            last_num=$(awk '
+              BEGIN { FS="\\s*\\|\\s*"; max=0 }
+              /^### 已构建的 Docker 镜像/ { f=1 }
+              /^### 已同步的 Docker 镜像/ { f=0 }
+              f && /^\s*\|\s*[0-9]/ { if($2 > max) max=$2 }
+              END { print max }
             ' "$README_FILE")
-            
-            # 计算新行号
-            if [ -z "$data_lines" ]; then
-              count=0
-            else
-              count=$(echo "$data_lines" | wc -l)
-            fi
-            new_count=$((count + 1))
+            new_num=$((last_num + 1))
             
             # 准备新行内容
             COMBINED_IMAGE_NAMES="\`$GHCR_IMAGE_NAME\`<br>\`$DOCKERHUB_IMAGE_NAME\`"
             printf -v new_row "| %-3s | %s | %s | %s |" \
-              "$new_count" \
+              "$new_num" \
               "$SOURCE_REPO_URL" \
               "$COMBINED_IMAGE_NAMES" \
               "$BUILD_TIME"
             
-            # 准备新的完整表格
-            {
-              echo "### 已构建的 Docker 镜像"
-              echo ""
-              echo "|   | 源仓库 | 镜像名称 | 构建时间 |"
-              echo "|---|---|---|---:|"
-              if [ -n "$data_lines" ]; then
-                echo "$data_lines"
-              fi
-              echo "$new_row"
-            } > new_build_table_content.txt
-
-            # 使用 awk 将旧表格替换为新表格
-            awk '
-              BEGIN { skipping=0 }
-              /^### 已构建的 Docker 镜像/ {
-                while ((getline line < "new_build_table_content.txt") > 0) { print line }
-                close("new_build_table_content.txt");
-                skipping=1;
-                next
-              }
-              skipping==1 {
-                if (!/^\|/ && !/^$/) {
-                  skipping=0;
-                  print;
-                }
-                next;
-              }
-              { print }
-            ' "$README_FILE" > "$TEMP_README" && mv "$TEMP_README" "$README_FILE"
+            # 使用 sed 在“已同步的 Docker 镜像”标题前插入新行。这是最安全、最精确的插入点。
+            # 这样可以确保新行总是被添加到第一个表格的末尾。
+            sed -i.bak "/^### 已同步的 Docker 镜像/i\\$new_row" "$README_FILE"
+            rm -f "${README_FILE}.bak" # 清理 sed 创建的备份文件
           fi
 
           # 提交并推送变更
