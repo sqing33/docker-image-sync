@@ -110,6 +110,7 @@
 | 2   | https://github.com/sqing33/docker-DouyinLiveRecorder-webui | `ghcr.io/sqing33/douyin-live-recorder-webui`<br>`sqing33/douyin-live-recorder-webui`       | 2025-06-03 |
 | 3   | https://github.com/sqing33/docker-image-sync-to-registry   | `ghcr.io/sqing33/docker-image-sync-to-registry`<br>`sqing33/docker-image-sync-to-registry` | 2025-06-03 |
 | 4   | https://github.com/sqing33/Docker.Codeserver-dev-env | `ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env` | 2025-08-30 |
+| 5   | https://github.com/sqing33/Docker.pt-nexus.git | `ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus` | 2025-09-12 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
