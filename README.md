@@ -190,7 +190,7 @@
 | 73  | b3log/siyuan                             | `ghcr.io/sqing33/siyuan`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)                   | ✔️   | 2025-09-09 |
 | 74  | ghostry/smartdns                         | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |          |
 | 75  | streamrec/stream-rec-front               | `ghcr.io/sqing33/stream-rec-front`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec-front.yaml)         | ✔️   | 2025-09-11 |
-| 76  | streamrec/stream-rec                     | `ghcr.io/sqing33/stream-rec`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec.yaml)               | ✔️   | 2025-09-11 |
+| 76  | streamrec/stream-rec                     | `ghcr.io/sqing33/stream-rec`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec.yaml)               | ✔️   | 2025-09-13 |
 | 77  | hslr/sun-panel | `ghcr.io/sqing33/sun-panel` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml) | ✔️ |  |
 | 78  | syncthing/syncthing                      | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2025-09-08 |
 | 79  | ghcr.io/lukegus/termix                   | `ghcr.io/sqing33/termix`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)                   | ✔️   | 2025-09-03 |
