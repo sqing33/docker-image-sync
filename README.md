@@ -122,7 +122,7 @@
 | 5   | p3terx/ariang                            | `ghcr.io/sqing33/aria2-webui`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2-webui.yaml)              | ✔️   | 2025-09-20 |
 | 6   | p3terx/aria2-pro                         | `ghcr.io/sqing33/aria2`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aria2.yaml)                    | ✔️   | 2025-08-25 |
 | 7   | jauderho/docker-autocompose              | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2025-09-22 |
-| 8   | henrygd/beszel                           | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️   | 2025-09-25 |
+| 8   | henrygd/beszel                           | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️   | 2025-09-26 |
 | 9   | chigusa/bililive-go                      | `ghcr.io/sqing33/bililive-go`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bililive-go.yaml)              | ✔️   | 2025-09-13 |
 | 10  | ghcr.io/bitmagnet-io/bitmagnet           | `ghcr.io/sqing33/bitmagnet`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitmagnet.yaml)                | ✔️   | 2025-08-25 |
 | 11  | vaultwarden/server | `ghcr.io/sqing33/bitwardenrs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml) | ✔️ |  |
