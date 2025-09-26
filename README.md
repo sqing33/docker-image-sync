@@ -115,7 +115,7 @@
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
 | ---- | -------- | --------- | -------------- | ---- | -------- |
-| 1   | adminer                                  | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️   | 2025-09-09 |
+| 1   | adminer                                  | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️   | 2025-09-26 |
 | 2   | xhofe/alist                              | `ghcr.io/sqing33/alist`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                    | ❌   |          |
 | 3   | continuumio/anaconda3                    | `ghcr.io/sqing33/anaconda3`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/anaconda3.yaml)                | ✔️   | 2025-08-25 |
 | 4   | sqing33/argb-fan-esp32                   | `ghcr.io/sqing33/argb-fan-esp32`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)           | ✔️   | 2025-08-25 |
