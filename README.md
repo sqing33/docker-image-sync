@@ -112,7 +112,7 @@
 | 4   | https://github.com/sqing33/Docker.Codeserver-dev-env | `ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env` | 2025-08-30 |
 | 5   | https://github.com/sqing33/Docker.pt-nexus.git | `ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus` | 2025-09-12 |
 | 6   | https://github.com/sqing33/gitea_actions_runner.git | `ghcr.io/sqing33/gitea_actions_runner`<br>`sqing33/gitea_actions_runner` | 2025-09-27 |
-| 7   | https://github.com/sqing33/Docker.Code-dev-env.git | `ghcr.io/sqing33/code-dev-env`<br>`sqing33/code-dev-env` | 2025-09-30 |
+| 7   | https://github.com/sqing33/Docker.Code-dev-env.git | `ghcr.io/sqing33/code-dev-env`<br>`sqing33/code-dev-env` | 2025-10-01 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
