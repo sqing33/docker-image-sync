@@ -173,8 +173,8 @@
 | 53  | shmilyin/nas-tools:2.9.0                 | `ghcr.io/sqing33/nas-tools:2.9.0`          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ❌   |          |
 | 54  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ✔️   |          |
 | 55  | tiangolo/nginx-rtmp                      | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️   | 2025-09-29 |
-| 56  | nginx:alpine | `ghcr.io/sqing33/nginx:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️ | 2025-10-02 |
-| 57  | nginx                                    | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-02 |
+| 56  | nginx:alpine | `ghcr.io/sqing33/nginx:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️ | 2025-10-03 |
+| 57  | nginx                                    | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-03 |
 | 58  | prom/node-exporter                       | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️   |          |
 | 59  | prom/node-exporter                       | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️   |          |
 | 60  | node:alpine                              | `ghcr.io/sqing33/node:alpine`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2025-10-02 |
