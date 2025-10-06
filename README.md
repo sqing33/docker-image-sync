@@ -166,7 +166,7 @@
 | 46  | milvusdb/milvus:v2.5.10                  | `ghcr.io/sqing33/milvus`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml)                   | ❌   |          |
 | 47  | continuumio/miniconda3                   | `ghcr.io/sqing33/miniconda3`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)               | ✔️   | 2025-08-25 |
 | 48  | minio/minio:RELEASE.2023-03-20T20-16-18Z | `ghcr.io/sqing33/minio`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml)                    | ❌   |          |
-| 49  | mongodb/mongodb-community-server         | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️   | 2025-10-05 |
+| 49  | mongodb/mongodb-community-server         | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️   | 2025-10-06 |
 | 50  | jxxghp/moviepilot-v2                     | `ghcr.io/sqing33/moviepilot-v2`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml)            | ✔️   | 2025-09-19 |
 | 51  | mysql:9.3.0                              | `ghcr.io/sqing33/mysql`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)                    | ❌   |          |
 | 52  | mlikiowa/napcat-docker | `ghcr.io/sqing33/napcat-docker` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat-docker.yaml) | ✔️ | 2025-10-03 |
