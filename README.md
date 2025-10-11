@@ -114,6 +114,7 @@
 | 6   | https://github.com/sqing33/gitea_actions_runner.git | `ghcr.io/sqing33/gitea_actions_runner`<br>`sqing33/gitea_actions_runner` | 2025-09-27 |
 | 7   | https://github.com/sqing33/Docker.Code-dev-env.git | `ghcr.io/sqing33/code-dev-env`<br>`sqing33/code-dev-env` | 2025-10-01 |
 | 8   | https://github.com/KimigaiiWuyi/Bangumi_Auto_Rename.git | `ghcr.io/sqing33/Bangumi_Auto_Rename`<br>`sqing33/Bangumi_Auto_Rename` | 2025-10-01 |
+| 9   | https://github.com/sqing33/aa.git | `ghcr.io/sqing33/uif`<br>`sqing33/uif` | 2025-10-11 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
