@@ -147,7 +147,7 @@
 | 26  | ghcr.io/snailyp/gemini-balance           | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️   | 2025-09-23 |
 | 27  | gitea/act_runner:nightly | `ghcr.io/sqing33/gitea-actions` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea-actions.yaml) | ❌ |  |
 | 28  | gitea/gitea                              | `ghcr.io/sqing33/gitea`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea.yaml)                    | ✔️   | 2025-09-11 |
-| 29  | liwei2633/gopeed | `ghcr.io/sqing33/gopeed` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gopeed.yaml) | ✔️ |  |
+| 29  | liwei2633/gopeed | `ghcr.io/sqing33/gopeed` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gopeed.yaml) | ✔️ | 2025-10-12 |
 | 30  | gotify/server                            | `ghcr.io/sqing33/gotify`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                   | ✔️   | 2025-09-21 |
 | 31  | ghcr.io/tbphp/gpt-load | `ghcr.io/sqing33/gpt-load` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gpt-load.yaml) | ✔️ | 2025-10-08 |
 | 32  | grafana/grafana                          | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   | 2025-09-24 |
