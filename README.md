@@ -187,7 +187,7 @@
 | 66  | prom/prometheus                          | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️   | 2025-09-22 |
 | 67  | prom/prometheus                          | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️   | 2025-09-22 |
 | 68  | eternalcurse/pt-accelerator              | `ghcr.io/sqing33/pt-accelerator`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/pt-accelerator.yaml)           | ✔️   |          |
-| 69  | linuxserver/qbittorrent | `ghcr.io/sqing33/qbittorrent` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) | ✔️ | 2025-10-08 |
+| 69  | linuxserver/qbittorrent | `ghcr.io/sqing33/qbittorrent` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) | ✔️ | 2025-10-12 |
 | 70  | qdtoday/qd                               | `ghcr.io/sqing33/qd`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml)                       | ✔️   | 2025-08-25 |
 | 71  | whyour/qinglong                          | `ghcr.io/sqing33/qinglong`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml)                 | ✔️   | 2025-08-25 |
 | 72  | redis:7.2-alpine | `ghcr.io/sqing33/redis:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) | ✔️ | 2025-10-11 |
