@@ -170,7 +170,7 @@
 | 49  | mongodb/mongodb-community-server         | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️   | 2025-10-16 |
 | 50  | jxxghp/moviepilot-v2                     | `ghcr.io/sqing33/moviepilot-v2`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot-v2.yaml)            | ✔️   | 2025-09-19 |
 | 51  | mysql:9.3.0                              | `ghcr.io/sqing33/mysql`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)                    | ❌   |          |
-| 52  | mlikiowa/napcat-docker | `ghcr.io/sqing33/napcat-docker` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat-docker.yaml) | ✔️ | 2025-10-15 |
+| 52  | mlikiowa/napcat-docker | `ghcr.io/sqing33/napcat-docker` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat-docker.yaml) | ✔️ | 2025-10-16 |
 | 53  | shmilyin/nas-tools:2.9.0                 | `ghcr.io/sqing33/nas-tools:2.9.0`          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ❌   |          |
 | 54  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ✔️   |          |
 | 55  | tiangolo/nginx-rtmp                      | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️   | 2025-10-13 |
