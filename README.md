@@ -152,7 +152,7 @@
 | 31  | ghcr.io/tbphp/gpt-load | `ghcr.io/sqing33/gpt-load` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gpt-load.yaml) | ✔️ | 2025-10-13 |
 | 32  | grafana/grafana                          | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   | 2025-09-24 |
 | 33  | haproxy                                  | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   | 2025-10-04 |
-| 34  | homeassistant/home-assistant             | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2025-10-11 |
+| 34  | homeassistant/home-assistant             | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2025-10-18 |
 | 35  | ghcr.io/gethomepage/homepage | `ghcr.io/sqing33/homepage` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml) | ✔️ | 2025-09-22 |
 | 36  | iyuucn/iyuuplus                          | `ghcr.io/sqing33/iyuuplus`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuuplus.yaml)                 | ✔️   | 2025-08-25 |
 | 37  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2025-10-17 |
