@@ -142,7 +142,7 @@
 | 21  | lscr.io/linuxserver/duplicati            | `ghcr.io/sqing33/duplicati`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                | ✔️   | 2025-10-18 |
 | 22  | lscr.io/linuxserver/emby                 | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️   | 2025-10-17 |
 | 23  | quay.io/coreos/etcd:v3.5.18              | `ghcr.io/sqing33/etcd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml)                     | ❌   |          |
-| 24  | linuxserver/firefox | `ghcr.io/sqing33/firefox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml) | ✔️ | 2025-10-18 |
+| 24  | linuxserver/firefox | `ghcr.io/sqing33/firefox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml) | ✔️ | 2025-10-19 |
 | 25  | lscr.io/linuxserver/flexget | `ghcr.io/sqing33/flexget` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/flexget.yaml) | ✔️ | 2025-10-18 |
 | 26  | ghcr.io/snailyp/gemini-balance           | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️   | 2025-09-23 |
 | 27  | gitea/act_runner:nightly | `ghcr.io/sqing33/gitea-actions` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea-actions.yaml) | ❌ |  |
