@@ -207,7 +207,7 @@
 | 86  | ghcr.io/lukegus/termix                   | `ghcr.io/sqing33/termix`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)                   | ✔️   | 2025-10-09 |
 | 87  | mzz2017/v2raya                           | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2025-10-08 |
 | 88  | lswl/vertex | `ghcr.io/sqing33/vertex` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml) | ✔️ | 2025-09-27 |
-| 89  | linuxserver/code-server                  | `ghcr.io/sqing33/vscode`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vscode.yaml)                   | ✔️   | 2025-10-18 |
+| 89  | linuxserver/code-server                  | `ghcr.io/sqing33/vscode`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vscode.yaml)                   | ✔️   | 2025-10-21 |
 | 90  | ghcr.io/requarks/wiki                    | `ghcr.io/sqing33/wiki`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wiki.yaml)                     | ✔️   | 2025-08-25 |
 | 91  | wiznote/wizserver | `ghcr.io/sqing33/wizserver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wizserver.yaml) | ✔️ |  |
 | 92  | hanxi/xiaomusic                          | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2025-09-16 |
