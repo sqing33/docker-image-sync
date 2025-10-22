@@ -216,7 +216,7 @@
 | 95  | containrrr/watchtower | `ghcr.io/sqing33/watchtower` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/watchtower.yaml) | ✔️ |  |
 | 96  | ghcr.io/requarks/wiki                    | `ghcr.io/sqing33/wiki`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wiki.yaml)                     | ✔️   | 2025-08-25 |
 | 97  | wiznote/wizserver | `ghcr.io/sqing33/wizserver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wizserver.yaml) | ✔️ |  |
-| 98  | hanxi/xiaomusic                          | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2025-10-21 |
+| 98  | hanxi/xiaomusic                          | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2025-10-22 |
 | 99  | xiaoyaliu/alist                          | `ghcr.io/sqing33/xiaoya-alist`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/alist.yaml)                    | ❌   |          |
 | 100 | haishanh/yacd                            | `ghcr.io/sqing33/yacd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)                     | ✔️   | 2025-08-26 |
 | 101 | siguremo/yutto                           | `ghcr.io/sqing33/yutto-bilibili_downloads` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yutto-bilibili_downloads.yaml) | ✔️   | 2025-10-08 |
