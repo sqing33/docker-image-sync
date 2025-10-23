@@ -136,7 +136,7 @@
 | 15  | metacubex/clash-meta                     | `ghcr.io/sqing33/clash`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                    | ❌   |          |
 | 16  | dbeaver/cloudbeaver | `ghcr.io/sqing33/cloudbeaver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cloudbeaver.yaml) | ✔️ |  |
 | 17  | easychen/cookiecloud                     | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2025-08-25 |
-| 18  | jeessy/ddns-go                           | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2025-10-01 |
+| 18  | jeessy/ddns-go                           | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2025-10-23 |
 | 19  | leishi1313/downloader-exporter           | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |          |
 | 20  | leishi1313/downloader-exporter           | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |          |
 | 21  | dpanel/dpanel                            | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2025-09-09 |
