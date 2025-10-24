@@ -201,8 +201,8 @@
 | 80  | linuxserver/qbittorrent | `ghcr.io/sqing33/qbittorrent` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml) | ✔️ | 2025-10-19 |
 | 81  | qdtoday/qd                               | `ghcr.io/sqing33/qd`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml)                       | ✔️   | 2025-08-25 |
 | 82  | whyour/qinglong                          | `ghcr.io/sqing33/qinglong`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml)                 | ✔️   | 2025-08-25 |
-| 83  | redis:7.2-alpine | `ghcr.io/sqing33/redis:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) | ✔️ | 2025-10-23 |
-| 84  | redis                                    | `ghcr.io/sqing33/redis`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️   | 2025-10-23 |
+| 83  | redis:7.2-alpine | `ghcr.io/sqing33/redis:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml) | ✔️ | 2025-10-24 |
+| 84  | redis                                    | `ghcr.io/sqing33/redis`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️   | 2025-10-24 |
 | 85  | quiq/registry-ui                         | `ghcr.io/sqing33/registry-ui`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml)              | ✔️   | 2025-08-25 |
 | 86  | registry:2                               | `ghcr.io/sqing33/registry`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)                 | ❌   |          |
 | 87  | szzhoubanxian/reseed-puppy               | `ghcr.io/sqing33/reseed-puppy`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/reseed-puppy.yaml)             | ✔️   |          |
