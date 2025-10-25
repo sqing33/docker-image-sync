@@ -159,7 +159,7 @@
 | 38  | gotify/server                            | `ghcr.io/sqing33/gotify`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                   | ✔️   | 2025-09-21 |
 | 39  | ghcr.io/tbphp/gpt-load | `ghcr.io/sqing33/gpt-load` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gpt-load.yaml) | ✔️ | 2025-10-19 |
 | 40  | grafana/grafana                          | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   | 2025-10-21 |
-| 41  | haproxy                                  | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   | 2025-10-21 |
+| 41  | haproxy                                  | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   | 2025-10-25 |
 | 42  | homeassistant/home-assistant             | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2025-10-18 |
 | 43  | ghcr.io/gethomepage/homepage | `ghcr.io/sqing33/homepage` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml) | ✔️ | 2025-09-22 |
 | 44  | corentinth/it-tools | `ghcr.io/sqing33/it-tools` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml) | ✔️ |  |
