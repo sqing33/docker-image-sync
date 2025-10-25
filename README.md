@@ -169,7 +169,7 @@
 | 48  | jupyter/scipy-notebook                   | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️   | 2025-08-25 |
 | 49  | bytelang/kplayer                         | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️   |          |
 | 50  | linyuchen/pmhq | `ghcr.io/sqing33/llonebot-pmhq` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/llonebot-pmhq.yaml) | ✔️ | 2025-10-24 |
-| 51  | linyuchen/llonebot | `ghcr.io/sqing33/llonebot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/llonebot.yaml) | ✔️ | 2025-10-24 |
+| 51  | linyuchen/llonebot | `ghcr.io/sqing33/llonebot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/llonebot.yaml) | ✔️ | 2025-10-25 |
 | 52  | dko0/lsky-pro                            | `ghcr.io/sqing33/lsky-pro`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky-pro.yaml)                 | ✔️   | 2025-08-25 |
 | 53  | gdy666/lucky                             | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2025-09-30 |
 | 54  | ghcr.io/metacubex/metacubexd             | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2025-09-22 |
