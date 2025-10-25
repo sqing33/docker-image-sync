@@ -164,7 +164,7 @@
 | 43  | ghcr.io/gethomepage/homepage | `ghcr.io/sqing33/homepage` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml) | ✔️ | 2025-09-22 |
 | 44  | corentinth/it-tools | `ghcr.io/sqing33/it-tools` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml) | ✔️ |  |
 | 45  | iyuucn/iyuuplus                          | `ghcr.io/sqing33/iyuuplus`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuuplus.yaml)                 | ✔️   | 2025-08-25 |
-| 46  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2025-10-24 |
+| 46  | lscr.io/linuxserver/jackett              | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2025-10-25 |
 | 47  | jellyfin/jellyfin                        | `ghcr.io/sqing33/jellyfin`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)                 | ✔️   | 2025-10-20 |
 | 48  | jupyter/scipy-notebook                   | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️   | 2025-08-25 |
 | 49  | bytelang/kplayer                         | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️   |          |
