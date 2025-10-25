@@ -196,7 +196,7 @@
 | 75  | node                                     | `ghcr.io/sqing33/node`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2025-10-25 |
 | 76  | openspeedtest/latest                     | `ghcr.io/sqing33/openspeedtest`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)            | ✔️   | 2025-08-25 |
 | 77  | openspeedtest/latest | `ghcr.io/sqing33/openspeedtest` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml) | ✔️ |  |
-| 78  | phpmyadmin                               | `ghcr.io/sqing33/phpmyadmin`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)               | ✔️   | 2025-10-21 |
+| 78  | phpmyadmin                               | `ghcr.io/sqing33/phpmyadmin`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/phpmyadmin.yaml)               | ✔️   | 2025-10-25 |
 | 79  | kuingsmile/piclist                       | `ghcr.io/sqing33/piclist`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/piclist.yaml)                  | ✔️   | 2025-09-28 |
 | 80  | pgvector/pgvector:0.8.0-pg17             | `ghcr.io/sqing33/postgres`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml)                 | ❌   |          |
 | 81  | prom/prometheus                          | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️   | 2025-10-22 |
