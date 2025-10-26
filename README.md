@@ -150,7 +150,7 @@
 | 29  | lscr.io/linuxserver/emby                 | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️   | 2025-10-24 |
 | 30  | quay.io/coreos/etcd:v3.5.18              | `ghcr.io/sqing33/etcd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml)                     | ❌   |          |
 | 31  | linuxserver/firefox | `ghcr.io/sqing33/firefox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml) | ✔️ | 2025-10-26 |
-| 32  | lscr.io/linuxserver/flexget | `ghcr.io/sqing33/flexget` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/flexget.yaml) | ✔️ | 2025-10-23 |
+| 32  | lscr.io/linuxserver/flexget | `ghcr.io/sqing33/flexget` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/flexget.yaml) | ✔️ | 2025-10-26 |
 | 33  | forgejoclone/forgejo:13 | `ghcr.io/sqing33/forgejo` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/forgejo.yaml) | ❌ |  |
 | 34  | ghcr.io/snailyp/gemini-balance           | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️   | 2025-09-23 |
 | 35  | gitea/act_runner:nightly | `ghcr.io/sqing33/gitea-actions` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gitea-actions.yaml) | ❌ |  |
