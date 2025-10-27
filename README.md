@@ -188,8 +188,8 @@
 | 67  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ✔️   |          |
 | 68  | calciumion/new-api | `ghcr.io/sqing33/new-api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml) | ✔️ |  |
 | 69  | tiangolo/nginx-rtmp                      | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️   | 2025-10-27 |
-| 70  | nginx:alpine | `ghcr.io/sqing33/nginx:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️ | 2025-10-26 |
-| 71  | nginx                                    | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-26 |
+| 70  | nginx:alpine | `ghcr.io/sqing33/nginx:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️ | 2025-10-27 |
+| 71  | nginx                                    | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-27 |
 | 72  | prom/node-exporter                       | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️   | 2025-10-26 |
 | 73  | prom/node-exporter                       | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️   | 2025-10-26 |
 | 74  | node:alpine                              | `ghcr.io/sqing33/node:alpine`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2025-10-26 |
