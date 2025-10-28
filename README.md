@@ -176,7 +176,7 @@
 | 55  | linyuchen/llonebot | `ghcr.io/sqing33/llonebot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/llonebot.yaml) | ✔️ | 2025-10-25 |
 | 56  | dko0/lsky-pro                            | `ghcr.io/sqing33/lsky-pro`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky-pro.yaml)                 | ✔️   | 2025-08-25 |
 | 57  | gdy666/lucky                             | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2025-09-30 |
-| 58  | ghcr.io/metacubex/metacubexd             | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2025-09-22 |
+| 58  | ghcr.io/metacubex/metacubexd             | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2025-10-28 |
 | 59  | idootop/migpt-next                       | `ghcr.io/sqing33/migpt-next`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)               | ✔️   | 2025-08-31 |
 | 60  | metacubex/mihomo                         | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2025-10-15 |
 | 61  | milvusdb/milvus:v2.5.10                  | `ghcr.io/sqing33/milvus`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/milvus.yaml)                   | ❌   |          |
