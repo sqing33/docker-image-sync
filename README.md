@@ -222,7 +222,7 @@
 | 101 | ghostry/smartdns                         | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |          |
 | 102 | streamrec/stream-rec-front               | `ghcr.io/sqing33/stream-rec-front`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec-front.yaml)         | ✔️   | 2025-09-11 |
 | 103 | streamrec/stream-rec                     | `ghcr.io/sqing33/stream-rec`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec.yaml)               | ✔️   | 2025-10-21 |
-| 104 | hslr/sun-panel | `ghcr.io/sqing33/sun-panel` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml) | ✔️ |  |
+| 104 | hslr/sun-panel | `ghcr.io/sqing33/sun-panel` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml) | ✔️ | 2025-10-28 |
 | 105 | syncthing/syncthing                      | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2025-09-24 |
 | 106 | ghcr.io/lukegus/termix                   | `ghcr.io/sqing33/termix`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/termix.yaml)                   | ✔️   | 2025-10-09 |
 | 107 | mzz2017/v2raya                           | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2025-10-08 |
