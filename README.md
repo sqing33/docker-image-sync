@@ -139,7 +139,7 @@
 | 18  | dbeaver/cloudbeaver | `ghcr.io/sqing33/cloudbeaver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cloudbeaver.yaml) | ✔️ |  |
 | 19  | easychen/cookiecloud                     | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2025-08-25 |
 | 20  | dbeaver/cloudbeaver | `ghcr.io/sqing33/db-cloudbeaver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/db-cloudbeaver.yaml) | ✔️ |  |
-| 21  | jeessy/ddns-go                           | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2025-10-23 |
+| 21  | jeessy/ddns-go                           | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2025-10-29 |
 | 22  | langgenius/dify-api | `ghcr.io/sqing33/dify-api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-api.yaml) | ✔️ |  |
 | 23  | langgenius/dify-plugin-daemon:latest-local | `ghcr.io/sqing33/dify-plugin-daemon` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-plugin-daemon.yaml) | ❌ |  |
 | 24  | langgenius/dify-sandbox | `ghcr.io/sqing33/dify-sandbox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-sandbox.yaml) | ✔️ |  |
