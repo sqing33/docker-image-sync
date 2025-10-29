@@ -143,7 +143,7 @@
 | 22  | langgenius/dify-api | `ghcr.io/sqing33/dify-api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-api.yaml) | ✔️ | 2025-10-29 |
 | 23  | langgenius/dify-plugin-daemon:latest-local | `ghcr.io/sqing33/dify-plugin-daemon` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-plugin-daemon.yaml) | ❌ |  |
 | 24  | langgenius/dify-sandbox | `ghcr.io/sqing33/dify-sandbox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-sandbox.yaml) | ✔️ |  |
-| 25  | langgenius/dify-web | `ghcr.io/sqing33/dify-web` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-web.yaml) | ✔️ |  |
+| 25  | langgenius/dify-web | `ghcr.io/sqing33/dify-web` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-web.yaml) | ✔️ | 2025-10-29 |
 | 26  | leishi1313/downloader-exporter           | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |          |
 | 27  | leishi1313/downloader-exporter           | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |          |
 | 28  | dpanel/dpanel                            | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2025-09-09 |
