@@ -190,7 +190,7 @@
 | 69  | mlikiowa/napcat-docker | `ghcr.io/sqing33/napcat` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat.yaml) | ✔️ |  |
 | 70  | shmilyin/nas-tools:2.9.0                 | `ghcr.io/sqing33/nas-tools:2.9.0`          | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ❌   |          |
 | 71  | hsuyelin/nas-tools                       | `ghcr.io/sqing33/nas-tools`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nas-tools.yaml)                | ✔️   |          |
-| 72  | calciumion/new-api | `ghcr.io/sqing33/new-api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml) | ✔️ | 2025-10-28 |
+| 72  | calciumion/new-api | `ghcr.io/sqing33/new-api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml) | ✔️ | 2025-10-29 |
 | 73  | tiangolo/nginx-rtmp                      | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️   | 2025-10-27 |
 | 74  | nginx:alpine | `ghcr.io/sqing33/nginx:alpine` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml) | ✔️ | 2025-10-28 |
 | 75  | nginx                                    | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-28 |
