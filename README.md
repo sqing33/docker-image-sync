@@ -218,7 +218,7 @@
 | 97  | steefdebruijn/docker-roonserver | `ghcr.io/sqing33/roonserver` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml) | ✔️ |  |
 | 98  | dperson/samba                            | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️   |          |
 | 99  | ccf2012/seedcross                        | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |          |
-| 100 | b3log/siyuan                             | `ghcr.io/sqing33/siyuan`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)                   | ✔️   | 2025-10-14 |
+| 100 | b3log/siyuan                             | `ghcr.io/sqing33/siyuan`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)                   | ✔️   | 2025-10-29 |
 | 101 | ghostry/smartdns                         | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |          |
 | 102 | streamrec/stream-rec-front               | `ghcr.io/sqing33/stream-rec-front`         | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec-front.yaml)         | ✔️   | 2025-09-11 |
 | 103 | streamrec/stream-rec                     | `ghcr.io/sqing33/stream-rec`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/stream-rec.yaml)               | ✔️   | 2025-10-21 |
