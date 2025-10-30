@@ -66,12 +66,16 @@ jobs:
             $0 == "'"${TABLE_TITLE}"'" { in_table=1; next }
             in_table {
               if (/^\| [0-9]/) { 
-                match($0, /\| *[^|]+ *\| *([^|]+) *\|/);
-                if (RSTART) { print substr($0, RSTART, RLENGTH) }
+                # 提取第二列（源镜像），使用管道符分割并去除空格
+                split($0, fields, "|");
+                if (length(fields) >= 3) {
+                  gsub(/^[ \t]+|[ \t]+$/, "", fields[3]);
+                  print fields[3];
+                }
               }
               if (!/^\|/ && !/^$/) { in_table=0 }
             }
-          ' README.md | sed -e 's/|//g' -e 's/^[ \t]*//;s/[ \t]*$//')
+          ' README.md)
 
           IFS=',' read -r -a image_array <<< "${{ inputs.images }}"
           IFS=',' read -r -a ghcr_name_array <<< "${{ inputs.ghcr_names }}"
