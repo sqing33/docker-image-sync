@@ -44,6 +44,7 @@
    - **`DOCKERHUB_USERNAME`**
 
      - **值**: 您的 Docker Hub 用户名。
+
    - **`DOCKERHUB_TOKEN`**
 
      - **值**: 您的 Docker Hub 访问令牌 (Access Token)。**强烈建议使用 Access Token 而非账户密码**。
@@ -63,13 +64,13 @@
 
 ### ⚙️ 输入参数
 
-| 参数 (Parameter) | 描述 (Description)                                                                  | 是否必需 | 默认值                                   |
-| :--------------- | :---------------------------------------------------------------------------------- | :------- | :--------------------------------------- |
-| `repo_url`     | 包含 `Dockerfile` 的 Git 仓库克隆链接。例如：`https://github.com/user/repo.git` | 是       |                                          |
-| `repo_ref`     | 要克隆的仓库的分支、标签或 Commit SHA。例如：`main`, `v1.2.0`                   | 是       | `main`                                 |
-| `image_name`   | 您希望为镜像设定的名称。例如：`my-web-app`                                        | 是       | `my-app`                               |
-| `tags`         | 要为镜像打上的标签，多个标签用逗号 `,` 分隔。例如：`latest,v1.0`                | 是       | `latest`                               |
-| `platforms`    | 要构建的 CPU 架构列表，用逗号 `,` 分隔。                                          | 是       | `linux/amd64,linux/arm64,linux/arm/v7` |
+| 参数 (Parameter) | 描述 (Description)                                                              | 是否必需 | 默认值                                 |
+| :--------------- | :------------------------------------------------------------------------------ | :------- | :------------------------------------- |
+| `repo_url`       | 包含 `Dockerfile` 的 Git 仓库克隆链接。例如：`https://github.com/user/repo.git` | 是       |                                        |
+| `repo_ref`       | 要克隆的仓库的分支、标签或 Commit SHA。例如：`main`, `v1.2.0`                   | 是       | `main`                                 |
+| `image_name`     | 您希望为镜像设定的名称。例如：`my-web-app`                                      | 是       | `my-app`                               |
+| `tags`           | 要为镜像打上的标签，多个标签用逗号 `,` 分隔。例如：`latest,v1.0`                | 是       | `latest`                               |
+| `platforms`      | 要构建的 CPU 架构列表，用逗号 `,` 分隔。                                        | 是       | `linux/amd64,linux/arm64,linux/arm/v7` |
 
 ## 🔄 功能二：同步公共镜像以加速下载
 
@@ -83,11 +84,11 @@
 
 ### ⚙️ 输入参数
 
-| 参数 (Parameter)         | 描述 (Description)                                                    | 是否必需 | 默认值 |
-| :----------------------- | :-------------------------------------------------------------------- | :------- | :----- |
+| 参数 (Parameter)       | 描述 (Description)                                                | 是否必需 | 默认值 |
+| :--------------------- | :---------------------------------------------------------------- | :------- | :----- |
 | `images`               | 要同步的 Docker 镜像列表，用逗号 `,` 分隔。格式为 `镜像名:标签`。 | 是       |        |
-| `ghcr_names`           | （可选）为同步后的镜像指定新名称，用逗号 `,` 分隔。                 | 否       |        |
-| `change_tag_to_latest` | 是否将同步后的镜像标签强制改为 `latest`。                           | 是       | `是` |
+| `ghcr_names`           | （可选）为同步后的镜像指定新名称，用逗号 `,` 分隔。               | 否       |        |
+| `change_tag_to_latest` | 是否将同步后的镜像标签强制改为 `latest`。                         | 是       | `是`   |
 
 ## 📊 查看结果与镜像管理
 
@@ -104,98 +105,98 @@
 
 ### 已构建的 Docker 镜像
 
-|   | 源仓库                                                     | 镜像名称                                                                                       |   构建时间 |
-| - | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------: |
-| 1 | https://github.com/sqing33/docker-docsify                  | `ghcr.io/sqing33/docsify<br>``sqing33/docsify`                                             | 2025-05-15 |
-| 2 | https://github.com/sqing33/docker-DouyinLiveRecorder-webui | `ghcr.io/sqing33/douyin-live-recorder-webui<br>``sqing33/douyin-live-recorder-webui`       | 2025-06-03 |
-| 3 | https://github.com/sqing33/docker-image-sync-to-registry   | `ghcr.io/sqing33/docker-image-sync-to-registry<br>``sqing33/docker-image-sync-to-registry` | 2025-06-03 |
-| 4 | https://github.com/sqing33/Docker.Codeserver-dev-env       | `ghcr.io/sqing33/codeserver-dev-env<br>``sqing33/codeserver-dev-env`                       | 2025-08-30 |
-| 5 | https://github.com/sqing33/Docker.pt-nexus.git             | `ghcr.io/sqing33/pt-nexus<br>``sqing33/pt-nexus`                                           | 2025-09-12 |
-| 7 | https://github.com/sqing33/Docker.Code-dev-env.git         | `ghcr.io/sqing33/code-dev-env<br>``sqing33/code-dev-env`                                   | 2025-10-01 |
+|     | 源仓库                                                     | 镜像名称                                                                                     |   构建时间 |
+| --- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------: |
+| 1   | https://github.com/sqing33/docker-docsify                  | `ghcr.io/sqing33/docsify`<br>`sqing33/docsify`                                               | 2025-05-15 |
+| 2   | https://github.com/sqing33/docker-DouyinLiveRecorder-webui | ` ghcr.io/sqing33/douyin-live-recorder-webui`<br>`sqing33/douyin-live-recorder-webui `       | 2025-06-03 |
+| 3   | https://github.com/sqing33/docker-image-sync-to-registry   | ` ghcr.io/sqing33/docker-image-sync-to-registry`<br>`sqing33/docker-image-sync-to-registry ` | 2025-06-03 |
+| 4   | https://github.com/sqing33/Docker.Codeserver-dev-env       | ` ghcr.io/sqing33/codeserver-dev-env`<br>`sqing33/codeserver-dev-env `                       | 2025-08-30 |
+| 5   | https://github.com/sqing33/Docker.pt-nexus.git             | ` ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus `                                           | 2025-09-12 |
+| 7   | https://github.com/sqing33/Docker.Code-dev-env.git         | ` ghcr.io/sqing33/code-dev-env`<br>`sqing33/code-dev-env `                                   | 2025-10-01 |
 
 ### 已同步的 Docker 镜像
 
-|   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
-| ---- | -------- | --------- | -------------- | ---- | -------- |
-| 1   | adminer                                               | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️ | 2025-10-25 |
-| 2   | sqing33/argb-fan-esp32                                | `ghcr.io/sqing33/argb-fan-esp32`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)           | ✔️ | 2025-08-25 |
-| 3   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️ | 2025-10-27 |
-| 4   | garethgeorge/backrest                                 | `ghcr.io/sqing33/backrest`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/backrest.yaml)                 | ✔️ |            |
-| 5   | henrygd/beszel                                        | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️ | 2025-10-29 |
-| 6   | vaultwarden/server                                    | `ghcr.io/sqing33/bitwardenrs`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml)              | ✔️ |            |
-| 7   | moby/buildkit                                         | `ghcr.io/sqing33/buildkit`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                 | ✔️ | 2025-10-08 |
-| 8   | tindy2013/subconverter                                | `ghcr.io/sqing33/clash-subconverter`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash-subconverter.yaml)       | ✔️ |            |
+|     | 源镜像                                                | pull 镜像                                  | docker-compose                                                                                              | 同步 | 更新时间   |
+| --- | ----------------------------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------- | ---- | ---------- |
+| 1   | adminer                                               | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️   | 2025-10-25 |
+| 2   | sqing33/argb-fan-esp32                                | `ghcr.io/sqing33/argb-fan-esp32`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)           | ✔️   | 2025-08-25 |
+| 3   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2025-10-27 |
+| 4   | garethgeorge/backrest                                 | `ghcr.io/sqing33/backrest`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/backrest.yaml)                 | ✔️   |            |
+| 5   | henrygd/beszel                                        | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️   | 2025-10-29 |
+| 6   | vaultwarden/server                                    | `ghcr.io/sqing33/bitwardenrs`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml)              | ✔️   |            |
+| 7   | moby/buildkit                                         | `ghcr.io/sqing33/buildkit`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                 | ✔️   | 2025-10-08 |
+| 8   | tindy2013/subconverter                                | `ghcr.io/sqing33/clash-subconverter`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash-subconverter.yaml)       | ✔️   |            |
 | 9   | metacubex/clash-meta                                  | `ghcr.io/sqing33/clash`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                    | ❌   |            |
-| 10  | easychen/cookiecloud                                  | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️ | 2025-08-25 |
-| 11  | jeessy/ddns-go                                        | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️ | 2025-10-29 |
-| 12  | langgenius/dify-api                                   | `ghcr.io/sqing33/dify-api`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-api.yaml)                 | ✔️ | 2025-10-29 |
+| 10  | easychen/cookiecloud                                  | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2025-08-25 |
+| 11  | jeessy/ddns-go                                        | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2025-10-29 |
+| 12  | langgenius/dify-api                                   | `ghcr.io/sqing33/dify-api`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-api.yaml)                 | ✔️   | 2025-10-29 |
 | 13  | langgenius/dify-plugin-daemon:latest-local            | `ghcr.io/sqing33/dify-plugin-daemon`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-plugin-daemon.yaml)       | ❌   |            |
-| 14  | langgenius/dify-sandbox                               | `ghcr.io/sqing33/dify-sandbox`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-sandbox.yaml)             | ✔️ |            |
-| 15  | langgenius/dify-web                                   | `ghcr.io/sqing33/dify-web`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-web.yaml)                 | ✔️ | 2025-10-29 |
-| 16  | leishi1313/downloader-exporter                        | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️ |            |
-| 17  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️ | 2025-09-09 |
-| 18  | lscr.io/linuxserver/duplicati                         | `ghcr.io/sqing33/duplicati`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                | ✔️ | 2025-10-23 |
-| 19  | registry.cn-shanghai.aliyuncs.com/rustc/easynvr_arm64 | `ghcr.io/sqing33/easynvr`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/easynvr.yaml)                  | ✔️ |            |
-| 20  | lscr.io/linuxserver/emby                              | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️ | 2025-10-24 |
+| 14  | langgenius/dify-sandbox                               | `ghcr.io/sqing33/dify-sandbox`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-sandbox.yaml)             | ✔️   |            |
+| 15  | langgenius/dify-web                                   | `ghcr.io/sqing33/dify-web`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-web.yaml)                 | ✔️   | 2025-10-29 |
+| 16  | leishi1313/downloader-exporter                        | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |            |
+| 17  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2025-09-09 |
+| 18  | lscr.io/linuxserver/duplicati                         | `ghcr.io/sqing33/duplicati`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                | ✔️   | 2025-10-23 |
+| 19  | registry.cn-shanghai.aliyuncs.com/rustc/easynvr_arm64 | `ghcr.io/sqing33/easynvr`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/easynvr.yaml)                  | ✔️   |            |
+| 20  | lscr.io/linuxserver/emby                              | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️   | 2025-10-24 |
 | 21  | quay.io/coreos/etcd:v3.5.18                           | `ghcr.io/sqing33/etcd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml)                     | ❌   |            |
-| 22  | linuxserver/firefox                                   | `ghcr.io/sqing33/firefox`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml)                  | ✔️ | 2025-10-26 |
-| 23  | lscr.io/linuxserver/flexget                           | `ghcr.io/sqing33/flexget`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/flexget.yaml)                  | ✔️ | 2025-10-28 |
+| 22  | linuxserver/firefox                                   | `ghcr.io/sqing33/firefox`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml)                  | ✔️   | 2025-10-26 |
+| 23  | lscr.io/linuxserver/flexget                           | `ghcr.io/sqing33/flexget`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/flexget.yaml)                  | ✔️   | 2025-10-28 |
 | 24  | forgejoclone/forgejo:13                               | `ghcr.io/sqing33/forgejo`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/forgejo.yaml)                  | ❌   |            |
-| 25  | ghcr.io/snailyp/gemini-balance                        | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️ | 2025-09-23 |
-| 26  | liwei2633/gopeed                                      | `ghcr.io/sqing33/gopeed`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gopeed.yaml)                   | ✔️ | 2025-10-12 |
-| 27  | gotify/server                                         | `ghcr.io/sqing33/gotify`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                   | ✔️ | 2025-09-21 |
-| 28  | ghcr.io/tbphp/gpt-load                                | `ghcr.io/sqing33/gpt-load`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gpt-load.yaml)                 | ✔️ | 2025-10-19 |
-| 29  | grafana/grafana                                       | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️ | 2025-10-21 |
-| 30  | haproxy                                               | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️ | 2025-10-25 |
-| 31  | homeassistant/home-assistant                          | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️ | 2025-10-25 |
-| 32  | ghcr.io/gethomepage/homepage                          | `ghcr.io/sqing33/homepage`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml)                 | ✔️ | 2025-09-22 |
-| 33  | corentinth/it-tools                                   | `ghcr.io/sqing33/it-tools`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml)                 | ✔️ |            |
-| 34  | iyuucn/iyuuplus                                       | `ghcr.io/sqing33/iyuuplus`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuuplus.yaml)                 | ✔️ | 2025-08-25 |
-| 35  | lscr.io/linuxserver/jackett                           | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️ | 2025-10-29 |
-| 36  | jellyfin/jellyfin                                     | `ghcr.io/sqing33/jellyfin`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)                 | ✔️ | 2025-10-27 |
-| 37  | jupyter/scipy-notebook                                | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️ | 2025-08-25 |
-| 38  | bytelang/kplayer                                      | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️ |            |
-| 39  | dko0/lsky-pro                                         | `ghcr.io/sqing33/lsky-pro`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky-pro.yaml)                 | ✔️ | 2025-08-25 |
-| 40  | gdy666/lucky                                          | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️ | 2025-09-30 |
-| 41  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️ | 2025-10-28 |
-| 42  | idootop/migpt-next                                    | `ghcr.io/sqing33/migpt-next`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)               | ✔️ | 2025-08-31 |
-| 43  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️ | 2025-10-15 |
-| 44  | continuumio/miniconda3                                | `ghcr.io/sqing33/miniconda3`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)               | ✔️ | 2025-08-25 |
+| 25  | ghcr.io/snailyp/gemini-balance                        | `ghcr.io/sqing33/gemini-balance`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gemini-balance.yaml)           | ✔️   | 2025-09-23 |
+| 26  | liwei2633/gopeed                                      | `ghcr.io/sqing33/gopeed`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gopeed.yaml)                   | ✔️   | 2025-10-12 |
+| 27  | gotify/server                                         | `ghcr.io/sqing33/gotify`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gotify.yaml)                   | ✔️   | 2025-09-21 |
+| 28  | ghcr.io/tbphp/gpt-load                                | `ghcr.io/sqing33/gpt-load`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/gpt-load.yaml)                 | ✔️   | 2025-10-19 |
+| 29  | grafana/grafana                                       | `ghcr.io/sqing33/grafana`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/grafana.yaml)                  | ✔️   | 2025-10-21 |
+| 30  | haproxy                                               | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   | 2025-10-25 |
+| 31  | homeassistant/home-assistant                          | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2025-10-25 |
+| 32  | ghcr.io/gethomepage/homepage                          | `ghcr.io/sqing33/homepage`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml)                 | ✔️   | 2025-09-22 |
+| 33  | corentinth/it-tools                                   | `ghcr.io/sqing33/it-tools`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml)                 | ✔️   |            |
+| 34  | iyuucn/iyuuplus                                       | `ghcr.io/sqing33/iyuuplus`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuuplus.yaml)                 | ✔️   | 2025-08-25 |
+| 35  | lscr.io/linuxserver/jackett                           | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2025-10-29 |
+| 36  | jellyfin/jellyfin                                     | `ghcr.io/sqing33/jellyfin`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)                 | ✔️   | 2025-10-27 |
+| 37  | jupyter/scipy-notebook                                | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️   | 2025-08-25 |
+| 38  | bytelang/kplayer                                      | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️   |            |
+| 39  | dko0/lsky-pro                                         | `ghcr.io/sqing33/lsky-pro`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky-pro.yaml)                 | ✔️   | 2025-08-25 |
+| 40  | gdy666/lucky                                          | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2025-09-30 |
+| 41  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2025-10-28 |
+| 42  | idootop/migpt-next                                    | `ghcr.io/sqing33/migpt-next`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt-next.yaml)               | ✔️   | 2025-08-31 |
+| 43  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2025-10-15 |
+| 44  | continuumio/miniconda3                                | `ghcr.io/sqing33/miniconda3`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)               | ✔️   | 2025-08-25 |
 | 45  | minio/minio:RELEASE.2023-03-20T20-16-18Z              | `ghcr.io/sqing33/minio`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml)                    | ❌   |            |
-| 46  | mongodb/mongodb-community-server                      | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️ | 2025-10-29 |
+| 46  | mongodb/mongodb-community-server                      | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️   | 2025-10-29 |
 | 47  | mysql:9.3.0                                           | `ghcr.io/sqing33/mysql`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)                    | ❌   |            |
-| 48  | mlikiowa/napcat-docker                                | `ghcr.io/sqing33/napcat`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat.yaml)                   | ✔️ |            |
-| 49  | calciumion/new-api                                    | `ghcr.io/sqing33/new-api`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml)                  | ✔️ | 2025-10-29 |
-| 50  | tiangolo/nginx-rtmp                                   | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️ | 2025-10-27 |
-| 51  | nginx:alpine                                          | `ghcr.io/sqing33/nginx:alpine`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️ | 2025-10-29 |
-| 52  | nginx                                                 | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️ | 2025-10-29 |
-| 53  | prom/node-exporter                                    | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️ | 2025-10-26 |
-| 54  | node:alpine                                           | `ghcr.io/sqing33/node:alpine`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️ | 2025-10-29 |
-| 55  | node                                                  | `ghcr.io/sqing33/node`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️ | 2025-10-29 |
-| 56  | xiguanle/openlist                                     | `ghcr.io/sqing33/openlist`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openlist.yaml)                 | ✔️ |            |
-| 57  | openspeedtest/latest                                  | `ghcr.io/sqing33/openspeedtest`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)            | ✔️ | 2025-08-25 |
+| 48  | mlikiowa/napcat-docker                                | `ghcr.io/sqing33/napcat`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat.yaml)                   | ✔️   |            |
+| 49  | calciumion/new-api                                    | `ghcr.io/sqing33/new-api`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml)                  | ✔️   | 2025-10-29 |
+| 50  | tiangolo/nginx-rtmp                                   | `ghcr.io/sqing33/nginx-rtmp`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx-rtmp.yaml)               | ✔️   | 2025-10-27 |
+| 51  | nginx:alpine                                          | `ghcr.io/sqing33/nginx:alpine`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-29 |
+| 52  | nginx                                                 | `ghcr.io/sqing33/nginx`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/nginx.yaml)                    | ✔️   | 2025-10-29 |
+| 53  | prom/node-exporter                                    | `ghcr.io/sqing33/node-exporter`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node-exporter.yaml)            | ✔️   | 2025-10-26 |
+| 54  | node:alpine                                           | `ghcr.io/sqing33/node:alpine`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2025-10-29 |
+| 55  | node                                                  | `ghcr.io/sqing33/node`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2025-10-29 |
+| 56  | xiguanle/openlist                                     | `ghcr.io/sqing33/openlist`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openlist.yaml)                 | ✔️   |            |
+| 57  | openspeedtest/latest                                  | `ghcr.io/sqing33/openspeedtest`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)            | ✔️   | 2025-08-25 |
 | 58  | pgvector/pgvector:0.8.0-pg17                          | `ghcr.io/sqing33/postgres`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml)                 | ❌   |            |
-| 59  | prom/prometheus                                       | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️ | 2025-10-22 |
-| 60  | linuxserver/qbittorrent                               | `ghcr.io/sqing33/qbittorrent`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)              | ✔️ | 2025-10-26 |
-| 61  | qdtoday/qd                                            | `ghcr.io/sqing33/qd`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml)                       | ✔️ | 2025-08-25 |
-| 62  | whyour/qinglong                                       | `ghcr.io/sqing33/qinglong`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml)                 | ✔️ | 2025-08-25 |
-| 63  | redis:7.2-alpine                                      | `ghcr.io/sqing33/redis:alpine`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️ | 2025-10-29 |
-| 64  | redis                                                 | `ghcr.io/sqing33/redis`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️ | 2025-10-29 |
-| 65  | quiq/registry-ui                                      | `ghcr.io/sqing33/registry-ui`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml)              | ✔️ | 2025-08-25 |
+| 59  | prom/prometheus                                       | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️   | 2025-10-22 |
+| 60  | linuxserver/qbittorrent                               | `ghcr.io/sqing33/qbittorrent`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qbittorrent.yaml)              | ✔️   | 2025-10-26 |
+| 61  | qdtoday/qd                                            | `ghcr.io/sqing33/qd`                       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qd.yaml)                       | ✔️   | 2025-08-25 |
+| 62  | whyour/qinglong                                       | `ghcr.io/sqing33/qinglong`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/qinglong.yaml)                 | ✔️   | 2025-08-25 |
+| 63  | redis:7.2-alpine                                      | `ghcr.io/sqing33/redis:alpine`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️   | 2025-10-29 |
+| 64  | redis                                                 | `ghcr.io/sqing33/redis`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/redis.yaml)                    | ✔️   | 2025-10-29 |
+| 65  | quiq/registry-ui                                      | `ghcr.io/sqing33/registry-ui`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry-ui.yaml)              | ✔️   | 2025-08-25 |
 | 66  | registry:2                                            | `ghcr.io/sqing33/registry`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)                 | ❌   |            |
-| 67  | szzhoubanxian/reseed-puppy                            | `ghcr.io/sqing33/reseed-puppy`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/reseed-puppy.yaml)             | ✔️ |            |
-| 68  | steefdebruijn/docker-roonserver                       | `ghcr.io/sqing33/roonserver`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml)               | ✔️ |            |
-| 69  | dperson/samba                                         | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️ |            |
-| 70  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️ |            |
-| 71  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ |  |
-| 72  | ghostry/smartdns                                      | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️ |            |
-| 73  | hslr/sun-panel                                        | `ghcr.io/sqing33/sun-panel`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml)                | ✔️ | 2025-10-28 |
-| 74  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️ | 2025-09-24 |
-| 75  | mzz2017/v2raya                                        | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️ | 2025-10-08 |
-| 76  | lswl/vertex                                           | `ghcr.io/sqing33/vertex`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml)                   | ✔️ | 2025-09-27 |
-| 77  | linuxserver/code-server                               | `ghcr.io/sqing33/vscode`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vscode.yaml)                   | ✔️ | 2025-10-26 |
-| 78  | containrrr/watchtower                                 | `ghcr.io/sqing33/watchtower`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/watchtower.yaml)               | ✔️ |            |
-| 79  | wiznote/wizserver                                     | `ghcr.io/sqing33/wizserver`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wizserver.yaml)                | ✔️ |            |
-| 80  | hanxi/xiaomusic                                       | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️ | 2025-10-27 |
-| 81  | haishanh/yacd                                         | `ghcr.io/sqing33/yacd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)                     | ✔️ | 2025-08-26 |
-| 82  | siguremo/yutto                                        | `ghcr.io/sqing33/yutto-bilibili_downloads` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yutto-bilibili_downloads.yaml) | ✔️ | 2025-10-08 |
+| 67  | szzhoubanxian/reseed-puppy                            | `ghcr.io/sqing33/reseed-puppy`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/reseed-puppy.yaml)             | ✔️   |            |
+| 68  | steefdebruijn/docker-roonserver                       | `ghcr.io/sqing33/roonserver`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml)               | ✔️   |            |
+| 69  | dperson/samba                                         | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️   |            |
+| 70  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |            |
+| 71  | apkdv/siyuan-unlock                                   | `ghcr.io/sqing33/siyuan`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml)                   | ✔️   |            |
+| 72  | ghostry/smartdns                                      | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |            |
+| 73  | hslr/sun-panel                                        | `ghcr.io/sqing33/sun-panel`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml)                | ✔️   | 2025-10-28 |
+| 74  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2025-09-24 |
+| 75  | mzz2017/v2raya                                        | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2025-10-08 |
+| 76  | lswl/vertex                                           | `ghcr.io/sqing33/vertex`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml)                   | ✔️   | 2025-09-27 |
+| 77  | linuxserver/code-server                               | `ghcr.io/sqing33/vscode`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vscode.yaml)                   | ✔️   | 2025-10-26 |
+| 78  | containrrr/watchtower                                 | `ghcr.io/sqing33/watchtower`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/watchtower.yaml)               | ✔️   |            |
+| 79  | wiznote/wizserver                                     | `ghcr.io/sqing33/wizserver`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wizserver.yaml)                | ✔️   |            |
+| 80  | hanxi/xiaomusic                                       | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2025-10-27 |
+| 81  | haishanh/yacd                                         | `ghcr.io/sqing33/yacd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)                     | ✔️   | 2025-08-26 |
+| 82  | siguremo/yutto                                        | `ghcr.io/sqing33/yutto-bilibili_downloads` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yutto-bilibili_downloads.yaml) | ✔️   | 2025-10-08 |
