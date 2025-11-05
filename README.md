@@ -119,7 +119,7 @@
 | ---- | -------- | --------- | -------------- | ---- | -------- |
 | 1   | adminer                                               | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️   | 2025-10-25 |
 | 2   | sqing33/argb-fan-esp32                                | `ghcr.io/sqing33/argb-fan-esp32`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)           | ✔️   | 2025-08-25 |
-| 3   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2025-11-03 |
+| 3   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2025-11-05 |
 | 4   | garethgeorge/backrest                                 | `ghcr.io/sqing33/backrest`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/backrest.yaml)                 | ✔️   | 2025-10-31 |
 | 5   | henrygd/beszel                                        | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️   | 2025-11-02 |
 | 6   | vaultwarden/server                                    | `ghcr.io/sqing33/bitwardenrs`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml)              | ✔️   |            |
