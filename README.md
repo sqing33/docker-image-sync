@@ -113,6 +113,7 @@
 | 4   | https://github.com/sqing33/Docker.pt-nexus.git             | ` ghcr.io/sqing33/pt-nexus`<br>`sqing33/pt-nexus `                                           | 2025-09-12 |
 | 5   | https://github.com/sqing33/Docker.Code-dev-env.git         | ` ghcr.io/sqing33/code-dev-env`<br>`sqing33/code-dev-env `                                   | 2025-10-01 |
 
+| 6   | https://github.com/AmintaCCCP/GithubStarsManager | `ghcr.io/sqing33/GithubStarsManager`<br>`sqing33/GithubStarsManager` | 2025-11-11 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
