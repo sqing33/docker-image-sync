@@ -160,7 +160,7 @@
 | 40  | bytelang/kplayer                                      | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️   |            |
 | 41  | dko0/lsky-pro | `ghcr.io/sqing33/lsky` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky.yaml) | ✔️ |  |
 | 42  | gdy666/lucky                                          | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2025-11-11 |
-| 43  | mariadb | `ghcr.io/sqing33/mariadb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mariadb.yaml) | ✔️ | 2025-11-14 |
+| 43  | mariadb | `ghcr.io/sqing33/mariadb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mariadb.yaml) | ✔️ | 2025-11-21 |
 | 44  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2025-11-20 |
 | 45  | idootop/migpt-next | `ghcr.io/sqing33/migpt` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt.yaml) | ✔️ |  |
 | 46  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2025-11-09 |
