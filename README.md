@@ -194,7 +194,7 @@
 | 76  | steefdebruijn/docker-roonserver                       | `ghcr.io/sqing33/roonserver`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml)               | ✔️   |            |
 | 77  | dperson/samba                                         | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️   |            |
 | 78  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |            |
-| 79  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2025-12-16 |
+| 79  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2025-12-23 |
 | 80  | ghostry/smartdns                                      | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |            |
 | 81  | hslr/sun-panel                                        | `ghcr.io/sqing33/sun-panel`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml)                | ✔️   | 2025-10-28 |
 | 82  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2025-12-02 |
