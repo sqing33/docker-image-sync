@@ -137,7 +137,7 @@
 | 19  | leishi1313/downloader-exporter                        | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |            |
 | 20  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2025-12-12 |
 | 21  | lscr.io/linuxserver/duplicati                         | `ghcr.io/sqing33/duplicati`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                | ✔️   | 2025-12-27 |
-| 22  | registry.cn-shanghai.aliyuncs.com/rustc/easynvr_arm64 | `ghcr.io/sqing33/easynvr`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/easynvr.yaml)                  | ✔️   |            |
+
 | 23  | lscr.io/linuxserver/emby                              | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️   | 2025-12-26 |
 | 24  | quay.io/coreos/etcd:v3.5.18                           | `ghcr.io/sqing33/etcd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/etcd.yaml)                     | ❌   |            |
 | 25  | linuxserver/firefox                                   | `ghcr.io/sqing33/firefox`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/firefox.yaml)                  | ✔️   | 2025-12-23 |
