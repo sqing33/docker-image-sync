@@ -168,7 +168,7 @@
 | 50  | minio/minio:RELEASE.2023-03-20T20-16-18Z              | `ghcr.io/sqing33/minio`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml)                    | ❌   |            |
 | 51  | l429609201/misaka_danmu_server | `ghcr.io/sqing33/misaka_danmu_server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/misaka_danmu_server.yaml) | ✔️ | 2025-12-31 |
 | 52  | mongodb/mongodb-community-server                      | `ghcr.io/sqing33/mongodb`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mongodb.yaml)                  | ✔️   | 2025-12-31 |
-| 53  | jxxghp/moviepilot-v2 | `ghcr.io/sqing33/moviepilot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot.yaml) | ✔️ | 2025-12-28 |
+| 53  | jxxghp/moviepilot-v2 | `ghcr.io/sqing33/moviepilot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/moviepilot.yaml) | ✔️ | 2025-12-31 |
 | 54  | mysql:9.3.0                                           | `ghcr.io/sqing33/mysql`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mysql.yaml)                    | ❌   |            |
 | 55  | mlikiowa/napcat-docker                                | `ghcr.io/sqing33/napcat`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/napcat.yaml)                   | ✔️   | 2025-12-24 |
 | 56  | calciumion/new-api                                    | `ghcr.io/sqing33/new-api`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/new-api.yaml)                  | ✔️   | 2025-12-29 |
