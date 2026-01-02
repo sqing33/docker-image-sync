@@ -201,7 +201,7 @@
 | 83  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2025-12-02 |
 | 84  | linuxserver/transmission:4.0.5 | `ghcr.io/sqing33/transmission` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml) | ❌ |  |
 | 85  | mzz2017/v2raya                                        | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2025-11-06 |
-| 86  | ghcr.io/vert-sh/vert | `ghcr.io/sqing33/vert` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vert.yaml) | ✔️ |  |
+| 86  | ghcr.io/vert-sh/vert | `ghcr.io/sqing33/vert` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vert.yaml) | ✔️ | 2026-01-02 |
 | 87  | ghcr.io/vert-sh/vertd | `ghcr.io/sqing33/vertd` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertd.yaml) | ✔️ |  |
 | 88  | lswl/vertex                                           | `ghcr.io/sqing33/vertex`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml)                   | ✔️   | 2025-09-27 |
 | 89  | containrrr/watchtower                                 | `ghcr.io/sqing33/watchtower`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/watchtower.yaml)               | ✔️   |            |
