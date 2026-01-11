@@ -211,3 +211,4 @@
 | 92  | hanxi/xiaomusic                                       | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2026-01-10 |
 | 93  | haishanh/yacd                                         | `ghcr.io/sqing33/yacd`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yacd.yaml)                     | ✔️   | 2025-08-26 |
 | 94  | siguremo/yutto                                        | `ghcr.io/sqing33/yutto-bilibili_downloads` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/yutto-bilibili_downloads.yaml) | ✔️   | 2025-11-28 |
+| 95  | ghcr.io/zephyruso/zashboard | `ghcr.io/sqing33/zashboard` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/zashboard.yaml) | ✔️ |  |
