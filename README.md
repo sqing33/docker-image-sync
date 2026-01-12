@@ -199,7 +199,7 @@
 | 80  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |            |
 | 81  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2025-12-30 |
 | 82  | ghostry/smartdns                                      | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |            |
-| 83  | metacubex/subconverter | `ghcr.io/sqing33/subconverter` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subconverter.yaml) | ✔️ | 2026-01-11 |
+| 83  | metacubex/subconverter | `ghcr.io/sqing33/subconverter` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subconverter.yaml) | ✔️ | 2026-01-12 |
 | 84  | stilleshan/subweb | `ghcr.io/sqing33/subweb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subweb.yaml) | ✔️ |  |
 | 85  | hslr/sun-panel                                        | `ghcr.io/sqing33/sun-panel`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml)                | ✔️   | 2025-12-31 |
 | 86  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2026-01-06 |
