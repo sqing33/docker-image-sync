@@ -201,7 +201,7 @@
 | 81  | steefdebruijn/docker-roonserver                       | `ghcr.io/sqing33/roonserver`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml)               | ✔️   | 2025-12-29 |
 | 82  | dperson/samba                                         | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️   |            |
 | 83  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |            |
-| 84  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2026-01-27 |
+| 84  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2026-02-10 |
 | 85  | ghostry/smartdns                                      | `ghcr.io/sqing33/smartdns`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/smartdns.yaml)                 | ✔️   |            |
 | 86  | metacubex/subconverter | `ghcr.io/sqing33/subconverter` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subconverter.yaml) | ✔️ | 2026-01-21 |
 | 87  | stilleshan/subweb | `ghcr.io/sqing33/subweb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subweb.yaml) | ✔️ |  |
