@@ -129,7 +129,7 @@
 | 9   | moby/buildkit                                         | `ghcr.io/sqing33/buildkit`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                 | ✔️   | 2026-01-29 |
 | 10  | tindy2013/subconverter                                | `ghcr.io/sqing33/clash-subconverter`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash-subconverter.yaml)       | ✔️   | 2026-01-11 |
 | 11  | metacubex/clash-meta                                  | `ghcr.io/sqing33/clash`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                    | ❌   |            |
-| 12  | linuxserver/code-server | `ghcr.io/sqing33/code-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/code-server.yaml) | ✔️ | 2026-02-08 |
+| 12  | linuxserver/code-server | `ghcr.io/sqing33/code-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/code-server.yaml) | ✔️ | 2026-02-13 |
 | 13  | ghcr.io/coracoo/dockports | `ghcr.io/sqing33/convertx` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/convertx.yaml) | ✔️ |  |
 | 14  | easychen/cookiecloud                                  | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2025-08-25 |
 | 15  | jeessy/ddns-go                                        | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2026-01-17 |
