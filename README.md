@@ -157,7 +157,7 @@
 | 37  | homeassistant/home-assistant                          | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2026-02-07 |
 | 38  | ghcr.io/gethomepage/homepage                          | `ghcr.io/sqing33/homepage`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml)                 | ✔️   | 2026-02-05 |
 | 39  | corentinth/it-tools                                   | `ghcr.io/sqing33/it-tools`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml)                 | ✔️   |            |
-| 40  | iyuucn/iyuuplus | `ghcr.io/sqing33/iyuu` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuu.yaml) | ✔️ | 2026-02-06 |
+| 40  | iyuucn/iyuuplus | `ghcr.io/sqing33/iyuu` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuu.yaml) | ✔️ | 2026-02-13 |
 | 41  | lscr.io/linuxserver/jackett                           | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2026-02-12 |
 | 42  | jellyfin/jellyfin                                     | `ghcr.io/sqing33/jellyfin`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jellyfin.yaml)                 | ✔️   | 2026-01-19 |
 | 43  | jupyter/scipy-notebook                                | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️   | 2025-08-25 |
