@@ -114,6 +114,7 @@
 
 | 5   | https://github.com/sqing33/Doraemon.git | `ghcr.io/sqing33/doraemon`<br>`sqing33/doraemon` | 2026-01-03 |
 | 6   | https://github.com/sqing33/SqingBlog.git | `ghcr.io/sqing33/SQBlog`<br>`sqing33/SQBlog` | 2026-01-21 |
+| 7   | https://github.com/zeroclaw-labs/zeroclaw | `ghcr.io/sqing33/zeroclaw`<br>`sqing33/zeroclaw` | 2026-02-21 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
