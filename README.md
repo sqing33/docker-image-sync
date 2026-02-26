@@ -120,7 +120,7 @@
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
 | ---- | -------- | --------- | -------------- | ---- | -------- |
 | 1   | adminer                                               | `ghcr.io/sqing33/adminer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/adminer.yaml)                  | ✔️   | 2026-02-14 |
-| 2   | justlikemaki/aiclient-2-api | `ghcr.io/sqing33/aiclient2api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aiclient2api.yaml) | ✔️ | 2026-02-20 |
+| 2   | justlikemaki/aiclient-2-api | `ghcr.io/sqing33/aiclient2api` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/aiclient2api.yaml) | ✔️ | 2026-02-26 |
 | 3   | sqing33/argb-fan-esp32                                | `ghcr.io/sqing33/argb-fan-esp32`           | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/argb-fan-esp32.yaml)           | ✔️   | 2025-08-25 |
 | 4   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2026-02-25 |
 | 5   | garethgeorge/backrest                                 | `ghcr.io/sqing33/backrest`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/backrest.yaml)                 | ✔️   | 2026-02-22 |
