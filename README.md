@@ -128,7 +128,7 @@
 | 7   | amtoaer/bili-sync-rs | `ghcr.io/sqing33/bili-sync-rs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bili-sync-rs.yaml) | ✔️ | 2026-02-25 |
 | 8   | vaultwarden/server                                    | `ghcr.io/sqing33/bitwardenrs`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml)              | ✔️   | 2026-02-24 |
 | 9   | moby/buildkit                                         | `ghcr.io/sqing33/buildkit`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                 | ✔️   | 2026-01-29 |
-| 10  | oven/bun | `ghcr.io/sqing33/bun` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bun.yaml) | ✔️ |  |
+| 10  | oven/bun | `ghcr.io/sqing33/bun` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bun.yaml) | ✔️ | 2026-02-26 |
 | 11  | tindy2013/subconverter                                | `ghcr.io/sqing33/clash-subconverter`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash-subconverter.yaml)       | ✔️   | 2026-01-11 |
 | 12  | metacubex/clash-meta                                  | `ghcr.io/sqing33/clash`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                    | ❌   |            |
 | 13  | linuxserver/code-server | `ghcr.io/sqing33/code-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/code-server.yaml) | ✔️ | 2026-02-22 |
