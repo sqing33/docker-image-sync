@@ -116,6 +116,7 @@
 | 6   | https://github.com/sqing33/SqingBlog.git | `ghcr.io/sqing33/SQBlog`<br>`sqing33/SQBlog` | 2026-01-21 |
 | 7   | https://github.com/zeroclaw-labs/zeroclaw | `ghcr.io/sqing33/zeroclaw`<br>`sqing33/zeroclaw` | 2026-02-21 |
 | 8   | https://github.com/libaxuan/cursor2api-go | `ghcr.io/sqing33/gogogo`<br>`sqing33/gogogo` | 2026-03-08 |
+| 9   | https://github.com/7836246/cursor2api | `ghcr.io/sqing33/apap`<br>`sqing33/apap` | 2026-03-08 |
 ### 已同步的 Docker 镜像
 
 |   | 源镜像 | pull 镜像 | docker-compose | 同步 | 更新时间 |
