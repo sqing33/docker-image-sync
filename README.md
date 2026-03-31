@@ -173,7 +173,7 @@
 | 49  | woodchen/lxmusicsyncserver | `ghcr.io/sqing33/lxmusic-sync-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lxmusic-sync-server.yaml) | ✔️ |  |
 | 50  | mariadb | `ghcr.io/sqing33/mariadb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mariadb.yaml) | ✔️ | 2026-03-17 |
 | 51  | docker/mcp-gateway | `ghcr.io/sqing33/mcp-gateway` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mcp-gateway.yaml) | ✔️ | 2026-03-31 |
-| 52  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2026-03-28 |
+| 52  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2026-03-31 |
 | 53  | idootop/migpt-next | `ghcr.io/sqing33/migpt` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt.yaml) | ✔️ |  |
 | 54  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2026-03-10 |
 | 55  | continuumio/miniconda3                                | `ghcr.io/sqing33/miniconda3`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)               | ✔️   | 2026-03-07 |
