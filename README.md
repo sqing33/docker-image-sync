@@ -128,7 +128,7 @@
 | 4   | jauderho/docker-autocompose                           | `ghcr.io/sqing33/autocompose`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/autocompose.yaml)              | ✔️   | 2026-05-06 |
 | 5   | garethgeorge/backrest                                 | `ghcr.io/sqing33/backrest`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/backrest.yaml)                 | ✔️   | 2026-05-04 |
 | 6   | henrygd/beszel                                        | `ghcr.io/sqing33/beszel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/beszel.yaml)                   | ✔️   | 2026-04-06 |
-| 7   | amtoaer/bili-sync-rs | `ghcr.io/sqing33/bili-sync-rs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bili-sync-rs.yaml) | ✔️ | 2026-03-26 |
+| 7   | amtoaer/bili-sync-rs | `ghcr.io/sqing33/bili-sync-rs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bili-sync-rs.yaml) | ✔️ | 2026-05-07 |
 | 8   | vaultwarden/server                                    | `ghcr.io/sqing33/bitwardenrs`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bitwardenrs.yaml)              | ✔️   | 2026-05-03 |
 | 9   | moby/buildkit                                         | `ghcr.io/sqing33/buildkit`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/buildkit.yaml)                 | ✔️   | 2026-03-31 |
 | 10  | oven/bun | `ghcr.io/sqing33/bun` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/bun.yaml) | ✔️ | 2026-04-20 |
