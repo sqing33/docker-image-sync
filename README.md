@@ -205,7 +205,7 @@
 | 81  | registry:2                                            | `ghcr.io/sqing33/registry`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/registry.yaml)                 | ❌   |            |
 | 82  | szzhoubanxian/reseed-puppy                            | `ghcr.io/sqing33/reseed-puppy`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/reseed-puppy.yaml)             | ✔️   |            |
 | 83  | steefdebruijn/docker-roonserver                       | `ghcr.io/sqing33/roonserver`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/roonserver.yaml)               | ✔️   | 2025-12-29 |
-| 84  | rustfs/rustfs | `ghcr.io/sqing33/rustfs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/rustfs.yaml) | ✔️ | 2026-04-29 |
+| 84  | rustfs/rustfs | `ghcr.io/sqing33/rustfs` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/rustfs.yaml) | ✔️ | 2026-05-09 |
 | 85  | dperson/samba                                         | `ghcr.io/sqing33/samba`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/samba.yaml)                    | ✔️   |            |
 | 86  | ccf2012/seedcross                                     | `ghcr.io/sqing33/seedcross`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/seedcross.yaml)                | ✔️   |            |
 | 87  | apkdv/siyuan-unlock | `ghcr.io/sqing33/siyuan` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/siyuan.yaml) | ✔️ | 2026-04-21 |
