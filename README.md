@@ -213,7 +213,7 @@
 | 89  | metacubex/subconverter | `ghcr.io/sqing33/subconverter` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subconverter.yaml) | ✔️ | 2026-02-10 |
 | 90  | stilleshan/subweb | `ghcr.io/sqing33/subweb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/subweb.yaml) | ✔️ |  |
 | 91  | hslr/sun-panel                                        | `ghcr.io/sqing33/sun-panel`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/sun-panel.yaml)                | ✔️   | 2025-12-31 |
-| 92  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2026-04-07 |
+| 92  | syncthing/syncthing                                   | `ghcr.io/sqing33/syncthing`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/syncthing.yaml)                | ✔️   | 2026-05-12 |
 | 93  | linuxserver/transmission:4.0.5 | `ghcr.io/sqing33/transmission` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/transmission.yaml) | ❌ |  |
 | 94  | mzz2017/v2raya                                        | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2026-01-25 |
 | 95  | ghcr.io/vert-sh/vert | `ghcr.io/sqing33/vert` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vert.yaml) | ✔️ | 2026-04-01 |
