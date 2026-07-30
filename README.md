@@ -142,7 +142,7 @@
 | 18  | langgenius/dify-plugin-daemon:latest-local            | `ghcr.io/sqing33/dify-plugin-daemon`       | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-plugin-daemon.yaml)       | ❌   |            |
 | 19  | langgenius/dify-sandbox                               | `ghcr.io/sqing33/dify-sandbox`             | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-sandbox.yaml)             | ✔️   | 2026-04-27 |
 | 20  | langgenius/dify-web                                   | `ghcr.io/sqing33/dify-web`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-web.yaml)                 | ✔️   | 2026-07-28 |
-| 21  | 0nlylty/dockercopilot | `ghcr.io/sqing33/docker-copilot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-copilot.yaml) | ✔️ |  |
+| 21  | 0nlylty/dockercopilot | `ghcr.io/sqing33/docker-copilot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-copilot.yaml) | ✔️ | 2026-07-30 |
 | 22  | ihmily/douyin-live-recorder | `ghcr.io/sqing33/douyin-live-recorder` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder.yaml) | ✔️ |  |
 | 23  | leishi1313/downloader-exporter                        | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |            |
 | 24  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2026-07-14 |
