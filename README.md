@@ -177,7 +177,7 @@
 | 52  | docker/mcp-gateway | `ghcr.io/sqing33/mcp-gateway` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mcp-gateway.yaml) | ✔️ | 2026-07-23 |
 | 53  | ghcr.io/metacubex/metacubexd                          | `ghcr.io/sqing33/metacubexd`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/metacubexd.yaml)               | ✔️   | 2026-09-10 |
 | 54  | idootop/migpt-next | `ghcr.io/sqing33/migpt` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/migpt.yaml) | ✔️ |  |
-| 55  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2026-09-14 |
+| 55  | metacubex/mihomo                                      | `ghcr.io/sqing33/mihomo`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mihomo.yaml)                   | ✔️   | 2026-09-30 |
 | 56  | continuumio/miniconda3                                | `ghcr.io/sqing33/miniconda3`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/miniconda3.yaml)               | ✔️   | 2026-08-29 |
 | 57  | minio/minio:RELEASE.2023-03-20T20-16-18Z              | `ghcr.io/sqing33/minio`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/minio.yaml)                    | ❌   |            |
 | 58  | l429609201/misaka_danmu_server | `ghcr.io/sqing33/misaka_danmu_server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/misaka_danmu_server.yaml) | ✔️ | 2026-08-22 |
