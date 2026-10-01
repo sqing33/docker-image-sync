@@ -147,7 +147,7 @@
 | 22  | 0nlylty/dockercopilot | `ghcr.io/sqing33/docker-copilot` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/docker-copilot.yaml) | ✔️ | 2026-07-30 |
 | 23  | ihmily/douyin-live-recorder | `ghcr.io/sqing33/douyin-live-recorder` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/douyin-live-recorder.yaml) | ✔️ |  |
 | 24  | leishi1313/downloader-exporter                        | `ghcr.io/sqing33/downloader-exporter`      | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/downloader-exporter.yaml)      | ✔️   |            |
-| 25  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2026-09-30 |
+| 25  | dpanel/dpanel                                         | `ghcr.io/sqing33/dpanel`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dpanel.yaml)                   | ✔️   | 2026-10-01 |
 | 26  | lscr.io/linuxserver/duplicati                         | `ghcr.io/sqing33/duplicati`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/duplicati.yaml)                | ✔️   | 2026-09-26 |
 | 27  | registry.cn-shanghai.aliyuncs.com/rustc/easynvr_amd64 | `ghcr.io/sqing33/easynvr` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/easynvr.yaml) | ✔️ |  |
 | 28  | lscr.io/linuxserver/emby                              | `ghcr.io/sqing33/emby`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/emby.yaml)                     | ✔️   | 2026-09-30 |
