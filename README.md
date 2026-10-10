@@ -163,7 +163,7 @@
 | 38  | registry.fit2cloud.com/halo/halo-pro:2.22 | `ghcr.io/sqing33/halo` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/halo.yaml) | ❌ |  |
 | 39  | haproxy                                               | `ghcr.io/sqing33/haproxy`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/haproxy.yaml)                  | ✔️   | 2026-10-06 |
 | 40  | homeassistant/home-assistant                          | `ghcr.io/sqing33/homeassistant`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homeassistant.yaml)            | ✔️   | 2026-10-10 |
-| 41  | ghcr.io/gethomepage/homepage                          | `ghcr.io/sqing33/homepage`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml)                 | ✔️   | 2026-09-17 |
+| 41  | ghcr.io/gethomepage/homepage                          | `ghcr.io/sqing33/homepage`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/homepage.yaml)                 | ✔️   | 2026-10-10 |
 | 42  | corentinth/it-tools                                   | `ghcr.io/sqing33/it-tools`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/it-tools.yaml)                 | ✔️   |            |
 | 43  | iyuucn/iyuuplus | `ghcr.io/sqing33/iyuu` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/iyuu.yaml) | ✔️ | 2026-10-09 |
 | 44  | lscr.io/linuxserver/jackett                           | `ghcr.io/sqing33/jackett`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jackett.yaml)                  | ✔️   | 2026-10-09 |
