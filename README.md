@@ -137,7 +137,7 @@
 | 12  | metacubex/clash-meta                                  | `ghcr.io/sqing33/clash`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/clash.yaml)                    | ❌   |            |
 | 13  | linuxserver/code-server | `ghcr.io/sqing33/code-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/code-server.yaml) | ✔️ | 2026-10-19 |
 | 14  | ghcr.io/coracoo/dockports | `ghcr.io/sqing33/convertx` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/convertx.yaml) | ✔️ |  |
-| 15  | easychen/cookiecloud                                  | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2025-08-25 |
+| 15  | easychen/cookiecloud                                  | `ghcr.io/sqing33/cookiecloud`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/cookiecloud.yaml)              | ✔️   | 2026-10-23 |
 | 16  | jeessy/ddns-go                                        | `ghcr.io/sqing33/ddns-go`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/ddns-go.yaml)                  | ✔️   | 2026-09-04 |
 | 17  | smanx/deepseek-harness:admin-latest | `ghcr.io/sqing33/deepseek-harness` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/deepseek-harness.yaml) | ✔️ | 2026-10-22 |
 | 18  | langgenius/dify-api                                   | `ghcr.io/sqing33/dify-api`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/dify-api.yaml)                 | ✔️   | 2026-09-10 |
