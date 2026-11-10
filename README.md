@@ -221,7 +221,7 @@
 | 96  | mzz2017/v2raya                                        | `ghcr.io/sqing33/v2raya`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/v2raya.yaml)                   | ✔️   | 2026-11-10 |
 | 97  | ghcr.io/vert-sh/vert | `ghcr.io/sqing33/vert` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vert.yaml) | ✔️ | 2026-10-20 |
 | 98  | ghcr.io/vert-sh/vertd | `ghcr.io/sqing33/vertd` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertd.yaml) | ✔️ | 2026-10-19 |
-| 99  | lswl/vertex                                           | `ghcr.io/sqing33/vertex`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml)                   | ✔️   | 2026-10-29 |
+| 99  | lswl/vertex                                           | `ghcr.io/sqing33/vertex`                   | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/vertex.yaml)                   | ✔️   | 2026-11-10 |
 | 100 | containrrr/watchtower                                 | `ghcr.io/sqing33/watchtower`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/watchtower.yaml)               | ✔️   |            |
 | 101 | wiznote/wizserver                                     | `ghcr.io/sqing33/wizserver`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/wizserver.yaml)                | ✔️   | 2025-10-30 |
 | 102 | hanxi/xiaomusic                                       | `ghcr.io/sqing33/xiaomusic`                | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/xiaomusic.yaml)                | ✔️   | 2026-06-09 |
