@@ -172,7 +172,7 @@
 | 47  | jupyter/scipy-notebook                                | `ghcr.io/sqing33/jupyterlab`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/jupyterlab.yaml)               | ✔️   | 2025-08-25 |
 | 48  | bytelang/kplayer                                      | `ghcr.io/sqing33/kplayer`                  | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/kplayer.yaml)                  | ✔️   |            |
 | 49  | dko0/lsky-pro | `ghcr.io/sqing33/lsky` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lsky.yaml) | ✔️ |  |
-| 50  | gdy666/lucky                                          | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2025-11-11 |
+| 50  | gdy666/lucky                                          | `ghcr.io/sqing33/lucky`                    | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lucky.yaml)                    | ✔️   | 2026-11-12 |
 | 51  | woodchen/lxmusicsyncserver | `ghcr.io/sqing33/lxmusic-sync-server` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/lxmusic-sync-server.yaml) | ✔️ |  |
 | 52  | mariadb | `ghcr.io/sqing33/mariadb` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mariadb.yaml) | ✔️ | 2026-10-27 |
 | 53  | docker/mcp-gateway | `ghcr.io/sqing33/mcp-gateway` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/mcp-gateway.yaml) | ✔️ | 2026-07-23 |
