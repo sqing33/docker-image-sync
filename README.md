@@ -194,7 +194,7 @@
 | 69  | node:alpine                                           | `ghcr.io/sqing33/node:alpine`              | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2026-11-19 |
 | 70  | node                                                  | `ghcr.io/sqing33/node`                     | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/node.yaml)                     | ✔️   | 2026-11-19 |
 | 71  | lampon/omnibox | `ghcr.io/sqing33/omnibox` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/omnibox.yaml) | ✔️ | 2026-05-13 |
-| 72  | openlistteam/openlist | `ghcr.io/sqing33/openlist` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openlist.yaml) | ✔️ | 2026-10-25 |
+| 72  | openlistteam/openlist | `ghcr.io/sqing33/openlist` | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openlist.yaml) | ✔️ | 2026-11-19 |
 | 73  | openspeedtest/latest                                  | `ghcr.io/sqing33/openspeedtest`            | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/openspeedtest.yaml)            | ✔️   | 2026-10-25 |
 | 74  | pgvector/pgvector:0.8.0-pg17                          | `ghcr.io/sqing33/postgres`                 | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/postgres.yaml)                 | ❌   |            |
 | 75  | prom/prometheus                                       | `ghcr.io/sqing33/prometheus`               | [yaml](https://github.com/sqing33/docker-image-sync/blob/main/docker-compose/prometheus.yaml)               | ✔️   | 2026-11-05 |
